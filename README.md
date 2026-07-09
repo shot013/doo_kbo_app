@@ -30,6 +30,7 @@ flutter run
 | lint | `analysis_options.yaml`에 strict-casts/strict-inference, `unawaited_futures`, `require_trailing_commas` 등 팀 협업용 규칙 추가 |
 | CI | `.github/workflows/ci.yaml` — PR/push마다 `dart format` 체크 + `flutter analyze` + `flutter test` |
 | 협업 문서 | `CONTRIBUTING.md`(브랜치 전략, Conventional Commits, PR 규칙), `.github/PULL_REQUEST_TEMPLATE.md` |
+| Claude Code 하네스 | `CLAUDE.md`/`.claude/rules/*`(항상 로드되는 규칙), `.claude/skills/*`(add-feature, verify), `.claude/hooks/*`(dart 파일 자동 포맷, 생성 파일 수정 차단), `.claude/agents/flutter-reviewer.md`(코드 리뷰 서브에이전트) — 정리는 [docs/CLAUDE_CODE.md](docs/CLAUDE_CODE.md) 참고 |
 | 예시 기능 | `lib/features/example/` — KBO 팀 목록을 domain→data→presentation 전 계층으로 구현한 템플릿. 백엔드가 없어 기본은 `TeamDummyDataSource`가 연결되어 있고, API 준비 시 `TeamRemoteDataSourceImpl(dio)`로 교체 |
 
 ```
