@@ -14,6 +14,7 @@ flutter run
 
 - [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) — 폴더 구조, 데이터 흐름, 새 기능 추가 절차
 - [CONTRIBUTING.md](CONTRIBUTING.md) — 브랜치 전략, 커밋 컨벤션, PR 규칙
+- [docs/CLAUDE_CODE.md](docs/CLAUDE_CODE.md) — Claude Code가 이 저장소에서 자동으로 지키는 규칙/스킬/훅 정리
 
 `lib/features/example/`은 새 기능을 만들 때 복사해서 시작하는 템플릿입니다.
 
