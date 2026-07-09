@@ -43,3 +43,6 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Claude Code personal overrides (team-shared config lives in .claude/settings.json)
+.claude/settings.local.json
