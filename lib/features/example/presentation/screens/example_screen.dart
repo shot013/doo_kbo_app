@@ -8,7 +8,7 @@ class ExampleScreen extends ConsumerWidget {
   const ExampleScreen({super.key});
 
   static const routeName = 'example';
-  static const routePath = '/';
+  static const routePath = '/example';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
