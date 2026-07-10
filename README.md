@@ -41,3 +41,11 @@ lib/
     example/                # 새 기능 작성 시 복사할 템플릿
       domain/  data/  presentation/
 ```
+
+## 왜 이 아키텍처인가
+
+- **Feature-first + 계층 분리(domain/data/presentation)**: 6인 이상 팀에서 여러 명이 동시에 다른 기능을 작업해도 폴더가 겹치지 않아 병합 충돌이 적고, 리뷰어가 `lib/features/{기능}/` 하나만 보면 그 기능의 전체 흐름을 파악할 수 있습니다.
+- **domain 레이어의 순수성(Flutter SDK/`data`/`presentation` 비의존)**: UI나 네트워크 구현을 건드리지 않고도 비즈니스 로직(usecase)만 단위 테스트할 수 있고, 백엔드가 아직 없을 때는 `data`만 더미로 갈아끼우면 되므로(`example`의 `TeamDummyDataSource`처럼) 프론트엔드 개발이 API 완성을 기다릴 필요가 없습니다.
+- **Riverpod**: 상태 관리와 의존성 주입을 하나의 도구로 처리해 provider 그래프만 보면 어떤 계층이 무엇에 의존하는지 추적할 수 있고, `AsyncNotifier` + `AsyncValue.when`으로 로딩/에러/성공 처리를 모든 화면에서 같은 패턴으로 강제합니다.
+- **`Result<T>`(`Ok`/`Err`) 패턴**: 예외를 domain/presentation까지 그대로 전파시키지 않고 `data/repositories`에서 한 번에 `AppFailure`로 변환하도록 강제해, 에러 처리 누락으로 인한 크래시를 구조적으로 줄입니다.
+- **엄격한 lint 규칙(`analysis_options.yaml`)**: 따옴표, trailing comma, import 경로처럼 사람마다 갈리기 쉬운 스타일을 기계적으로 통일해, 코드 리뷰가 스타일 논쟁이 아니라 로직 검토에 집중되도록 합니다.
