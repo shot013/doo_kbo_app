@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../providers/bottom_nav_provider.dart';
 
 enum AppTab { home, stat }
 
-class AppBottomNav extends StatelessWidget {
-  const AppBottomNav({
-    super.key,
-    required this.activeTab,
-    required this.onHomeTap,
-    required this.onStatTap,
-  });
-
-  final AppTab activeTab;
-  final VoidCallback onHomeTap;
-  final VoidCallback onStatTap;
+class AppBottomNav extends ConsumerWidget {
+  const AppBottomNav({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeTab = ref.watch(bottomNavIndexProvider);
+    final notifier = ref.read(bottomNavIndexProvider.notifier);
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
@@ -29,14 +26,14 @@ class AppBottomNav extends StatelessWidget {
             icon: Icons.home,
             label: 'HOME',
             active: activeTab == AppTab.home,
-            onTap: onHomeTap,
+            onTap: () => notifier.select(AppTab.home),
           ),
           const Icon(Icons.donut_large, color: Color(0xFF9E9E9E)),
           _NavItem(
             icon: Icons.bar_chart,
             label: 'STAT',
             active: activeTab == AppTab.stat,
-            onTap: onStatTap,
+            onTap: () => notifier.select(AppTab.stat),
           ),
           const Icon(Icons.person_outline, color: Color(0xFF9E9E9E)),
         ],
