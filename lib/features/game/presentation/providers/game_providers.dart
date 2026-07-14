@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/network/dio_client.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/utils/result.dart';
 import '../../data/datasources/game_remote_data_source.dart';
@@ -10,10 +11,8 @@ import '../../domain/repositories/game_repository.dart';
 import '../../domain/usecases/get_game_stats.dart';
 import '../../domain/usecases/get_games.dart';
 
-// 백엔드가 준비되면 아래를 `GameRemoteDataSourceImpl(ref.watch(dioProvider))`로
-// 교체하세요. (import '../../../../core/network/dio_client.dart' 필요)
 final gameRemoteDataSourceProvider = Provider<GameRemoteDataSource>((ref) {
-  return const GameDummyDataSource();
+  return GameRemoteDataSourceImpl(ref.watch(dioProvider));
 });
 
 final gameRepositoryProvider = Provider<GameRepository>((ref) {
@@ -60,3 +59,28 @@ final gameStatsProvider = FutureProvider.family<List<GameStat>, String>((
     Err<List<GameStat>>(:final failure) => throw failure,
   };
 });
+
+final todayGamesProvider =
+    AsyncNotifierProvider<TodayGamesNotifier, List<Game>>(
+      TodayGamesNotifier.new,
+    );
+
+class TodayGamesNotifier extends AsyncNotifier<List<Game>> {
+  @override
+  Future<List<Game>> build() async {
+    final result = await ref
+        .read(getGamesProvider)
+        .call(GetGamesParams(gameDate: _todayDateString()));
+    return switch (result) {
+      Ok<List<Game>>(:final value) => value,
+      Err<List<Game>>(:final failure) => throw failure,
+    };
+  }
+
+  String _todayDateString() {
+    final now = DateTime.now();
+    final month = now.month.toString().padLeft(2, '0');
+    final day = now.day.toString().padLeft(2, '0');
+    return '${now.year}-$month-$day';
+  }
+}

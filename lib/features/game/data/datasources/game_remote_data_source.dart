@@ -22,11 +22,11 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
   @override
   Future<List<GameModel>> getGames({int? seasonYear, String? gameDate}) async {
     try {
-      final response = await _dio.get<List<dynamic>>(
+      final response = await _dio.get<Map<String, dynamic>>(
         '/games',
         queryParameters: {'seasonYear': ?seasonYear, 'gameDate': ?gameDate},
       );
-      final data = response.data ?? const [];
+      final data = response.data?['data'] as List<dynamic>? ?? const [];
       return data
           .map((json) => GameModel.fromJson(json as Map<String, dynamic>))
           .toList();
@@ -38,11 +38,11 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
   @override
   Future<List<GameStatModel>> getGameStats(String gameId) async {
     try {
-      final response = await _dio.get<List<dynamic>>(
+      final response = await _dio.get<Map<String, dynamic>>(
         '/game-stats',
         queryParameters: {'gameId': gameId},
       );
-      final data = response.data ?? const [];
+      final data = response.data?['data'] as List<dynamic>? ?? const [];
       return data
           .map((json) => GameStatModel.fromJson(json as Map<String, dynamic>))
           .toList();

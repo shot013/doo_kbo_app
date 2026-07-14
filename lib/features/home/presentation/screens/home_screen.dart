@@ -28,7 +28,7 @@ class HomeScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      TodayGameSection(dateLabel: '07.10 (금)'),
+                      TodayGameSection(),
                       SizedBox(height: 32),
                       AllStarSection(),
                     ],

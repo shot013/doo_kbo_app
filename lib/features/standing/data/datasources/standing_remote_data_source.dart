@@ -17,11 +17,11 @@ class StandingRemoteDataSourceImpl implements StandingRemoteDataSource {
   @override
   Future<List<StandingModel>> getStandings({int? seasonYear}) async {
     try {
-      final response = await _dio.get<List<dynamic>>(
+      final response = await _dio.get<Map<String, dynamic>>(
         '/standings',
         queryParameters: {'seasonYear': ?seasonYear},
       );
-      final data = response.data ?? const [];
+      final data = response.data?['data'] as List<dynamic>? ?? const [];
       return data
           .map((json) => StandingModel.fromJson(json as Map<String, dynamic>))
           .toList();

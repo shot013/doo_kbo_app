@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/network/dio_client.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/utils/result.dart';
 import '../../data/datasources/standing_remote_data_source.dart';
@@ -8,12 +9,10 @@ import '../../domain/entities/standing.dart';
 import '../../domain/repositories/standing_repository.dart';
 import '../../domain/usecases/get_standings.dart';
 
-// 백엔드가 준비되면 아래를 `StandingRemoteDataSourceImpl(ref.watch(dioProvider))`로
-// 교체하세요. (import '../../../../core/network/dio_client.dart' 필요)
 final standingRemoteDataSourceProvider = Provider<StandingRemoteDataSource>((
   ref,
 ) {
-  return const StandingDummyDataSource();
+  return StandingRemoteDataSourceImpl(ref.watch(dioProvider));
 });
 
 final standingRepositoryProvider = Provider<StandingRepository>((ref) {

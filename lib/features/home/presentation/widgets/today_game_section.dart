@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TodayGameSection extends StatelessWidget {
-  const TodayGameSection({super.key, required this.dateLabel});
+import '../../../../core/error/failures.dart';
+import '../../../game/domain/entities/game.dart';
+import '../../../game/domain/entities/game_status.dart';
+import '../../../game/presentation/providers/game_providers.dart';
 
-  final String dateLabel;
+class TodayGameSection extends ConsumerWidget {
+  const TodayGameSection({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final gamesAsync = ref.watch(todayGamesProvider);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          dateLabel,
+          _todayLabel(),
           style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
         ),
         const SizedBox(height: 8),
@@ -38,14 +44,38 @@ class TodayGameSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 16),
-        const _EmptyGameCard(),
+        gamesAsync.when(
+          data: (games) =>
+              games.isEmpty ? const _EmptyGameCard() : _GameCard(games.first),
+          loading: () => const _GameCardShell(
+            child: Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+          ),
+          error: (error, stackTrace) => _GameCardShell(
+            child: Text(
+              error is AppFailure ? error.message : '경기 정보를 불러오지 못했습니다.',
+              style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+            ),
+          ),
+        ),
       ],
     );
   }
+
+  String _todayLabel() {
+    const weekdays = ['월', '화', '수', '목', '금', '토', '일'];
+    final now = DateTime.now();
+    final month = now.month.toString().padLeft(2, '0');
+    final day = now.day.toString().padLeft(2, '0');
+    return '$month.$day (${weekdays[now.weekday - 1]})';
+  }
 }
 
-class _EmptyGameCard extends StatelessWidget {
-  const _EmptyGameCard();
+class _GameCardShell extends StatelessWidget {
+  const _GameCardShell({required this.child});
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +86,68 @@ class _EmptyGameCard extends StatelessWidget {
         color: const Color(0xFF1C1C1E),
         borderRadius: BorderRadius.circular(20),
       ),
+      child: child,
+    );
+  }
+}
+
+class _GameCard extends StatelessWidget {
+  const _GameCard(this.game);
+
+  final Game game;
+
+  @override
+  Widget build(BuildContext context) {
+    return _GameCardShell(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '${game.awayTeamName} vs ${game.homeTeamName}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _statusLabel(game),
+            style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
+          ),
+          if (game.homeScore != null && game.awayScore != null) ...[
+            const SizedBox(height: 12),
+            Text(
+              '${game.awayScore} : ${game.homeScore}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 24,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  String _statusLabel(Game game) {
+    return switch (game.status) {
+      GameStatus.scheduled => '경기 예정',
+      GameStatus.inProgress => game.currentInning ?? '진행중',
+      GameStatus.finished => '경기 종료',
+      GameStatus.cancelled => '경기 취소',
+      GameStatus.postponed => '경기 연기',
+    };
+  }
+}
+
+class _EmptyGameCard extends StatelessWidget {
+  const _EmptyGameCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return _GameCardShell(
       child: Column(
         children: [
           Container(
