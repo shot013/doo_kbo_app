@@ -1,0 +1,1 @@
+enum PlayerStatType { batting, pitching }
