@@ -3,6 +3,8 @@ import 'package:doo_kbo_app/core/network/network_info.dart';
 import 'package:doo_kbo_app/features/example/presentation/screens/example_screen.dart';
 import 'package:doo_kbo_app/features/game/data/datasources/game_remote_data_source.dart';
 import 'package:doo_kbo_app/features/game/presentation/providers/game_providers.dart';
+import 'package:doo_kbo_app/features/standing/data/datasources/standing_remote_data_source.dart';
+import 'package:doo_kbo_app/features/standing/presentation/providers/standing_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -26,6 +28,9 @@ void main() {
           gameRemoteDataSourceProvider.overrideWithValue(
             const GameDummyDataSource(),
           ),
+          standingRemoteDataSourceProvider.overrideWithValue(
+            const StandingDummyDataSource(),
+          ),
         ],
         child: const App(),
       ),
@@ -33,7 +38,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('오늘의 경기'), findsOneWidget);
-    expect(find.text('역대 미스터 올스타'), findsOneWidget);
+    expect(find.text('최근 경기 결과'), findsOneWidget);
   });
 
   testWidgets('shows the KBO team list after loading', (tester) async {
@@ -43,6 +48,9 @@ void main() {
           networkInfoProvider.overrideWithValue(const _FakeNetworkInfo()),
           gameRemoteDataSourceProvider.overrideWithValue(
             const GameDummyDataSource(),
+          ),
+          standingRemoteDataSourceProvider.overrideWithValue(
+            const StandingDummyDataSource(),
           ),
         ],
         child: const App(),
