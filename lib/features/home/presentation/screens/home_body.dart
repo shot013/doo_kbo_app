@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../widgets/all_star_section.dart';
 import '../widgets/home_app_bar.dart';
+import '../widgets/recent_game_section.dart';
 import '../widgets/today_game_section.dart';
 
 class HomeBody extends StatelessWidget {
@@ -21,7 +21,9 @@ class HomeBody extends StatelessWidget {
               children: [
                 TodayGameSection(),
                 SizedBox(height: 32),
-                AllStarSection(),
+                RecentGameSection(),
+                SizedBox(height: 32),
+                // AllStarSection(),
               ],
             ),
           ),

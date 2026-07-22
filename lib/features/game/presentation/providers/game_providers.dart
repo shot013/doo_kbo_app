@@ -7,6 +7,7 @@ import '../../data/datasources/game_remote_data_source.dart';
 import '../../data/repositories/game_repository_impl.dart';
 import '../../domain/entities/game.dart';
 import '../../domain/entities/game_stat.dart';
+import '../../domain/entities/game_status.dart';
 import '../../domain/repositories/game_repository.dart';
 import '../../domain/usecases/get_game_stats.dart';
 import '../../domain/usecases/get_games.dart';
@@ -82,5 +83,28 @@ class TodayGamesNotifier extends AsyncNotifier<List<Game>> {
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
     return '${now.year}-$month-$day';
+  }
+}
+
+final recentFinishedGameProvider =
+    AsyncNotifierProvider<RecentFinishedGameNotifier, Game?>(
+      RecentFinishedGameNotifier.new,
+    );
+
+class RecentFinishedGameNotifier extends AsyncNotifier<Game?> {
+  @override
+  Future<Game?> build() async {
+    final result = await ref
+        .read(getGamesProvider)
+        .call(const GetGamesParams());
+    final games = switch (result) {
+      Ok<List<Game>>(:final value) => value,
+      Err<List<Game>>(:final failure) => throw failure,
+    };
+
+    final finished =
+        games.where((game) => game.status == GameStatus.finished).toList()
+          ..sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));
+    return finished.isEmpty ? null : finished.first;
   }
 }

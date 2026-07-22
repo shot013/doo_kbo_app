@@ -20,7 +20,7 @@ class MainScreen extends ConsumerWidget {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),
           child: Column(
             children: [
               Expanded(
@@ -29,12 +29,13 @@ class MainScreen extends ConsumerWidget {
                   children: const [HomeBody(), StatBody()],
                 ),
               ),
-              const SizedBox(height: 12),
-              const AppBottomNav(),
+              const SizedBox(height: 40),
             ],
           ),
         ),
       ),
+      floatingActionButton: const AppBottomNav(),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

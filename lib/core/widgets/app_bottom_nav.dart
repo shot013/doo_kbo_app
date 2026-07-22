@@ -20,7 +20,8 @@ class AppBottomNav extends ConsumerWidget {
         borderRadius: BorderRadius.circular(32),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisSize: MainAxisSize.min,
         children: [
           _NavItem(
             icon: Icons.home,
@@ -28,14 +29,15 @@ class AppBottomNav extends ConsumerWidget {
             active: activeTab == AppTab.home,
             onTap: () => notifier.select(AppTab.home),
           ),
-          const Icon(Icons.donut_large, color: Color(0xFF9E9E9E)),
+          // const Icon(Icons.donut_large, color: Color(0xFF9E9E9E)),
+          const SizedBox(width: 16),
           _NavItem(
             icon: Icons.bar_chart,
             label: 'STAT',
             active: activeTab == AppTab.stat,
             onTap: () => notifier.select(AppTab.stat),
           ),
-          const Icon(Icons.person_outline, color: Color(0xFF9E9E9E)),
+          // const Icon(Icons.person_outline, color: Color(0xFF9E9E9E)),
         ],
       ),
     );

@@ -38,7 +38,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('오늘의 경기'), findsOneWidget);
-    expect(find.text('역대 미스터 올스타'), findsOneWidget);
+    expect(find.text('최근 경기 결과'), findsOneWidget);
   });
 
   testWidgets('shows the KBO team list after loading', (tester) async {
