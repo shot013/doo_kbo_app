@@ -86,14 +86,14 @@ class TodayGamesNotifier extends AsyncNotifier<List<Game>> {
   }
 }
 
-final recentFinishedGameProvider =
-    AsyncNotifierProvider<RecentFinishedGameNotifier, Game?>(
-      RecentFinishedGameNotifier.new,
+final recentFinishedGamesProvider =
+    AsyncNotifierProvider<RecentFinishedGamesNotifier, List<Game>>(
+      RecentFinishedGamesNotifier.new,
     );
 
-class RecentFinishedGameNotifier extends AsyncNotifier<Game?> {
+class RecentFinishedGamesNotifier extends AsyncNotifier<List<Game>> {
   @override
-  Future<Game?> build() async {
+  Future<List<Game>> build() async {
     final result = await ref
         .read(getGamesProvider)
         .call(const GetGamesParams());
@@ -102,9 +102,14 @@ class RecentFinishedGameNotifier extends AsyncNotifier<Game?> {
       Err<List<Game>>(:final failure) => throw failure,
     };
 
-    final finished =
-        games.where((game) => game.status == GameStatus.finished).toList()
-          ..sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));
-    return finished.isEmpty ? null : finished.first;
+    final finished = games
+        .where((game) => game.status == GameStatus.finished)
+        .toList();
+    if (finished.isEmpty) return const [];
+
+    final latestGameDate = finished
+        .map((game) => game.gameDate)
+        .reduce((a, b) => a.compareTo(b) >= 0 ? a : b);
+    return finished.where((game) => game.gameDate == latestGameDate).toList();
   }
 }

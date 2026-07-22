@@ -12,7 +12,7 @@ class RecentGameSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gameAsync = ref.watch(recentFinishedGameProvider);
+    final gamesAsync = ref.watch(recentFinishedGamesProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,15 +26,22 @@ class RecentGameSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        gameAsync.when(
-          data: (game) => game == null
+        gamesAsync.when(
+          data: (games) => games.isEmpty
               ? const _RecentGameCardShell(
                   child: Text(
                     '최근 종료된 경기가 없습니다',
                     style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
                   ),
                 )
-              : _RecentGameCard(game: game),
+              : Column(
+                  children: [
+                    for (final game in games) ...[
+                      _RecentGameCard(game: game),
+                      const SizedBox(height: 16),
+                    ],
+                  ],
+                ),
           loading: () => const _RecentGameCardShell(
             child: Center(
               child: CircularProgressIndicator(color: Colors.white),
