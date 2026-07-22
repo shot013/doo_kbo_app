@@ -21,6 +21,8 @@ class TodayGameSection extends ConsumerWidget {
           style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
         ),
         const SizedBox(height: 8),
+
+        /// 오늘의 경기 + 더 보기
         const Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -46,7 +48,7 @@ class TodayGameSection extends ConsumerWidget {
         const SizedBox(height: 16),
         gamesAsync.when(
           data: (games) =>
-              games.isEmpty ? const _EmptyGameCard() : _GameCard(games.first),
+              games.isEmpty ? const _EmptyGameCard() : _GameCard(games),
           loading: () => const _GameCardShell(
             child: Center(
               child: CircularProgressIndicator(color: Colors.white),
@@ -92,42 +94,56 @@ class _GameCardShell extends StatelessWidget {
 }
 
 class _GameCard extends StatelessWidget {
-  const _GameCard(this.game);
+  const _GameCard(this.games);
 
-  final Game game;
+  final List<Game> games;
 
   @override
   Widget build(BuildContext context) {
-    return _GameCardShell(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '${game.awayTeamName} vs ${game.homeTeamName}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+    return Column(
+      children: games.map((game) {
+        return Container(
+          width: double.maxFinite,
+          margin: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2C2C2E),
+            borderRadius: BorderRadius.circular(20),
           ),
-          const SizedBox(height: 8),
-          Text(
-            _statusLabel(game),
-            style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
-          ),
-          if (game.homeScore != null && game.awayScore != null) ...[
-            const SizedBox(height: 12),
-            Text(
-              '${game.awayScore} : ${game.homeScore}',
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.w700,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                _statusLabel(game),
+                style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
               ),
-            ),
-          ],
-        ],
-      ),
+              const SizedBox(height: 4),
+              Text(
+                '${game.awayTeamName} vs ${game.homeTeamName}',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              /// 게임중이거나 종료된 경우 점수 표시한다.
+              if (game.status == GameStatus.inProgress ||
+                  game.status == GameStatus.finished)
+                Text(
+                  '${game.awayScore} - ${game.homeScore}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+            ],
+          ),
+        );
+      }).toList(),
     );
   }
 
