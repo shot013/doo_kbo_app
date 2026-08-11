@@ -120,23 +120,52 @@ class _GameCard extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  TeamLogo(teamCode: game.awayTeamCode, size: 20),
+                  TeamLogo(teamCode: game.homeTeamCode, size: 40),
                   const SizedBox(width: 6),
-                  Text(
-                    '${game.awayTeamName} vs ${game.homeTeamName}',
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        game.homeTeamName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    child: const Text(
+                      '   VS   ',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    child: Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        game.awayTeamName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 6),
-                  TeamLogo(teamCode: game.homeTeamCode, size: 20),
+                  TeamLogo(teamCode: game.awayTeamCode, size: 40),
                 ],
               ),
-
               const SizedBox(height: 8),
 
               /// 게임중이거나 종료된 경우 점수 표시한다.
