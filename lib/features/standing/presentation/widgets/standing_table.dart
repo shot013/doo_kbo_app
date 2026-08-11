@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/widgets/team_logo.dart';
 import '../../domain/entities/standing.dart';
 
 class StandingTable extends StatelessWidget {
@@ -133,23 +134,7 @@ class _TeamBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Container(
-          width: 24,
-          height: 24,
-          alignment: Alignment.center,
-          decoration: BoxDecoration(
-            color: _teamColor(standing.teamCode),
-            shape: BoxShape.circle,
-          ),
-          child: Text(
-            standing.teamCode.substring(0, 1),
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 11,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
+        TeamLogo(teamCode: standing.teamCode, size: 24),
         const SizedBox(width: 8),
         Flexible(
           child: Text(
@@ -160,9 +145,5 @@ class _TeamBadge extends StatelessWidget {
         ),
       ],
     );
-  }
-
-  Color _teamColor(String teamCode) {
-    return Colors.primaries[teamCode.hashCode % Colors.primaries.length];
   }
 }

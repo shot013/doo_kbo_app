@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/widgets/team_logo.dart';
 import '../../../game/domain/entities/game.dart';
 import '../../../game/domain/entities/game_stat.dart';
 import '../../../game/domain/entities/player_stat_type.dart';
@@ -91,13 +92,23 @@ class _RecentGameCard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            '${game.awayTeamName} vs ${game.homeTeamName}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            children: [
+              TeamLogo(teamCode: game.awayTeamCode, size: 20),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  '${game.awayTeamName} vs ${game.homeTeamName}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 6),
+              TeamLogo(teamCode: game.homeTeamCode, size: 20),
+            ],
           ),
           const SizedBox(height: 8),
           Text(

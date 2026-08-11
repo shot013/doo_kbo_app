@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/widgets/bottom_nav_spacer.dart';
 import '../providers/standing_providers.dart';
 import '../widgets/standing_tab_bar.dart';
 import '../widgets/standing_table.dart';
@@ -48,6 +49,7 @@ class StatBody extends ConsumerWidget {
                     ),
                   ),
                 ),
+                const BottomNavSpacer(),
               ],
             ),
           ),

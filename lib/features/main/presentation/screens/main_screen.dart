@@ -29,7 +29,6 @@ class MainScreen extends ConsumerWidget {
                   children: const [HomeBody(), StatBody()],
                 ),
               ),
-              const SizedBox(height: 40),
             ],
           ),
         ),

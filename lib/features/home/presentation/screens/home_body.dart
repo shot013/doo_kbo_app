@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/widgets/bottom_nav_spacer.dart';
+import '../../../game/presentation/providers/game_providers.dart';
 import '../widgets/home_app_bar.dart';
 import '../widgets/recent_game_section.dart';
 import '../widgets/today_game_section.dart';
@@ -9,23 +12,32 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeAppBar(),
-        SizedBox(height: 24),
+        const HomeAppBar(),
+        const SizedBox(height: 24),
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TodayGameSection(),
-                SizedBox(height: 32),
-                RecentGameSection(),
-                SizedBox(height: 32),
-                // AllStarSection(),
-              ],
-            ),
+          child: Consumer(
+            builder: (context, ref, child) {
+              return RefreshIndicator(
+                onRefresh: () async {
+                  ref.invalidate(todayGamesProvider);
+                  // ref.invalidate(recentGamesProvider);
+                },
+                child: const SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TodayGameSection(),
+                      SizedBox(height: 24),
+                      RecentGameSection(),
+                      BottomNavSpacer(),
+                    ],
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ],
