@@ -23,7 +23,7 @@ class HomeAppBar extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         const Text(
-          'ruta',
+          'Doo KBO',
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,

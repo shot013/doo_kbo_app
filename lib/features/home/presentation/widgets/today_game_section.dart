@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/widgets/team_logo.dart';
 import '../../../game/domain/entities/game.dart';
 import '../../../game/domain/entities/game_status.dart';
 import '../../../game/presentation/providers/game_providers.dart';
@@ -114,17 +115,26 @@ class _GameCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                _statusLabel(game),
+                '${game.stadium ?? ''} (${_statusLabel(game)})',
                 style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
               ),
               const SizedBox(height: 4),
-              Text(
-                '${game.awayTeamName} vs ${game.homeTeamName}',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TeamLogo(teamCode: game.awayTeamCode, size: 20),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${game.awayTeamName} vs ${game.homeTeamName}',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  TeamLogo(teamCode: game.homeTeamCode, size: 20),
+                ],
               ),
 
               const SizedBox(height: 8),
