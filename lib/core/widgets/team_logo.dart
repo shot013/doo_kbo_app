@@ -42,17 +42,20 @@ class TeamLogo extends StatelessWidget {
       return _FallbackBadge(teamCode: teamCode, size: size);
     }
 
-    return SizedBox(
-      width: size,
-      height: size,
-      child: asset.isSvg
-          ? SvgPicture.asset(asset.path, width: size, height: size)
-          : Image.asset(
-              asset.path,
-              width: size,
-              height: size,
-              fit: BoxFit.contain,
-            ),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(size),
+      child: SizedBox(
+        width: size,
+        height: size,
+        child: asset.isSvg
+            ? SvgPicture.asset(asset.path, width: size, height: size)
+            : Image.asset(
+                asset.path,
+                width: size,
+                height: size,
+                fit: BoxFit.contain,
+              ),
+      ),
     );
   }
 }

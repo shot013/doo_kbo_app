@@ -36,12 +36,16 @@ class RecentGameSection extends ConsumerWidget {
                   ),
                 )
               : Column(
-                  children: [
-                    for (final game in games) ...[
-                      _RecentGameCard(game: game),
-                      const SizedBox(height: 16),
-                    ],
-                  ],
+                  children: games
+                      .map(
+                        (game) => Column(
+                          children: [
+                            _RecentGameCard(game: game),
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+                      )
+                      .toList(),
                 ),
           loading: () => const _RecentGameCardShell(
             child: Center(
@@ -93,12 +97,28 @@ class _RecentGameCard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TeamLogo(teamCode: game.awayTeamCode, size: 20),
+              TeamLogo(teamCode: game.homeTeamCode, size: 40),
               const SizedBox(width: 6),
-              Expanded(
+              Flexible(
+                child: Container(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    game.homeTeamName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                alignment: Alignment.center,
                 child: Text(
-                  '${game.awayTeamName} vs ${game.homeTeamName}',
+                  '    ${game.awayScore} : ${game.homeScore}    ',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -106,18 +126,22 @@ class _RecentGameCard extends ConsumerWidget {
                   ),
                 ),
               ),
+              Flexible(
+                child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    game.awayTeamName,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
               const SizedBox(width: 6),
-              TeamLogo(teamCode: game.homeTeamCode, size: 20),
+              TeamLogo(teamCode: game.awayTeamCode, size: 40),
             ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '${game.awayScore} - ${game.homeScore}',
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.w700,
-            ),
           ),
           statsAsync.when(
             data: (stats) {
