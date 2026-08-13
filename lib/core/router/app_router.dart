@@ -5,6 +5,8 @@ import '../../features/example/presentation/screens/example_screen.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
 import '../../features/game/presentation/screens/game_list_screen.dart';
 import '../../features/main/presentation/screens/main_screen.dart';
+import '../../features/player/presentation/screens/player_detail_screen.dart';
+import '../../features/team/presentation/screens/team_detail_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -30,6 +32,18 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: GameDetailScreen.routeName,
         builder: (context, state) =>
             GameDetailScreen(gameId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: TeamDetailScreen.routePath,
+        name: TeamDetailScreen.routeName,
+        builder: (context, state) =>
+            TeamDetailScreen(teamCode: state.pathParameters['code']!),
+      ),
+      GoRoute(
+        path: PlayerDetailScreen.routePath,
+        name: PlayerDetailScreen.routeName,
+        builder: (context, state) =>
+            PlayerDetailScreen(playerId: state.pathParameters['id']!),
       ),
     ],
   );

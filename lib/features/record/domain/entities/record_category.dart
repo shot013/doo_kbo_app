@@ -1,0 +1,1 @@
+enum RecordCategory { batting, pitching }
