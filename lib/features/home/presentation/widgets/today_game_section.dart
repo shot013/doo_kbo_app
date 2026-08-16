@@ -172,7 +172,7 @@ class _GameCard extends StatelessWidget {
               if (game.status == GameStatus.inProgress ||
                   game.status == GameStatus.finished)
                 Text(
-                  '${game.awayScore} - ${game.homeScore}',
+                  '${game.homeScore} - ${game.awayScore}',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,
