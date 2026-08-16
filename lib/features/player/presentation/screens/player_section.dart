@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/constants/kbo_teams.dart';
 import '../../../../core/constants/player_position.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/widgets/bottom_nav_spacer.dart';
@@ -31,6 +32,8 @@ class PlayerSection extends ConsumerWidget {
         const _PlayerSearchField(),
         const SizedBox(height: 12),
         const _PositionFilterChips(),
+        const SizedBox(height: 8),
+        const _TeamFilterChips(),
         const SizedBox(height: 12),
         Expanded(
           child: playersAsync.when(
@@ -132,6 +135,38 @@ class _PositionFilterChips extends ConsumerWidget {
               label: position.displayName,
               active: selected == position,
               onTap: () => notifier.select(position),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _TeamFilterChips extends ConsumerWidget {
+  const _TeamFilterChips();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final selected = ref.watch(playerTeamFilterProvider);
+    final notifier = ref.read(playerTeamFilterProvider.notifier);
+
+    return SizedBox(
+      height: 36,
+      child: ListView(
+        scrollDirection: Axis.horizontal,
+        children: [
+          _FilterChip(
+            label: '전체',
+            active: selected == null,
+            onTap: () => notifier.select(null),
+          ),
+          for (final team in kKboTeams) ...[
+            const SizedBox(width: 8),
+            _FilterChip(
+              label: team.name.split(' ').first,
+              active: selected == team.code,
+              onTap: () => notifier.select(team.code),
             ),
           ],
         ],
