@@ -73,7 +73,19 @@ class PlayerPositionFilterNotifier extends Notifier<PlayerPosition?> {
   void select(PlayerPosition? position) => state = position;
 }
 
-/// [playerListProvider]를 검색어/포지션 필터로 클라이언트 사이드 필터링한 결과.
+final playerTeamFilterProvider =
+    NotifierProvider<PlayerTeamFilterNotifier, String?>(
+      PlayerTeamFilterNotifier.new,
+    );
+
+class PlayerTeamFilterNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void select(String? teamCode) => state = teamCode;
+}
+
+/// [playerListProvider]를 검색어/포지션/팀 필터로 클라이언트 사이드 필터링한 결과.
 /// 더미 datasource가 300ms 지연을 흉내내므로, 검색/필터 입력마다 재요청하지
 /// 않도록 이미 불러온 전체 목록을 여기서만 걸러낸다.
 final filteredPlayersProvider = Provider<AsyncValue<List<PlayerSummary>>>((
@@ -82,6 +94,7 @@ final filteredPlayersProvider = Provider<AsyncValue<List<PlayerSummary>>>((
   final playersAsync = ref.watch(playerListProvider);
   final query = ref.watch(playerSearchQueryProvider).trim();
   final position = ref.watch(playerPositionFilterProvider);
+  final teamCode = ref.watch(playerTeamFilterProvider);
 
   return playersAsync.whenData((players) {
     return players.where((player) {
@@ -90,7 +103,8 @@ final filteredPlayersProvider = Provider<AsyncValue<List<PlayerSummary>>>((
           player.name.contains(query) ||
           player.teamName.contains(query);
       final matchesPosition = position == null || player.position == position;
-      return matchesQuery && matchesPosition;
+      final matchesTeam = teamCode == null || player.teamCode == teamCode;
+      return matchesQuery && matchesPosition && matchesTeam;
     }).toList();
   });
 });
