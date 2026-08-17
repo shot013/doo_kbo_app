@@ -15,7 +15,7 @@ class PlayerSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final playersAsync = ref.watch(filteredPlayersProvider);
+    final playersAsync = ref.watch(playerListProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
