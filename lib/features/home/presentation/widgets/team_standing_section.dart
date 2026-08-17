@@ -12,8 +12,6 @@ import '../../../standing/presentation/providers/standing_providers.dart';
 class TeamStandingSection extends ConsumerWidget {
   const TeamStandingSection({super.key});
 
-  static const int _previewCount = 5;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final standingsAsync = ref.watch(standingListProvider);
@@ -52,8 +50,7 @@ class TeamStandingSection extends ConsumerWidget {
         const SizedBox(height: 16),
         standingsAsync.when(
           data: (standings) {
-            final preview = standings.take(_previewCount).toList();
-            if (preview.isEmpty) {
+            if (standings.isEmpty) {
               return const _StandingCardShell(
                 child: Text(
                   '순위 정보가 없습니다',
@@ -64,9 +61,9 @@ class TeamStandingSection extends ConsumerWidget {
             return _StandingCardShell(
               child: Column(
                 children: [
-                  for (var i = 0; i < preview.length; i++) ...[
-                    _StandingRow(standing: preview[i]),
-                    if (i != preview.length - 1)
+                  for (var i = 0; i < standings.length; i++) ...[
+                    _StandingRow(standing: standings[i]),
+                    if (i != standings.length - 1)
                       const Divider(color: Color(0xFF2C2C2E), height: 24),
                   ],
                 ],
