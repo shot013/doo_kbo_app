@@ -36,12 +36,24 @@ final playerListProvider =
       PlayerListNotifier.new,
     );
 
+/// 검색어/포지션/팀 필터 중 하나라도 바뀌면 [build]가 다시 실행되어
+/// 그때마다 서버에 새로 요청한다(클라이언트 사이드 필터링을 하지 않음).
 class PlayerListNotifier extends AsyncNotifier<List<PlayerSummary>> {
   @override
   Future<List<PlayerSummary>> build() async {
+    final search = ref.watch(playerSearchQueryProvider).trim();
+    final position = ref.watch(playerPositionFilterProvider);
+    final teamCode = ref.watch(playerTeamFilterProvider);
+
     final result = await ref
         .read(getPlayersProvider)
-        .call(const GetPlayersParams());
+        .call(
+          GetPlayersParams(
+            search: search.isEmpty ? null : search,
+            teamCode: teamCode,
+            position: position,
+          ),
+        );
     return switch (result) {
       Ok<List<PlayerSummary>>(:final value) => value,
       Err<List<PlayerSummary>>(:final failure) => throw failure,
@@ -84,30 +96,6 @@ class PlayerTeamFilterNotifier extends Notifier<String?> {
 
   void select(String? teamCode) => state = teamCode;
 }
-
-/// [playerListProvider]를 검색어/포지션/팀 필터로 클라이언트 사이드 필터링한 결과.
-/// 더미 datasource가 300ms 지연을 흉내내므로, 검색/필터 입력마다 재요청하지
-/// 않도록 이미 불러온 전체 목록을 여기서만 걸러낸다.
-final filteredPlayersProvider = Provider<AsyncValue<List<PlayerSummary>>>((
-  ref,
-) {
-  final playersAsync = ref.watch(playerListProvider);
-  final query = ref.watch(playerSearchQueryProvider).trim();
-  final position = ref.watch(playerPositionFilterProvider);
-  final teamCode = ref.watch(playerTeamFilterProvider);
-
-  return playersAsync.whenData((players) {
-    return players.where((player) {
-      final matchesQuery =
-          query.isEmpty ||
-          player.name.contains(query) ||
-          player.teamName.contains(query);
-      final matchesPosition = position == null || player.position == position;
-      final matchesTeam = teamCode == null || player.teamCode == teamCode;
-      return matchesQuery && matchesPosition && matchesTeam;
-    }).toList();
-  });
-});
 
 final playerDetailProvider = FutureProvider.family<PlayerDetail, String>((
   ref,
