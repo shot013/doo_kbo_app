@@ -19,7 +19,7 @@ final class PitcherRecordModel extends PitcherRecord {
       playerName: json['playerName'] as String,
       teamCode: json['teamCode'] as String,
       teamName: json['teamName'] as String,
-      era: json['era'] as String,
+      era: json['era'] as String? ?? '0.00',
       games: json['games'] as int,
       wins: json['wins'] as int,
       losses: json['losses'] as int,
