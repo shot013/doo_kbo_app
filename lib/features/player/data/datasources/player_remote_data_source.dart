@@ -37,8 +37,9 @@ class PlayerRemoteDataSourceImpl implements PlayerRemoteDataSource {
           'search': ?search,
           'teamCode': ?teamCode,
           'position': ?position?.name,
-          // 선수 탭은 서버 페이지네이션 없이 전체 목록을 한 번에 불러와
-          // 클라이언트에서 검색/필터링한다(presentation/providers/player_providers.dart).
+          // 검색/필터는 서버에 그대로 전달해 매번 새로 요청하고
+          // (presentation/providers/player_providers.dart), limit은 결과가
+          // 페이지네이션 없이 한 번에 다 돌아오도록 넉넉히 잡아둔 값이다.
           'limit': '500',
         },
       );
@@ -67,9 +68,8 @@ class PlayerRemoteDataSourceImpl implements PlayerRemoteDataSource {
 
 /// 백엔드가 아직 없는 스캐폴딩 단계에서 화면을 바로 확인할 수 있도록 만든
 /// 더미 구현체입니다. API가 준비되면 [PlayerRemoteDataSourceImpl]로 교체하세요.
-/// 필터 인자는 실제 API 계약만 맞춰두고, 실제 필터링은 presentation에서
-/// 클라이언트 사이드로 처리합니다([StandingDummyDataSource]가 `seasonYear`를
-/// 무시하는 것과 동일한 스캐폴딩 관례).
+/// 실제 서버가 검색/필터를 처리하는 것과 동일하게, 여기서도 인자를 받아
+/// 더미 데이터 안에서 걸러서 반환합니다.
 class PlayerDummyDataSource implements PlayerRemoteDataSource {
   const PlayerDummyDataSource();
 
@@ -80,17 +80,23 @@ class PlayerDummyDataSource implements PlayerRemoteDataSource {
     PlayerPosition? position,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
+    final query = search?.trim() ?? '';
     return [
       for (final seed in kDummyPlayerRoster)
-        PlayerSummaryModel(
-          id: seed.id,
-          name: seed.name,
-          teamCode: seed.teamCode,
-          teamName: seed.teamName,
-          position: seed.position,
-          backNumber: seed.backNumber,
-          primaryStat: seed.primaryStat,
-        ),
+        if ((query.isEmpty ||
+                seed.name.contains(query) ||
+                seed.teamName.contains(query)) &&
+            (teamCode == null || seed.teamCode == teamCode) &&
+            (position == null || seed.position == position))
+          PlayerSummaryModel(
+            id: seed.id,
+            name: seed.name,
+            teamCode: seed.teamCode,
+            teamName: seed.teamName,
+            position: seed.position,
+            backNumber: seed.backNumber,
+            primaryStat: seed.primaryStat,
+          ),
     ];
   }
 
