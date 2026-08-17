@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class HomeAppBar extends StatelessWidget {
-  const HomeAppBar({super.key});
+class StatAppBar extends StatelessWidget {
+  const StatAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,18 +12,18 @@ class HomeAppBar extends StatelessWidget {
           height: 36,
           alignment: Alignment.center,
           decoration: const BoxDecoration(
-            color: Color(0xFFFFC72C),
+            color: Color(0xFF1E3A8A),
             shape: BoxShape.circle,
           ),
           child: const Icon(
             Icons.sports_baseball,
-            color: Colors.black,
+            color: Colors.white,
             size: 20,
           ),
         ),
         const SizedBox(width: 8),
         const Text(
-          'Doo KBO',
+          'STAT',
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,

@@ -4,17 +4,18 @@ import 'package:go_router/go_router.dart';
 import '../../features/example/presentation/screens/example_screen.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
 import '../../features/game/presentation/screens/game_list_screen.dart';
-import '../../features/home/presentation/screens/home_screen.dart';
-import '../../features/standing/presentation/screens/standing_screen.dart';
+import '../../features/main/presentation/screens/main_screen.dart';
+import '../../features/player/presentation/screens/player_detail_screen.dart';
+import '../../features/team/presentation/screens/team_detail_screen.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: HomeScreen.routePath,
+    initialLocation: MainScreen.routePath,
     routes: [
       GoRoute(
-        path: HomeScreen.routePath,
-        name: HomeScreen.routeName,
-        builder: (context, state) => const HomeScreen(),
+        path: MainScreen.routePath,
+        name: MainScreen.routeName,
+        builder: (context, state) => const MainScreen(),
       ),
       GoRoute(
         path: ExampleScreen.routePath,
@@ -33,9 +34,16 @@ final routerProvider = Provider<GoRouter>((ref) {
             GameDetailScreen(gameId: state.pathParameters['id']!),
       ),
       GoRoute(
-        path: StandingScreen.routePath,
-        name: StandingScreen.routeName,
-        builder: (context, state) => const StandingScreen(),
+        path: TeamDetailScreen.routePath,
+        name: TeamDetailScreen.routeName,
+        builder: (context, state) =>
+            TeamDetailScreen(teamCode: state.pathParameters['code']!),
+      ),
+      GoRoute(
+        path: PlayerDetailScreen.routePath,
+        name: PlayerDetailScreen.routeName,
+        builder: (context, state) =>
+            PlayerDetailScreen(playerId: state.pathParameters['id']!),
       ),
     ],
   );
