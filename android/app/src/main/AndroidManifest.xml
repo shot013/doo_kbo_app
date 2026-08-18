@@ -1,4 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- EC2 백엔드 API(http://15.164.113.221:3651) 호출에 필요. 디버그 빌드는
+         Flutter 툴이 자동으로 붙여주지만 release 빌드는 명시하지 않으면 빠진다. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="JIKGWAN"
         android:name="${applicationName}"

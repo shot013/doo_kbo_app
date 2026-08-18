@@ -26,6 +26,22 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- EC2 백엔드 API가 아직 HTTPS가 아닌 http://15.164.113.221:3651 이라
+	     App Transport Security 기본 정책이 이 연결을 막는다. 그 IP에만
+	     예외를 허용한다(전체 허용 NSAllowsArbitraryLoads는 쓰지 않음). -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>15.164.113.221</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<false/>
+			</dict>
+		</dict>
+	</dict>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
