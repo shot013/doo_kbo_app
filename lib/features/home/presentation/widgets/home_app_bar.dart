@@ -23,7 +23,7 @@ class HomeAppBar extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         const Text(
-          'Doo KBO',
+          'JIKGWAN',
           style: TextStyle(
             color: Colors.white,
             fontSize: 22,

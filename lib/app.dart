@@ -12,7 +12,7 @@ class App extends ConsumerWidget {
     final router = ref.watch(routerProvider);
 
     return MaterialApp.router(
-      title: 'Doo KBO App',
+      title: 'JIKGWAN',
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       routerConfig: router,

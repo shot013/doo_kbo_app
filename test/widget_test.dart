@@ -1,14 +1,14 @@
-import 'package:doo_kbo_app/app.dart';
-import 'package:doo_kbo_app/core/network/network_info.dart';
-import 'package:doo_kbo_app/features/example/presentation/screens/example_screen.dart';
-import 'package:doo_kbo_app/features/game/data/datasources/game_remote_data_source.dart';
-import 'package:doo_kbo_app/features/game/presentation/providers/game_providers.dart';
-import 'package:doo_kbo_app/features/standing/data/datasources/standing_remote_data_source.dart';
-import 'package:doo_kbo_app/features/standing/presentation/providers/standing_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:jikgwan/app.dart';
+import 'package:jikgwan/core/network/network_info.dart';
+import 'package:jikgwan/features/example/presentation/screens/example_screen.dart';
+import 'package:jikgwan/features/game/data/datasources/game_remote_data_source.dart';
+import 'package:jikgwan/features/game/presentation/providers/game_providers.dart';
+import 'package:jikgwan/features/standing/data/datasources/standing_remote_data_source.dart';
+import 'package:jikgwan/features/standing/presentation/providers/standing_providers.dart';
 
 class _FakeNetworkInfo implements NetworkInfo {
   const _FakeNetworkInfo();
