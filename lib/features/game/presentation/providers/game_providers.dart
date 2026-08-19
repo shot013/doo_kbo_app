@@ -91,25 +91,49 @@ final recentFinishedGamesProvider =
       RecentFinishedGamesNotifier.new,
     );
 
+/// 오늘 이전 날짜 중, 종료된 경기가 있는 가장 최근 경기일을 찾아
+/// 그날의 경기 결과를 반환한다. (휴식일 등으로 경기가 없는 날을 대비해
+/// 최근 [_lookbackDays]일을 한 번에 병렬 조회한 뒤 가장 최근 날짜를 고른다.)
 class RecentFinishedGamesNotifier extends AsyncNotifier<List<Game>> {
+  static const _lookbackDays = 7;
+
   @override
   Future<List<Game>> build() async {
-    final result = await ref
-        .read(getGamesProvider)
-        .call(const GetGamesParams());
-    final games = switch (result) {
-      Ok<List<Game>>(:final value) => value,
-      Err<List<Game>>(:final failure) => throw failure,
-    };
+    final getGames = ref.read(getGamesProvider);
+    final today = DateTime.now();
+    final results = await Future.wait([
+      for (var i = 1; i <= _lookbackDays; i++)
+        getGames.call(
+          GetGamesParams(
+            gameDate: _dateString(today.subtract(Duration(days: i))),
+          ),
+        ),
+    ]);
 
-    final finished = games
-        .where((game) => game.status == GameStatus.finished)
-        .toList();
-    if (finished.isEmpty) return const [];
+    final finishedByDate = <String, List<Game>>{};
+    for (final result in results) {
+      final games = switch (result) {
+        Ok<List<Game>>(:final value) => value,
+        Err<List<Game>>(:final failure) => throw failure,
+      };
+      final finished = games
+          .where((game) => game.status == GameStatus.finished)
+          .toList();
+      if (finished.isNotEmpty) {
+        finishedByDate[finished.first.gameDate] = finished;
+      }
+    }
+    if (finishedByDate.isEmpty) return const [];
 
-    final latestGameDate = finished
-        .map((game) => game.gameDate)
-        .reduce((a, b) => a.compareTo(b) >= 0 ? a : b);
-    return finished.where((game) => game.gameDate == latestGameDate).toList();
+    final latestGameDate = finishedByDate.keys.reduce(
+      (a, b) => a.compareTo(b) >= 0 ? a : b,
+    );
+    return finishedByDate[latestGameDate]!;
+  }
+
+  String _dateString(DateTime date) {
+    final month = date.month.toString().padLeft(2, '0');
+    final day = date.day.toString().padLeft(2, '0');
+    return '${date.year}-$month-$day';
   }
 }

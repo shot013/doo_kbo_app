@@ -23,7 +23,7 @@ class HomeBody extends StatelessWidget {
               return RefreshIndicator(
                 onRefresh: () async {
                   ref.invalidate(todayGamesProvider);
-                  // ref.invalidate(recentGamesProvider);
+                  ref.invalidate(recentFinishedGamesProvider);
                 },
                 child: const SingleChildScrollView(
                   child: Column(

@@ -18,9 +18,9 @@ class RecentGameSection extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '최근 경기 결과',
-          style: TextStyle(
+        Text(
+          '최근 경기 결과${(gamesAsync.value?.length ?? 0) > 0 ? ' ${gamesAsync.value?.first.gameDate ?? ''}' : ''}',
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w700,
@@ -118,7 +118,7 @@ class _RecentGameCard extends ConsumerWidget {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  '    ${game.awayScore} : ${game.homeScore}    ',
+                  '    ${game.homeScore} : ${game.awayScore}    ',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
