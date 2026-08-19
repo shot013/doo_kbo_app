@@ -103,6 +103,8 @@ class _GameCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: games.map((game) {
+        final String gameTime = _gameTimeLabel(game);
+
         return Container(
           width: double.maxFinite,
           margin: const EdgeInsets.only(bottom: 16),
@@ -115,7 +117,7 @@ class _GameCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                '${game.stadium ?? ''} (${_statusLabel(game)})',
+                '${gameTime.isNotEmpty ? '$gameTime ' : ''}${game.stadium ?? ''} (${_statusLabel(game)})',
                 style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
               ),
               const SizedBox(height: 4),
@@ -194,6 +196,17 @@ class _GameCard extends StatelessWidget {
       GameStatus.cancelled => '경기 취소',
       GameStatus.postponed => '경기 연기',
     };
+  }
+
+  String _gameTimeLabel(Game game) {
+    if (game.status != GameStatus.scheduled) {
+      return '';
+    }
+
+    final kst = game.scheduledAt.toUtc().add(const Duration(hours: 9));
+    final hour = kst.hour.toString().padLeft(2, '0');
+    final minute = kst.minute.toString().padLeft(2, '0');
+    return '$hour:$minute';
   }
 }
 
