@@ -35,15 +35,6 @@ class TodayGameSection extends ConsumerWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  '더보기',
-                  style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
-                ),
-                Icon(Icons.chevron_right, color: Color(0xFF9E9E9E), size: 18),
-              ],
-            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -127,17 +118,29 @@ class _GameCard extends StatelessWidget {
                 children: [
                   TeamLogo(teamCode: game.homeTeamCode, size: 40),
                   const SizedBox(width: 6),
-                  Flexible(
-                    child: Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        game.homeTeamName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          game.homeTeamName,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
+                        if (game.homeStarterPitcher != null &&
+                            game.homeStarterPitcher != '')
+                          Text(
+                            game.homeStarterPitcher!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 212, 212, 212),
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   Container(
@@ -151,17 +154,29 @@ class _GameCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Flexible(
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        game.awayTeamName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        Text(
+                          game.awayTeamName,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
+                        if (game.awayStarterPitcher != null &&
+                            game.awayStarterPitcher != '')
+                          Text(
+                            game.awayStarterPitcher!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color.fromARGB(255, 212, 212, 212),
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   const SizedBox(width: 6),

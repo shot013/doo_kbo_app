@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/widgets/team_logo.dart';
-import '../../../game/domain/entities/game.dart';
-import '../../../game/domain/entities/game_stat.dart';
-import '../../../game/domain/entities/player_stat_type.dart';
+import '../../../game/domain/entities/best_performer.dart';
+import '../../../game/domain/entities/game_result.dart';
+import '../../../game/domain/entities/pitcher_decision.dart';
+import '../../../game/domain/entities/pitcher_decision_type.dart';
 import '../../../game/presentation/providers/game_providers.dart';
 
 class RecentGameSection extends ConsumerWidget {
@@ -13,21 +14,22 @@ class RecentGameSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gamesAsync = ref.watch(recentFinishedGamesProvider);
+    final resultsAsync = ref.watch(recentGameResultsProvider);
+    final games = resultsAsync.value ?? const [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '최근 경기 결과',
-          style: TextStyle(
+        Text(
+          '최근 경기 결과${games.isEmpty ? '' : ' ${games.first.gameDate}'}',
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
         ),
         const SizedBox(height: 16),
-        gamesAsync.when(
+        resultsAsync.when(
           data: (games) => games.isEmpty
               ? const _RecentGameCardShell(
                   child: Text(
@@ -83,15 +85,13 @@ class _RecentGameCardShell extends StatelessWidget {
   }
 }
 
-class _RecentGameCard extends ConsumerWidget {
+class _RecentGameCard extends StatelessWidget {
   const _RecentGameCard({required this.game});
 
-  final Game game;
+  final GameResult game;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final statsAsync = ref.watch(gameStatsProvider(game.id));
-
+  Widget build(BuildContext context) {
     return _RecentGameCardShell(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -103,22 +103,36 @@ class _RecentGameCard extends ConsumerWidget {
               TeamLogo(teamCode: game.homeTeamCode, size: 40),
               const SizedBox(width: 6),
               Flexible(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    game.homeTeamName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        game.homeTeamName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
+                    if (game
+                        .getPitchersByTeam(game.homeTeamCode)
+                        .isNotEmpty) ...[
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: _PitcherDecisionsRow(
+                          pitchers: game.getPitchersByTeam(game.homeTeamCode),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  '    ${game.awayScore} : ${game.homeScore}    ',
+                  '  ${game.homeScore} : ${game.awayScore}  ',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -127,74 +141,109 @@ class _RecentGameCard extends ConsumerWidget {
                 ),
               ),
               Flexible(
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    game.awayTeamName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        game.awayTeamName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
+                    if (game
+                        .getPitchersByTeam(game.awayTeamCode)
+                        .isNotEmpty) ...[
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: _PitcherDecisionsRow(
+                          pitchers: game.getPitchersByTeam(game.awayTeamCode),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               const SizedBox(width: 6),
               TeamLogo(teamCode: game.awayTeamCode, size: 40),
             ],
           ),
-          statsAsync.when(
-            data: (stats) {
-              final best = _findBestBatter(stats);
-              if (best == null) return const SizedBox.shrink();
-              return Column(
-                children: [
-                  const SizedBox(height: 16),
-                  const Divider(color: Color(0xFF2C2C2E), height: 1),
-                  const SizedBox(height: 16),
-                  _BestBatterRow(stat: best),
-                ],
-              );
-            },
-            loading: () => const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            ),
-            error: (error, stackTrace) => const SizedBox.shrink(),
-          ),
+          if (game.bestPerformer != null) ...[
+            const SizedBox(height: 20),
+            _BestPerformerRow(bestPerformer: game.bestPerformer!),
+          ],
         ],
       ),
     );
   }
+}
 
-  GameStat? _findBestBatter(List<GameStat> stats) {
-    final batters = stats
-        .where((stat) => stat.statType == PlayerStatType.batting)
-        .toList();
-    if (batters.isEmpty) return null;
+class _PitcherDecisionsRow extends StatelessWidget {
+  const _PitcherDecisionsRow({required this.pitchers});
 
-    batters.sort((a, b) {
-      final scoreA = (a.hits ?? 0) + (a.homeRuns ?? 0) * 2 + (a.rbi ?? 0);
-      final scoreB = (b.hits ?? 0) + (b.homeRuns ?? 0) * 2 + (b.rbi ?? 0);
-      return scoreB.compareTo(scoreA);
-    });
-    return batters.first;
+  final List<PitcherDecision> pitchers;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 4,
+      runSpacing: 2,
+      children: pitchers
+          .map(
+            (pitcher) => Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _decisionLabel(pitcher.decision),
+                  style: TextStyle(
+                    color: _decisionColor(pitcher.decision),
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 2),
+                Text(
+                  pitcher.playerName,
+                  style: const TextStyle(color: Colors.white, fontSize: 11),
+                ),
+              ],
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  String _decisionLabel(PitcherDecisionType decision) {
+    return switch (decision) {
+      PitcherDecisionType.win => '승',
+      PitcherDecisionType.loss => '패',
+      PitcherDecisionType.save => '세',
+      PitcherDecisionType.hold => '홀',
+    };
+  }
+
+  Color _decisionColor(PitcherDecisionType decision) {
+    return switch (decision) {
+      PitcherDecisionType.win => const Color.fromARGB(255, 126, 152, 223),
+      PitcherDecisionType.loss => const Color.fromARGB(255, 161, 88, 88),
+      PitcherDecisionType.save => const Color.fromARGB(255, 101, 139, 111),
+      PitcherDecisionType.hold => const Color.fromARGB(255, 115, 208, 224),
+    };
   }
 }
 
-class _BestBatterRow extends StatelessWidget {
-  const _BestBatterRow({required this.stat});
+class _BestPerformerRow extends StatelessWidget {
+  const _BestPerformerRow({required this.bestPerformer});
 
-  final GameStat stat;
+  final BestPerformer bestPerformer;
 
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -208,16 +257,19 @@ class _BestBatterRow extends StatelessWidget {
               color: Colors.white,
               fontSize: 12,
               fontWeight: FontWeight.w600,
+              height: 1.0,
             ),
           ),
         ),
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            '${stat.playerName} · ${stat.atBats ?? 0}타수 ${stat.hits ?? 0}안타'
-            '${(stat.homeRuns ?? 0) > 0 ? '(${stat.homeRuns}홈런)' : ''} '
-            '${stat.rbi ?? 0}타점',
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            '${bestPerformer.playerName} · ${bestPerformer.line}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              height: 1.0,
+            ),
           ),
         ),
       ],

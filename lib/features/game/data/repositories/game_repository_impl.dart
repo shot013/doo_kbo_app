@@ -3,6 +3,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/network/network_info.dart';
 import '../../../../core/utils/result.dart';
 import '../../domain/entities/game.dart';
+import '../../domain/entities/game_result.dart';
 import '../../domain/entities/game_stat.dart';
 import '../../domain/repositories/game_repository.dart';
 import '../datasources/game_remote_data_source.dart';
@@ -44,6 +45,22 @@ class GameRepositoryImpl implements GameRepository {
     try {
       final stats = await _remoteDataSource.getGameStats(gameId);
       return Ok(stats);
+    } on ServerException catch (e) {
+      return Err(ServerFailure(e.message));
+    } catch (_) {
+      return const Err(UnknownFailure());
+    }
+  }
+
+  @override
+  Future<Result<List<GameResult>>> getRecentGameResults({String? date}) async {
+    if (!await _networkInfo.isConnected) {
+      return const Err(NetworkFailure());
+    }
+
+    try {
+      final results = await _remoteDataSource.getRecentGameResults(date: date);
+      return Ok(results);
     } on ServerException catch (e) {
       return Err(ServerFailure(e.message));
     } catch (_) {

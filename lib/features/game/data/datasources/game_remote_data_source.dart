@@ -2,14 +2,20 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/game_status.dart';
+import '../../domain/entities/pitcher_decision_type.dart';
 import '../../domain/entities/player_stat_type.dart';
+import '../models/best_performer_model.dart';
 import '../models/game_model.dart';
+import '../models/game_result_model.dart';
 import '../models/game_stat_model.dart';
+import '../models/pitcher_decision_model.dart';
 
 abstract interface class GameRemoteDataSource {
   Future<List<GameModel>> getGames({int? seasonYear, String? gameDate});
 
   Future<List<GameStatModel>> getGameStats(String gameId);
+
+  Future<List<GameResultModel>> getRecentGameResults({String? date});
 }
 
 /// 실제 백엔드가 준비되면 사용할 구현체입니다.
@@ -50,6 +56,22 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
       throw const ServerException();
     }
   }
+
+  @override
+  Future<List<GameResultModel>> getRecentGameResults({String? date}) async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/game-results/recent',
+        queryParameters: {'date': ?date},
+      );
+      final games = response.data?['games'] as List<dynamic>? ?? const [];
+      return games
+          .map((json) => GameResultModel.fromJson(json as Map<String, dynamic>))
+          .toList();
+    } on DioException {
+      throw const ServerException();
+    }
+  }
 }
 
 /// 백엔드가 아직 없는 스캐폴딩 단계에서 화면을 바로 확인할 수 있도록 만든
@@ -68,6 +90,12 @@ class GameDummyDataSource implements GameRemoteDataSource {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     return _dummyGameStats;
   }
+
+  @override
+  Future<List<GameResultModel>> getRecentGameResults({String? date}) async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    return _dummyGameResults;
+  }
 }
 
 final _dummyGames = [
@@ -83,6 +111,8 @@ final _dummyGames = [
     awayTeamName: '두산 베어스',
     homeScore: 3,
     awayScore: 2,
+    homeStarterPitcher: '이민호',
+    awayStarterPitcher: '곽빈',
     currentInning: '7회말',
     status: GameStatus.inProgress,
   ),
@@ -98,6 +128,8 @@ final _dummyGames = [
     awayTeamName: 'KIA 타이거즈',
     homeScore: null,
     awayScore: null,
+    homeStarterPitcher: '원태인',
+    awayStarterPitcher: '양현종',
     currentInning: null,
     status: GameStatus.scheduled,
   ),
@@ -163,5 +195,39 @@ const _dummyGameStats = [
     save: false,
     hold: false,
     era: '2.15',
+  ),
+];
+
+const _dummyGameResults = [
+  GameResultModel(
+    gameId: '20260713OBLG0',
+    gameDate: '2026-07-13',
+    stadium: '잠실야구장',
+    homeTeamCode: 'LG',
+    homeTeamName: 'LG 트윈스',
+    awayTeamCode: 'OB',
+    awayTeamName: '두산 베어스',
+    homeScore: 3,
+    awayScore: 2,
+    bestPerformer: BestPerformerModel(
+      playerName: '김민석',
+      teamCode: 'OB',
+      atBats: 4,
+      hits: 2,
+      rbi: 1,
+      runs: 1,
+      line: '4타수 2안타 1타점',
+    ),
+    pitchers: [
+      PitcherDecisionModel(
+        decision: PitcherDecisionType.win,
+        playerName: '이민호',
+        teamCode: 'LG',
+        inningsPitched: '6.0',
+        earnedRuns: 2,
+        strikeoutsPitched: 6,
+        era: '2.15',
+      ),
+    ],
   ),
 ];
