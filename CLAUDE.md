@@ -61,3 +61,14 @@ lib/
 - 브랜치: `main` (보호됨, PR 전용), `develop` (통합), `feature/{issue}-{desc}`, `fix/{issue}-{desc}`, `chore/{desc}`, `release/{version}`.
 - 커밋: Conventional Commits — `<type>(<scope>): <subject>`, 명령형, 소문자 시작, 마침표 없음. 타입: `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`, `perf`.
 - PR 하나 = 리뷰 가능한 단위 하나; 최소 1명 승인 필요; squash merge; PR 열기 전 로컬에서 `flutter analyze`와 `flutter test`가 통과해야 함.
+
+## Claude Code 작업 규칙
+
+- PR은 항상 `main`이 아니라 `develop`을 대상(base)으로 한다. `gh` CLI를 쓸 수 없는 환경이므로, PR을 만들어달라는 요청에는 실제로 클릭 가능한 비교 링크를 매번 제공한다: `https://github.com/shot013/doo_kbo_app/compare/develop...{branch}?expand=1`.
+- PR 링크와 함께 제목과 본문도 항상 채워서 제시한다. 제목은 커밋 메시지와 동일한 Conventional Commits 형식(`<type>(<scope>): <subject>`), 본문은 무엇을 왜 바꿨는지 핵심만 간단히 요약한다.
+- 새로운 독립적인 변경마다 `develop`에서 새 브랜치를 만든다. 이미 다른 브랜치에 PR이 열려 있고 아직 머지되지 않았다면 그 브랜치를 이어서 쓰고, 성격이 다른 변경이면 별도 브랜치로 분리한다.
+- 커밋하기 전에 `dart format --output=none --set-exit-if-changed .`, `flutter analyze`, `flutter test`를 모두 통과시킨다.
+- 작업 디렉터리에 이미 사용자가(IDE 등에서) 만들어둔, 지금 요청과 무관한 미커밋 변경이 있으면 건드리지 않는다. `git stash push -- <해당 파일들>`로 분리해서 별도 브랜치로 옮긴 뒤, 작업이 끝나면 원래 있던 파일/브랜치로 되돌려 놓는다(stash pop).
+- UI/프론트엔드 변경은 가능하면 에뮬레이터(`flutter run -d emulator-5554`)에서 실제로 띄워 스크린샷으로 확인한 뒤 커밋한다.
+- 커밋/푸시/PR 생성은 사용자가 명시적으로 요청했을 때만 수행한다.
+- `MEMORY.md`(코드/git 히스토리만으로 알 수 없는 결정·진행 상황·배경)와 `ERRORS.md`(재발 가능하거나 원인 파악에 시간이 걸렸던 에러)는 이 저장소가 채택한 `doo_kbo_harness_kit` 문서 관례다. 작업 시작 전 관련 있으면 참고하고, 주요 결정을 내리거나 까다로운 에러를 해결했다면 각 파일의 작성 규칙에 맞춰 갱신한다.

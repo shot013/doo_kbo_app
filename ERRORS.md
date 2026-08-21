@@ -24,4 +24,12 @@
 
 ---
 
-_(아직 기록된 에러 없음)_
+### [2026-08-19] 릴리즈 AAB가 debug 서명으로 빌드됨
+
+**증상**: `flutter build appbundle --release`가 성공했지만, 생성된 AAB의 서명 인증서가 업로드 키스토어가 아닌 debug 키였다.
+
+**원인**: 이전 작업(untracked 빌드 산출물 정리) 중 `rm -rf android ...`로 gitignore된 `android/key.properties`가 함께 삭제됨. `key.properties`가 없으면 Gradle이 조용히 debug 서명으로 폴백해 빌드 자체는 에러 없이 성공한다.
+
+**해결**: 기록해둔 keystore 비밀번호로 `key.properties`를 재생성하고, `keytool -list` / AAB 안의 `META-INF/*.RSA`를 `openssl pkcs7`/`x509`로 추출해 SHA-256 지문이 업로드 키스토어와 일치하는지 직접 검증한 뒤 재빌드.
+
+**재발 방지**: `key.properties`는 git에 없으므로 `rm -rf`류 정리 명령을 실행하기 전 gitignore된 파일이 대상에 포함되는지 확인한다. 릴리즈 AAB를 빌드할 때마다 서명 인증서 지문을 검증하는 습관을 들인다.
