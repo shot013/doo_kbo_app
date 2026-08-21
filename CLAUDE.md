@@ -65,7 +65,7 @@ lib/
 ## Claude Code 작업 규칙
 
 - PR은 항상 `main`이 아니라 `develop`을 대상(base)으로 한다. `gh` CLI를 쓸 수 없는 환경이므로, PR을 만들어달라는 요청에는 실제로 클릭 가능한 비교 링크를 매번 제공한다: `https://github.com/shot013/doo_kbo_app/compare/develop...{branch}?expand=1`.
-- PR 링크와 함께 제목과 본문도 항상 채워서 제시한다. 제목은 커밋 메시지와 동일한 Conventional Commits 형식(`<type>(<scope>): <subject>`), 본문은 무엇을 왜 바꿨는지 핵심만 간단히 요약한다.
+- 위 링크에 `&title=`, `&body=`를 URL-인코딩해 추가하면 GitHub의 "Open a pull request" 폼에 제목/본문이 미리 채워진다. 제목은 커밋 메시지와 동일한 Conventional Commits 형식(`<type>(<scope>): <subject>`), 본문은 무엇을 왜 바꿨는지 핵심만 간단히 요약해 항상 채운 링크를 제공한다.
 - 새로운 독립적인 변경마다 `develop`에서 새 브랜치를 만든다. 이미 다른 브랜치에 PR이 열려 있고 아직 머지되지 않았다면 그 브랜치를 이어서 쓰고, 성격이 다른 변경이면 별도 브랜치로 분리한다.
 - 커밋하기 전에 `dart format --output=none --set-exit-if-changed .`, `flutter analyze`, `flutter test`를 모두 통과시킨다.
 - 작업 디렉터리에 이미 사용자가(IDE 등에서) 만들어둔, 지금 요청과 무관한 미커밋 변경이 있으면 건드리지 않는다. `git stash push -- <해당 파일들>`로 분리해서 별도 브랜치로 옮긴 뒤, 작업이 끝나면 원래 있던 파일/브랜치로 되돌려 놓는다(stash pop).
