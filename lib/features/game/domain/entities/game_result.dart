@@ -44,4 +44,8 @@ class GameResult extends Equatable {
     bestPerformer,
     pitchers,
   ];
+
+  List<PitcherDecision> getPitchersByTeam(String teamCode) {
+    return pitchers.where((pitcher) => pitcher.teamCode == teamCode).toList();
+  }
 }
