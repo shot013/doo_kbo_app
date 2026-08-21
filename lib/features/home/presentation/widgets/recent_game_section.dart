@@ -118,7 +118,7 @@ class _RecentGameCard extends ConsumerWidget {
               Container(
                 alignment: Alignment.center,
                 child: Text(
-                  '    ${game.homeScore} : ${game.awayScore}    ',
+                  '  ${game.homeScore} : ${game.awayScore}  ',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
