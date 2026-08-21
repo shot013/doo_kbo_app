@@ -14,6 +14,8 @@ final class GameModel extends Game {
     required super.awayTeamName,
     required super.homeScore,
     required super.awayScore,
+    required super.homeStarterPitcher,
+    required super.awayStarterPitcher,
     required super.currentInning,
     required super.status,
   });
@@ -31,6 +33,8 @@ final class GameModel extends Game {
       awayTeamName: json['awayTeamName'] as String,
       homeScore: json['homeScore'] as int?,
       awayScore: json['awayScore'] as int?,
+      homeStarterPitcher: json['homeStarterPitcher'] as String?,
+      awayStarterPitcher: json['awayStarterPitcher'] as String?,
       currentInning: json['currentInning'] as String?,
       status: _statusFromJson(json['status'] as String),
     );

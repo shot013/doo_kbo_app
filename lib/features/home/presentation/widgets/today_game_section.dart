@@ -119,17 +119,27 @@ class _GameCard extends StatelessWidget {
                   TeamLogo(teamCode: game.homeTeamCode, size: 40),
                   const SizedBox(width: 6),
                   Flexible(
-                    child: Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        game.homeTeamName,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                    child: Column(
+                      children: [
+                        Text(
+                          game.homeTeamName,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
+                        if (game.homeStarterPitcher != null)
+                          Text(
+                            game.homeStarterPitcher!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color(0xFF9E9E9E),
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   Container(
@@ -144,17 +154,27 @@ class _GameCard extends StatelessWidget {
                     ),
                   ),
                   Flexible(
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        game.awayTeamName,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                    child: Column(
+                      children: [
+                        Text(
+                          game.awayTeamName,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
-                      ),
+                        if (game.awayStarterPitcher != null)
+                          Text(
+                            game.awayStarterPitcher!,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Color(0xFF9E9E9E),
+                              fontSize: 12,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                   const SizedBox(width: 6),
