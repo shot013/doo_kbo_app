@@ -6,11 +6,12 @@ import '../../../../core/utils/result.dart';
 import '../../data/datasources/game_remote_data_source.dart';
 import '../../data/repositories/game_repository_impl.dart';
 import '../../domain/entities/game.dart';
+import '../../domain/entities/game_result.dart';
 import '../../domain/entities/game_stat.dart';
-import '../../domain/entities/game_status.dart';
 import '../../domain/repositories/game_repository.dart';
 import '../../domain/usecases/get_game_stats.dart';
 import '../../domain/usecases/get_games.dart';
+import '../../domain/usecases/get_recent_game_results.dart';
 
 final gameRemoteDataSourceProvider = Provider<GameRemoteDataSource>((ref) {
   return GameRemoteDataSourceImpl(ref.watch(dioProvider));
@@ -29,6 +30,10 @@ final getGamesProvider = Provider<GetGames>((ref) {
 
 final getGameStatsProvider = Provider<GetGameStats>((ref) {
   return GetGameStats(ref.watch(gameRepositoryProvider));
+});
+
+final getRecentGameResultsProvider = Provider<GetRecentGameResults>((ref) {
+  return GetRecentGameResults(ref.watch(gameRepositoryProvider));
 });
 
 final gameListProvider = AsyncNotifierProvider<GameListNotifier, List<Game>>(
@@ -86,54 +91,22 @@ class TodayGamesNotifier extends AsyncNotifier<List<Game>> {
   }
 }
 
-final recentFinishedGamesProvider =
-    AsyncNotifierProvider<RecentFinishedGamesNotifier, List<Game>>(
-      RecentFinishedGamesNotifier.new,
+final recentGameResultsProvider =
+    AsyncNotifierProvider<RecentGameResultsNotifier, List<GameResult>>(
+      RecentGameResultsNotifier.new,
     );
 
-/// 오늘 이전 날짜 중, 종료된 경기가 있는 가장 최근 경기일을 찾아
-/// 그날의 경기 결과를 반환한다. (휴식일 등으로 경기가 없는 날을 대비해
-/// 최근 [_lookbackDays]일을 한 번에 병렬 조회한 뒤 가장 최근 날짜를 고른다.)
-class RecentFinishedGamesNotifier extends AsyncNotifier<List<Game>> {
-  static const _lookbackDays = 7;
-
+/// 서버가 날짜 미지정 시 가장 최근에 종료 경기가 있는 날짜를 골라주므로
+/// 클라이언트에서는 별도 날짜 계산 없이 그대로 요청한다.
+class RecentGameResultsNotifier extends AsyncNotifier<List<GameResult>> {
   @override
-  Future<List<Game>> build() async {
-    final getGames = ref.read(getGamesProvider);
-    final today = DateTime.now();
-    final results = await Future.wait([
-      for (var i = 1; i <= _lookbackDays; i++)
-        getGames.call(
-          GetGamesParams(
-            gameDate: _dateString(today.subtract(Duration(days: i))),
-          ),
-        ),
-    ]);
-
-    final finishedByDate = <String, List<Game>>{};
-    for (final result in results) {
-      final games = switch (result) {
-        Ok<List<Game>>(:final value) => value,
-        Err<List<Game>>(:final failure) => throw failure,
-      };
-      final finished = games
-          .where((game) => game.status == GameStatus.finished)
-          .toList();
-      if (finished.isNotEmpty) {
-        finishedByDate[finished.first.gameDate] = finished;
-      }
-    }
-    if (finishedByDate.isEmpty) return const [];
-
-    final latestGameDate = finishedByDate.keys.reduce(
-      (a, b) => a.compareTo(b) >= 0 ? a : b,
-    );
-    return finishedByDate[latestGameDate]!;
-  }
-
-  String _dateString(DateTime date) {
-    final month = date.month.toString().padLeft(2, '0');
-    final day = date.day.toString().padLeft(2, '0');
-    return '${date.year}-$month-$day';
+  Future<List<GameResult>> build() async {
+    final result = await ref
+        .read(getRecentGameResultsProvider)
+        .call(const GetRecentGameResultsParams());
+    return switch (result) {
+      Ok<List<GameResult>>(:final value) => value,
+      Err<List<GameResult>>(:final failure) => throw failure,
+    };
   }
 }

@@ -51,7 +51,7 @@ class _MainScreenState extends ConsumerState<MainScreen>
   /// 있는(IndexedStack) 목록성 provider들을 다시 불러온다.
   void _refreshData() {
     ref.invalidate(todayGamesProvider);
-    ref.invalidate(recentFinishedGamesProvider);
+    ref.invalidate(recentGameResultsProvider);
     ref.invalidate(standingListProvider);
     ref.invalidate(batterRecordListProvider);
     ref.invalidate(pitcherRecordListProvider);

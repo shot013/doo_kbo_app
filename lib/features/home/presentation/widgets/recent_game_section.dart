@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/widgets/team_logo.dart';
-import '../../../game/domain/entities/game.dart';
-import '../../../game/domain/entities/game_stat.dart';
-import '../../../game/domain/entities/player_stat_type.dart';
+import '../../../game/domain/entities/best_performer.dart';
+import '../../../game/domain/entities/game_result.dart';
+import '../../../game/domain/entities/pitcher_decision.dart';
+import '../../../game/domain/entities/pitcher_decision_type.dart';
 import '../../../game/presentation/providers/game_providers.dart';
 
 class RecentGameSection extends ConsumerWidget {
@@ -13,13 +14,14 @@ class RecentGameSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gamesAsync = ref.watch(recentFinishedGamesProvider);
+    final resultsAsync = ref.watch(recentGameResultsProvider);
+    final games = resultsAsync.value ?? const [];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '최근 경기 결과${(gamesAsync.value?.length ?? 0) > 0 ? ' ${gamesAsync.value?.first.gameDate ?? ''}' : ''}',
+          '최근 경기 결과${games.isEmpty ? '' : ' ${games.first.gameDate}'}',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 20,
@@ -27,7 +29,7 @@ class RecentGameSection extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        gamesAsync.when(
+        resultsAsync.when(
           data: (games) => games.isEmpty
               ? const _RecentGameCardShell(
                   child: Text(
@@ -83,15 +85,13 @@ class _RecentGameCardShell extends StatelessWidget {
   }
 }
 
-class _RecentGameCard extends ConsumerWidget {
+class _RecentGameCard extends StatelessWidget {
   const _RecentGameCard({required this.game});
 
-  final Game game;
+  final GameResult game;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final statsAsync = ref.watch(gameStatsProvider(game.id));
-
+  Widget build(BuildContext context) {
     return _RecentGameCardShell(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -143,53 +143,71 @@ class _RecentGameCard extends ConsumerWidget {
               TeamLogo(teamCode: game.awayTeamCode, size: 40),
             ],
           ),
-          statsAsync.when(
-            data: (stats) {
-              final best = _findBestBatter(stats);
-              if (best == null) return const SizedBox.shrink();
-              return Column(
-                children: [
-                  const SizedBox(height: 16),
-                  const Divider(color: Color(0xFF2C2C2E), height: 1),
-                  const SizedBox(height: 16),
-                  _BestBatterRow(stat: best),
-                ],
-              );
-            },
-            loading: () => const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(
-                strokeWidth: 2,
-                color: Colors.white,
-              ),
-            ),
-            error: (error, stackTrace) => const SizedBox.shrink(),
-          ),
+          if (game.pitchers.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            const Divider(color: Color(0xFF2C2C2E), height: 1),
+            const SizedBox(height: 16),
+            _PitcherDecisionsRow(pitchers: game.pitchers),
+          ],
+          if (game.bestPerformer != null) ...[
+            const SizedBox(height: 12),
+            _BestPerformerRow(bestPerformer: game.bestPerformer!),
+          ],
         ],
       ),
     );
   }
+}
 
-  GameStat? _findBestBatter(List<GameStat> stats) {
-    final batters = stats
-        .where((stat) => stat.statType == PlayerStatType.batting)
-        .toList();
-    if (batters.isEmpty) return null;
+class _PitcherDecisionsRow extends StatelessWidget {
+  const _PitcherDecisionsRow({required this.pitchers});
 
-    batters.sort((a, b) {
-      final scoreA = (a.hits ?? 0) + (a.homeRuns ?? 0) * 2 + (a.rbi ?? 0);
-      final scoreB = (b.hits ?? 0) + (b.homeRuns ?? 0) * 2 + (b.rbi ?? 0);
-      return scoreB.compareTo(scoreA);
-    });
-    return batters.first;
+  final List<PitcherDecision> pitchers;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 12,
+      runSpacing: 8,
+      children: pitchers
+          .map(
+            (pitcher) => Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  _decisionLabel(pitcher.decision),
+                  style: const TextStyle(
+                    color: Color(0xFF9E9E9E),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  pitcher.playerName,
+                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                ),
+              ],
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  String _decisionLabel(PitcherDecisionType decision) {
+    return switch (decision) {
+      PitcherDecisionType.win => '승',
+      PitcherDecisionType.loss => '패',
+      PitcherDecisionType.save => '세이브',
+      PitcherDecisionType.hold => '홀드',
+    };
   }
 }
 
-class _BestBatterRow extends StatelessWidget {
-  const _BestBatterRow({required this.stat});
+class _BestPerformerRow extends StatelessWidget {
+  const _BestPerformerRow({required this.bestPerformer});
 
-  final GameStat stat;
+  final BestPerformer bestPerformer;
 
   @override
   Widget build(BuildContext context) {
@@ -214,9 +232,7 @@ class _BestBatterRow extends StatelessWidget {
         const SizedBox(width: 10),
         Expanded(
           child: Text(
-            '${stat.playerName} · ${stat.atBats ?? 0}타수 ${stat.hits ?? 0}안타'
-            '${(stat.homeRuns ?? 0) > 0 ? '(${stat.homeRuns}홈런)' : ''} '
-            '${stat.rbi ?? 0}타점',
+            '${bestPerformer.playerName} · ${bestPerformer.line}',
             style: const TextStyle(color: Colors.white, fontSize: 14),
           ),
         ),
