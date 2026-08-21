@@ -15,6 +15,8 @@ class Game extends Equatable {
     required this.awayTeamName,
     required this.homeScore,
     required this.awayScore,
+    required this.homeStarterPitcher,
+    required this.awayStarterPitcher,
     required this.currentInning,
     required this.status,
   });
@@ -30,6 +32,8 @@ class Game extends Equatable {
   final String awayTeamName;
   final int? homeScore;
   final int? awayScore;
+  final String? homeStarterPitcher;
+  final String? awayStarterPitcher;
   final String? currentInning;
   final GameStatus status;
 
@@ -46,6 +50,8 @@ class Game extends Equatable {
     awayTeamName,
     homeScore,
     awayScore,
+    homeStarterPitcher,
+    awayStarterPitcher,
     currentInning,
     status,
   ];
