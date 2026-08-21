@@ -35,15 +35,6 @@ class TodayGameSection extends ConsumerWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
-            Row(
-              children: [
-                Text(
-                  '더보기',
-                  style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
-                ),
-                Icon(Icons.chevron_right, color: Color(0xFF9E9E9E), size: 18),
-              ],
-            ),
           ],
         ),
         const SizedBox(height: 16),
@@ -132,6 +123,7 @@ class _GameCard extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: Text(
                         game.homeTeamName,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -156,6 +148,7 @@ class _GameCard extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         game.awayTeamName,
+                        textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
