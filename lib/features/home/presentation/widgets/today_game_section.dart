@@ -118,7 +118,7 @@ class _GameCard extends StatelessWidget {
                 children: [
                   TeamLogo(teamCode: game.homeTeamCode, size: 40),
                   const SizedBox(width: 6),
-                  Flexible(
+                  Expanded(
                     child: Column(
                       children: [
                         Text(
@@ -130,12 +130,13 @@ class _GameCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        if (game.homeStarterPitcher != null)
+                        if (game.homeStarterPitcher != null &&
+                            game.homeStarterPitcher != '')
                           Text(
                             game.homeStarterPitcher!,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              color: Color(0xFF9E9E9E),
+                              color: Color.fromARGB(255, 212, 212, 212),
                               fontSize: 12,
                             ),
                           ),
@@ -153,7 +154,7 @@ class _GameCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Flexible(
+                  Expanded(
                     child: Column(
                       children: [
                         Text(
@@ -165,12 +166,13 @@ class _GameCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        if (game.awayStarterPitcher != null)
+                        if (game.awayStarterPitcher != null &&
+                            game.awayStarterPitcher != '')
                           Text(
                             game.awayStarterPitcher!,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              color: Color(0xFF9E9E9E),
+                              color: Color.fromARGB(255, 212, 212, 212),
                               fontSize: 12,
                             ),
                           ),
