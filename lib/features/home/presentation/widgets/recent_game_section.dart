@@ -103,16 +103,30 @@ class _RecentGameCard extends StatelessWidget {
               TeamLogo(teamCode: game.homeTeamCode, size: 40),
               const SizedBox(width: 6),
               Flexible(
-                child: Container(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    game.homeTeamName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Text(
+                        game.homeTeamName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
+                    if (game
+                        .getPitchersByTeam(game.homeTeamCode)
+                        .isNotEmpty) ...[
+                      Container(
+                        alignment: Alignment.centerRight,
+                        child: _PitcherDecisionsRow(
+                          pitchers: game.getPitchersByTeam(game.homeTeamCode),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               Container(
@@ -127,30 +141,38 @@ class _RecentGameCard extends StatelessWidget {
                 ),
               ),
               Flexible(
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    game.awayTeamName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                child: Column(
+                  children: [
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        game.awayTeamName,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
+                    if (game
+                        .getPitchersByTeam(game.awayTeamCode)
+                        .isNotEmpty) ...[
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: _PitcherDecisionsRow(
+                          pitchers: game.getPitchersByTeam(game.awayTeamCode),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
               ),
               const SizedBox(width: 6),
               TeamLogo(teamCode: game.awayTeamCode, size: 40),
             ],
           ),
-          if (game.pitchers.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            const Divider(color: Color(0xFF2C2C2E), height: 1),
-            const SizedBox(height: 16),
-            _PitcherDecisionsRow(pitchers: game.pitchers),
-          ],
           if (game.bestPerformer != null) ...[
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             _BestPerformerRow(bestPerformer: game.bestPerformer!),
           ],
         ],
@@ -167,8 +189,8 @@ class _PitcherDecisionsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      spacing: 12,
-      runSpacing: 8,
+      spacing: 4,
+      runSpacing: 2,
       children: pitchers
           .map(
             (pitcher) => Row(
@@ -176,16 +198,16 @@ class _PitcherDecisionsRow extends StatelessWidget {
               children: [
                 Text(
                   _decisionLabel(pitcher.decision),
-                  style: const TextStyle(
-                    color: Color(0xFF9E9E9E),
-                    fontSize: 13,
+                  style: TextStyle(
+                    color: _decisionColor(pitcher.decision),
+                    fontSize: 11,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-                const SizedBox(width: 4),
+                const SizedBox(width: 2),
                 Text(
                   pitcher.playerName,
-                  style: const TextStyle(color: Colors.white, fontSize: 13),
+                  style: const TextStyle(color: Colors.white, fontSize: 11),
                 ),
               ],
             ),
@@ -198,8 +220,17 @@ class _PitcherDecisionsRow extends StatelessWidget {
     return switch (decision) {
       PitcherDecisionType.win => '승',
       PitcherDecisionType.loss => '패',
-      PitcherDecisionType.save => '세이브',
-      PitcherDecisionType.hold => '홀드',
+      PitcherDecisionType.save => '세',
+      PitcherDecisionType.hold => '홀',
+    };
+  }
+
+  Color _decisionColor(PitcherDecisionType decision) {
+    return switch (decision) {
+      PitcherDecisionType.win => const Color.fromARGB(255, 126, 152, 223),
+      PitcherDecisionType.loss => const Color.fromARGB(255, 161, 88, 88),
+      PitcherDecisionType.save => const Color.fromARGB(255, 101, 139, 111),
+      PitcherDecisionType.hold => const Color.fromARGB(255, 115, 208, 224),
     };
   }
 }
@@ -212,7 +243,7 @@ class _BestPerformerRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -226,6 +257,7 @@ class _BestPerformerRow extends StatelessWidget {
               color: Colors.white,
               fontSize: 12,
               fontWeight: FontWeight.w600,
+              height: 1.0,
             ),
           ),
         ),
@@ -233,7 +265,11 @@ class _BestPerformerRow extends StatelessWidget {
         Expanded(
           child: Text(
             '${bestPerformer.playerName} · ${bestPerformer.line}',
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              height: 1.0,
+            ),
           ),
         ),
       ],
