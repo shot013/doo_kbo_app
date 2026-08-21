@@ -46,3 +46,6 @@ app.*.map.json
 
 # Claude Code personal overrides (team-shared config lives in .claude/settings.json)
 .claude/settings.local.json
+
+# Claude Code 프로젝트 설정 템플릿 킷 (자체 .git을 가진 별도 저장소, 서브모듈 아님)
+doo_kbo_harness_kit/
