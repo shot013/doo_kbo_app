@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/team_logo.dart';
+import '../../../player/presentation/screens/player_detail_screen.dart';
 import '../../domain/entities/batter_record.dart';
 
 class BatterRecordTable extends StatelessWidget {
@@ -44,27 +46,33 @@ class BatterRecordTable extends StatelessWidget {
         ),
         const Divider(color: Color(0xFF2C2C2E), height: 24),
         for (final record in records) ...[
-          _buildRow(
-            rank: Text('${record.rank}', style: _cellStyle),
-            player: _PlayerBadge(
-              teamCode: record.teamCode,
-              playerName: record.playerName,
-              teamName: record.teamName,
+          GestureDetector(
+            onTap: () => context.pushNamed(
+              PlayerDetailScreen.routeName,
+              pathParameters: {'id': record.playerId.toString()},
             ),
-            avg: Text(
-              record.avg,
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            homeRuns: Text(
-              '${record.homeRuns}',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            rbi: Text(
-              '${record.rbi}',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
+            child: _buildRow(
+              rank: Text('${record.rank}', style: _cellStyle),
+              player: _PlayerBadge(
+                teamCode: record.teamCode,
+                playerName: record.playerName,
+                teamName: record.teamName,
+              ),
+              avg: Text(
+                record.avg,
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              homeRuns: Text(
+                '${record.homeRuns}',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              rbi: Text(
+                '${record.rbi}',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           const SizedBox(height: 16),

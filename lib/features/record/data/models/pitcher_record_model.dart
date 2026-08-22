@@ -3,6 +3,7 @@ import '../../domain/entities/pitcher_record.dart';
 final class PitcherRecordModel extends PitcherRecord {
   const PitcherRecordModel({
     required super.rank,
+    required super.playerId,
     required super.playerName,
     required super.teamCode,
     required super.teamName,
@@ -16,6 +17,7 @@ final class PitcherRecordModel extends PitcherRecord {
   factory PitcherRecordModel.fromJson(Map<String, dynamic> json) {
     return PitcherRecordModel(
       rank: json['rank'] as int,
+      playerId: json['playerId'] as String,
       playerName: json['playerName'] as String,
       teamCode: json['teamCode'] as String,
       teamName: json['teamName'] as String,
