@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/team_logo.dart';
+import '../../../player/presentation/screens/player_detail_screen.dart';
 import '../../domain/entities/pitcher_record.dart';
 
 class PitcherRecordTable extends StatelessWidget {
@@ -44,27 +46,63 @@ class PitcherRecordTable extends StatelessWidget {
         ),
         const Divider(color: Color(0xFF2C2C2E), height: 24),
         for (final record in records) ...[
-          _buildRow(
-            rank: Text('${record.rank}', style: _cellStyle),
-            player: _PlayerBadge(
-              teamCode: record.teamCode,
-              playerName: record.playerName,
-              teamName: record.teamName,
-            ),
-            era: Text(
-              record.era,
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            wl: Text(
-              '${record.wins}승 ${record.losses}패',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            saves: Text(
-              '${record.saves}',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
+          GestureDetector(
+            onTap: () {
+              final playerId = record.playerId;
+              if (playerId == null) {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: const Color(0xFF2C2C2E),
+                    contentPadding: const EdgeInsets.all(0),
+                    content: const Text(
+                      '선수 ID가 없습니다',
+                      style: TextStyle(
+                        color: Color.fromARGB(255, 179, 177, 177),
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          '확인',
+                          style: TextStyle(
+                            color: Color.fromARGB(255, 179, 177, 177),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+                return;
+              }
+              context.pushNamed(
+                PlayerDetailScreen.routeName,
+                pathParameters: {'id': playerId.toString()},
+              );
+            },
+            child: _buildRow(
+              rank: Text('${record.rank}', style: _cellStyle),
+              player: _PlayerBadge(
+                teamCode: record.teamCode,
+                playerName: record.playerName,
+                teamName: record.teamName,
+              ),
+              era: Text(
+                record.era,
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              wl: Text(
+                '${record.wins}승 ${record.losses}패',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              saves: Text(
+                '${record.saves}',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           const SizedBox(height: 16),
