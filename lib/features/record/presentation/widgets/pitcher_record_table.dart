@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/widgets/team_logo.dart';
+import '../../../player/presentation/screens/player_detail_screen.dart';
 import '../../domain/entities/pitcher_record.dart';
 
 class PitcherRecordTable extends StatelessWidget {
@@ -44,27 +46,33 @@ class PitcherRecordTable extends StatelessWidget {
         ),
         const Divider(color: Color(0xFF2C2C2E), height: 24),
         for (final record in records) ...[
-          _buildRow(
-            rank: Text('${record.rank}', style: _cellStyle),
-            player: _PlayerBadge(
-              teamCode: record.teamCode,
-              playerName: record.playerName,
-              teamName: record.teamName,
+          GestureDetector(
+            onTap: () => context.pushNamed(
+              PlayerDetailScreen.routeName,
+              pathParameters: {'id': record.playerId.toString()},
             ),
-            era: Text(
-              record.era,
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            wl: Text(
-              '${record.wins}승 ${record.losses}패',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            saves: Text(
-              '${record.saves}',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
+            child: _buildRow(
+              rank: Text('${record.rank}', style: _cellStyle),
+              player: _PlayerBadge(
+                teamCode: record.teamCode,
+                playerName: record.playerName,
+                teamName: record.teamName,
+              ),
+              era: Text(
+                record.era,
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              wl: Text(
+                '${record.wins}승 ${record.losses}패',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              saves: Text(
+                '${record.saves}',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           const SizedBox(height: 16),

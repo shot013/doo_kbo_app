@@ -75,6 +75,7 @@ class RecordDummyDataSource implements RecordRemoteDataSource {
 const _dummyBatterRecords = [
   BatterRecordModel(
     rank: 1,
+    playerId: '1',
     playerName: '타자 1',
     teamCode: 'LG',
     teamName: 'LG 트윈스',
@@ -85,6 +86,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 2,
+    playerId: '2',
     playerName: '타자 2',
     teamCode: 'KT',
     teamName: 'kt wiz',
@@ -95,6 +97,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 3,
+    playerId: '3',
     playerName: '타자 3',
     teamCode: 'SS',
     teamName: '삼성 라이온즈',
@@ -105,6 +108,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 4,
+    playerId: '4',
     playerName: '타자 4',
     teamCode: 'HT',
     teamName: 'KIA 타이거즈',
@@ -115,6 +119,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 5,
+    playerId: '5',
     playerName: '타자 5',
     teamCode: 'OB',
     teamName: '두산 베어스',
@@ -125,6 +130,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 6,
+    playerId: '6',
     playerName: '타자 6',
     teamCode: 'SK',
     teamName: 'SSG 랜더스',
@@ -135,6 +141,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 7,
+    playerId: '7',
     playerName: '타자 7',
     teamCode: 'HH',
     teamName: '한화 이글스',
@@ -145,6 +152,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 8,
+    playerId: '8',
     playerName: '타자 8',
     teamCode: 'NC',
     teamName: 'NC 다이노스',
@@ -155,6 +163,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 9,
+    playerId: '9',
     playerName: '타자 9',
     teamCode: 'LT',
     teamName: '롯데 자이언츠',
@@ -165,6 +174,7 @@ const _dummyBatterRecords = [
   ),
   BatterRecordModel(
     rank: 10,
+    playerId: '10',
     playerName: '타자 10',
     teamCode: 'WO',
     teamName: '키움 히어로즈',
@@ -178,6 +188,7 @@ const _dummyBatterRecords = [
 const _dummyPitcherRecords = [
   PitcherRecordModel(
     rank: 1,
+    playerId: 'p1',
     playerName: '투수 1',
     teamCode: 'KT',
     teamName: 'kt wiz',
@@ -189,6 +200,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 2,
+    playerId: 'p2',
     playerName: '투수 2',
     teamCode: 'LG',
     teamName: 'LG 트윈스',
@@ -200,6 +212,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 3,
+    playerId: 'p3',
     playerName: '투수 3',
     teamCode: 'SS',
     teamName: '삼성 라이온즈',
@@ -211,6 +224,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 4,
+    playerId: 'p4',
     playerName: '투수 4',
     teamCode: 'HT',
     teamName: 'KIA 타이거즈',
@@ -222,6 +236,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 5,
+    playerId: 'p5',
     playerName: '투수 5',
     teamCode: 'OB',
     teamName: '두산 베어스',
@@ -233,6 +248,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 6,
+    playerId: 'p6',
     playerName: '투수 6',
     teamCode: 'SK',
     teamName: 'SSG 랜더스',
@@ -244,6 +260,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 7,
+    playerId: 'p7',
     playerName: '투수 7',
     teamCode: 'HH',
     teamName: '한화 이글스',
@@ -255,6 +272,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 8,
+    playerId: 'p8',
     playerName: '투수 8',
     teamCode: 'NC',
     teamName: 'NC 다이노스',
@@ -266,6 +284,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 9,
+    playerId: 'p9',
     playerName: '투수 9',
     teamCode: 'LT',
     teamName: '롯데 자이언츠',
@@ -277,6 +296,7 @@ const _dummyPitcherRecords = [
   ),
   PitcherRecordModel(
     rank: 10,
+    playerId: 'p10',
     playerName: '투수 10',
     teamCode: 'WO',
     teamName: '키움 히어로즈',
