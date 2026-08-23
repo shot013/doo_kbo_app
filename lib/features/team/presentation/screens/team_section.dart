@@ -20,15 +20,6 @@ class TeamSection extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            '팀',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          const SizedBox(height: 16),
           teamsAsync.when(
             data: (teams) => ListView.separated(
               shrinkWrap: true,
@@ -99,18 +90,59 @@ class _TeamCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${team.rank}위 · ${team.wins}승 ${team.losses}패',
+                    '${team.rank}위 · ${team.wins}승 ${team.losses}패 ${team.draws}무',
                     style: const TextStyle(
                       color: Color(0xFF9E9E9E),
                       fontSize: 12,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
+                  const SizedBox(height: 8),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _TeamStat(label: '팀 타율', value: team.battingAverage),
+                      _TeamStat(label: '팀 평균자책', value: team.era),
+                      _TeamStat(label: '팀 득점', value: '${team.runsScored}'),
+                      _TeamStat(label: '팀 실점', value: '${team.runsAllowed}'),
+                    ],
+                  ),
                 ],
               ),
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class _TeamStat extends StatelessWidget {
+  const _TeamStat({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 11),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            value,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
     );
   }
