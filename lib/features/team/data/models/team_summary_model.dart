@@ -10,6 +10,10 @@ final class TeamSummaryModel extends TeamSummary {
     required super.draws,
     required super.winRate,
     required super.gamesBehind,
+    required super.battingAverage,
+    required super.era,
+    required super.runsScored,
+    required super.runsAllowed,
     required super.recentForm,
   });
 
@@ -24,6 +28,10 @@ final class TeamSummaryModel extends TeamSummary {
       draws: json['draws'] as int,
       winRate: json['winRate'] as String,
       gamesBehind: json['gamesBehind'] as String,
+      battingAverage: json['battingAverage'] as String,
+      era: json['era'] as String,
+      runsScored: json['runsScored'] as int,
+      runsAllowed: json['runsAllowed'] as int,
       recentForm: recentFormJson.cast<String>(),
     );
   }

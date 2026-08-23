@@ -10,6 +10,10 @@ class TeamSummary extends Equatable {
     required this.draws,
     required this.winRate,
     required this.gamesBehind,
+    required this.battingAverage,
+    required this.era,
+    required this.runsScored,
+    required this.runsAllowed,
     required this.recentForm,
   });
 
@@ -21,6 +25,10 @@ class TeamSummary extends Equatable {
   final int draws;
   final String winRate;
   final String gamesBehind;
+  final String battingAverage;
+  final String era;
+  final int runsScored;
+  final int runsAllowed;
 
   /// 최근 5경기 결과. 오래된 경기부터 순서대로 'W'/'L'/'D'.
   final List<String> recentForm;
@@ -35,6 +43,10 @@ class TeamSummary extends Equatable {
     draws,
     winRate,
     gamesBehind,
+    battingAverage,
+    era,
+    runsScored,
+    runsAllowed,
     recentForm,
   ];
 }
