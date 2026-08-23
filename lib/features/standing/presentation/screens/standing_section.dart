@@ -18,7 +18,7 @@ class StandingSection extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const _StandingHeader(),
-          const SizedBox(height: 16),
+          const SizedBox(height: 8),
           standingsAsync.when(
             data: (standings) => StandingTable(standings: standings),
             loading: () => const Padding(
