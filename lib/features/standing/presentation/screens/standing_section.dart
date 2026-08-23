@@ -86,11 +86,6 @@ class _DropdownLabel extends StatelessWidget {
           label,
           style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
         ),
-        const Icon(
-          Icons.keyboard_arrow_down,
-          color: Color(0xFF9E9E9E),
-          size: 18,
-        ),
       ],
     );
   }
