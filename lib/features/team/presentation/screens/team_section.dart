@@ -30,14 +30,12 @@ class TeamSection extends ConsumerWidget {
           ),
           const SizedBox(height: 16),
           teamsAsync.when(
-            data: (teams) => GridView.count(
-              crossAxisCount: 2,
+            data: (teams) => ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 2.6,
-              children: [for (final team in teams) _TeamCard(team: team)],
+              itemCount: teams.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) => _TeamCard(team: teams[index]),
             ),
             loading: () => const Padding(
               padding: EdgeInsets.symmetric(vertical: 40),
