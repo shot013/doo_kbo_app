@@ -6,6 +6,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../domain/entities/player_detail.dart';
 import '../../domain/entities/player_stat_line.dart';
+import '../../domain/entities/player_vs_team_stat.dart';
 import '../providers/player_providers.dart';
 
 class PlayerDetailScreen extends ConsumerWidget {
@@ -102,6 +103,34 @@ class _PlayerDetailBody extends StatelessWidget {
             ],
           ),
         ),
+        if (player.vsTeamStats.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          Text(
+            player.position == PlayerPosition.pitcher ? '구단별 피안타율' : '구단별 안타율',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1C1C1E),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                for (final stat in player.vsTeamStats) ...[
+                  _VsTeamStatRow(stat: stat),
+                  if (stat != player.vsTeamStats.last)
+                    const Divider(color: Color(0xFF2C2C2E), height: 20),
+                ],
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -123,6 +152,39 @@ class _StatRow extends StatelessWidget {
         ),
         Text(
           line.value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _VsTeamStatRow extends StatelessWidget {
+  const _VsTeamStatRow({required this.stat});
+
+  final PlayerVsTeamStat stat;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            TeamLogo(teamCode: stat.teamCode, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              stat.teamName,
+              style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+            ),
+          ],
+        ),
+        Text(
+          '${stat.avg} · ${stat.games}경기',
           style: const TextStyle(
             color: Colors.white,
             fontSize: 15,

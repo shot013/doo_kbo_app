@@ -33,3 +33,13 @@
 **해결**: 기록해둔 keystore 비밀번호로 `key.properties`를 재생성하고, `keytool -list` / AAB 안의 `META-INF/*.RSA`를 `openssl pkcs7`/`x509`로 추출해 SHA-256 지문이 업로드 키스토어와 일치하는지 직접 검증한 뒤 재빌드.
 
 **재발 방지**: `key.properties`는 git에 없으므로 `rm -rf`류 정리 명령을 실행하기 전 gitignore된 파일이 대상에 포함되는지 확인한다. 릴리즈 AAB를 빌드할 때마다 서명 인증서 지문을 검증하는 습관을 들인다.
+
+### [2026-08-23] 에뮬레이터에서 `adb shell input tap`/`swipe`가 먹지 않음
+
+**증상**: `adb shell input tap x y`, `input swipe ...`, `input touchscreen tap ...`를 보내도 Flutter 앱 화면이 전혀 반응하지 않음(탭해도 네비게이션 안 됨, 스와이프해도 스크롤 안 됨). 반면 `adb shell input keyevent KEYCODE_HOME`은 정상 동작(런처로 이동)하고, `am start`로 앱 재실행도 정상 동작함 — 즉 keyevent/intent는 기기에 도달하지만 합성 터치(모션) 이벤트만 Flutter 엔진까지 전달되지 않는 것으로 보임.
+
+**원인**: 파악하지 못함(이 세션에서는 근본 원인을 특정하지 못하고 우회도 실패). 에뮬레이터(`sdk_gphone16k_x86_64`, Android 17 preview) 또는 이 머신의 adb/에뮬레이터 조합에 특이한 문제로 추정.
+
+**해결**: 이번엔 UI 변경 사항을 코드 리뷰(정적 분석 통과 + 표준 위젯 API 사용 확인)로만 검증하고 실제 스크린샷 확인은 생략함.
+
+**재발 방지**: 다음에 에뮬레이터 터치 검증이 필요할 때 이 증상이 재현되면, 코드 문제가 아니라 알려진 환경 이슈임을 먼저 확인하고 시간을 낭비하지 않는다. 가능하면 에뮬레이터 재시작/재생성으로 먼저 시도해볼 것.
