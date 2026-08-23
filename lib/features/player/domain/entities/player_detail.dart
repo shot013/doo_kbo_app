@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 import '../../../../core/constants/player_position.dart';
 import 'player_stat_line.dart';
+import 'player_vs_team_stat.dart';
 
 class PlayerDetail extends Equatable {
   const PlayerDetail({
@@ -12,6 +13,7 @@ class PlayerDetail extends Equatable {
     required this.position,
     required this.backNumber,
     required this.statLines,
+    required this.vsTeamStats,
   });
 
   final String id;
@@ -21,6 +23,7 @@ class PlayerDetail extends Equatable {
   final PlayerPosition position;
   final int backNumber;
   final List<PlayerStatLine> statLines;
+  final List<PlayerVsTeamStat> vsTeamStats;
 
   @override
   List<Object?> get props => [
@@ -31,5 +34,6 @@ class PlayerDetail extends Equatable {
     position,
     backNumber,
     statLines,
+    vsTeamStats,
   ];
 }

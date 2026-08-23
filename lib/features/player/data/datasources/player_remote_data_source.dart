@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 
 import '../../../../core/constants/dummy_player_roster.dart';
+import '../../../../core/constants/kbo_teams.dart';
 import '../../../../core/constants/player_position.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/player_stat_line.dart';
+import '../../domain/entities/player_vs_team_stat.dart';
 import '../models/player_detail_model.dart';
 import '../models/player_summary_model.dart';
 
@@ -117,6 +119,16 @@ class PlayerDummyDataSource implements PlayerRemoteDataSource {
       statLines: [
         for (final (label, value) in seed.statLines)
           PlayerStatLine(label: label, value: value),
+      ],
+      vsTeamStats: [
+        for (final team in kKboTeams)
+          if (team.code != seed.teamCode)
+            PlayerVsTeamStat(
+              teamCode: team.code,
+              teamName: team.name,
+              games: 10 + team.code.length,
+              avg: '0.3${(20 + team.code.length * 7) % 80}',
+            ),
       ],
     );
   }
