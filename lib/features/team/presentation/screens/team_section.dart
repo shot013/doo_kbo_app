@@ -21,14 +21,12 @@ class TeamSection extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           teamsAsync.when(
-            data: (teams) => GridView.count(
-              crossAxisCount: 2,
+            data: (teams) => ListView.separated(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 2.6,
-              children: [for (final team in teams) _TeamCard(team: team)],
+              itemCount: teams.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 12),
+              itemBuilder: (context, index) => _TeamCard(team: teams[index]),
             ),
             loading: () => const Padding(
               padding: EdgeInsets.symmetric(vertical: 40),
@@ -101,11 +99,12 @@ class _TeamCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      _TeamStat(label: '타율', value: team.battingAverage),
-                      _TeamStat(label: '평균자책', value: team.era),
-                      _TeamStat(label: '득점', value: '${team.runsScored}'),
-                      _TeamStat(label: '실점', value: '${team.runsAllowed}'),
+                      _TeamStat(label: '팀 타율', value: team.battingAverage),
+                      _TeamStat(label: '팀 평균자책', value: team.era),
+                      _TeamStat(label: '팀 득점', value: '${team.runsScored}'),
+                      _TeamStat(label: '팀 실점', value: '${team.runsAllowed}'),
                     ],
                   ),
                 ],
