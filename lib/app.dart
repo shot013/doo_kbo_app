@@ -13,8 +13,8 @@ class App extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'JIKGWAN',
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      theme: AppTheme.dark,
+      themeMode: ThemeMode.dark,
       routerConfig: router,
     );
   }

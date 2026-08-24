@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../theme/app_colors.dart';
 
 class _TeamAsset {
   const _TeamAsset(this.path, this.isSvg);
@@ -79,7 +80,7 @@ class _FallbackBadge extends StatelessWidget {
       child: Text(
         teamCode.isEmpty ? '?' : teamCode.substring(0, 1),
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.textPrimary,
           fontSize: size * 0.45,
           fontWeight: FontWeight.w700,
         ),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/bottom_nav_spacer.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../domain/entities/team_summary.dart';
@@ -31,7 +32,7 @@ class TeamSection extends ConsumerWidget {
             loading: () => const Padding(
               padding: EdgeInsets.symmetric(vertical: 40),
               child: Center(
-                child: CircularProgressIndicator(color: Colors.white),
+                child: CircularProgressIndicator(color: AppColors.textPrimary),
               ),
             ),
             error: (error, stackTrace) => Padding(
@@ -39,7 +40,7 @@ class TeamSection extends ConsumerWidget {
               child: Center(
                 child: Text(
                   error is AppFailure ? error.message : '팀 정보를 불러오지 못했습니다.',
-                  style: const TextStyle(color: Color(0xFF9E9E9E)),
+                  style: const TextStyle(color: AppColors.textMuted),
                 ),
               ),
             ),
@@ -67,7 +68,7 @@ class _TeamCard extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: const Color(0xFF1C1C1E),
+          color: AppColors.surface,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -82,7 +83,7 @@ class _TeamCard extends StatelessWidget {
                   Text(
                     team.name,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                     ),
@@ -92,7 +93,7 @@ class _TeamCard extends StatelessWidget {
                   Text(
                     '${team.rank}위 · ${team.wins}승 ${team.losses}패 ${team.draws}무',
                     style: const TextStyle(
-                      color: Color(0xFF9E9E9E),
+                      color: AppColors.textMuted,
                       fontSize: 12,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -131,13 +132,13 @@ class _TeamStat extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 11),
+            style: const TextStyle(color: AppColors.textMuted, fontSize: 11),
           ),
           const SizedBox(height: 2),
           Text(
             value,
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),

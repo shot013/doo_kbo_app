@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../../game/domain/entities/game.dart';
 import '../../../game/domain/entities/game_status.dart';
@@ -19,7 +20,7 @@ class TodayGameSection extends ConsumerWidget {
       children: [
         Text(
           _todayLabel(),
-          style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
+          style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
         ),
         const SizedBox(height: 8),
 
@@ -30,7 +31,7 @@ class TodayGameSection extends ConsumerWidget {
             Text(
               '오늘의 경기',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
               ),
@@ -43,13 +44,13 @@ class TodayGameSection extends ConsumerWidget {
               games.isEmpty ? const _EmptyGameCard() : _GameCard(games),
           loading: () => const _GameCardShell(
             child: Center(
-              child: CircularProgressIndicator(color: Colors.white),
+              child: CircularProgressIndicator(color: AppColors.textPrimary),
             ),
           ),
           error: (error, stackTrace) => _GameCardShell(
             child: Text(
               error is AppFailure ? error.message : '경기 정보를 불러오지 못했습니다.',
-              style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ),
         ),
@@ -77,7 +78,7 @@ class _GameCardShell extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1E),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: child,
@@ -101,7 +102,7 @@ class _GameCard extends StatelessWidget {
           margin: const EdgeInsets.only(bottom: 16),
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF2C2C2E),
+            color: AppColors.surfaceHigh,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -109,7 +110,10 @@ class _GameCard extends StatelessWidget {
             children: [
               Text(
                 '${gameTime.isNotEmpty ? '$gameTime ' : ''}${game.stadium ?? ''} (${_statusLabel(game)})',
-                style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 14,
+                ),
               ),
               const SizedBox(height: 4),
               Row(
@@ -125,7 +129,7 @@ class _GameCard extends StatelessWidget {
                           game.homeTeamName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textPrimary,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -148,7 +152,7 @@ class _GameCard extends StatelessWidget {
                     child: const Text(
                       '   VS   ',
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.textPrimary,
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
@@ -161,7 +165,7 @@ class _GameCard extends StatelessWidget {
                           game.awayTeamName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
-                            color: Colors.white,
+                            color: AppColors.textPrimary,
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
                           ),
@@ -191,7 +195,7 @@ class _GameCard extends StatelessWidget {
                 Text(
                   '${game.homeScore} - ${game.awayScore}',
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
@@ -238,12 +242,12 @@ class _EmptyGameCard extends StatelessWidget {
             height: 56,
             alignment: Alignment.center,
             decoration: const BoxDecoration(
-              color: Color(0xFF3A3A3C),
+              color: AppColors.border,
               shape: BoxShape.circle,
             ),
             child: const Icon(
               Icons.sports_baseball,
-              color: Colors.white,
+              color: AppColors.textPrimary,
               size: 28,
             ),
           ),
@@ -251,7 +255,7 @@ class _EmptyGameCard extends StatelessWidget {
           const Text(
             '오늘은 MY팀 경기가 없습니다',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -259,7 +263,7 @@ class _EmptyGameCard extends StatelessWidget {
           const SizedBox(height: 6),
           const Text(
             '예정된 경기가 없는 날이에요',
-            style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
+            style: TextStyle(color: AppColors.textMuted, fontSize: 13),
           ),
           const SizedBox(height: 20),
           SizedBox(
@@ -267,8 +271,8 @@ class _EmptyGameCard extends StatelessWidget {
             child: OutlinedButton(
               onPressed: () {},
               style: OutlinedButton.styleFrom(
-                backgroundColor: const Color(0xFF3A3A3C),
-                foregroundColor: Colors.white,
+                backgroundColor: AppColors.border,
+                foregroundColor: AppColors.textPrimary,
                 padding: const EdgeInsets.symmetric(vertical: 14),
                 side: BorderSide.none,
                 shape: RoundedRectangleBorder(

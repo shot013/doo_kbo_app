@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../theme/app_colors.dart';
 
 class _NavTab {
   const _NavTab(this.icon, this.label);
@@ -26,7 +27,7 @@ class AppBottomNav extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1E),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(32),
       ),
       child: Row(
@@ -69,7 +70,7 @@ class _NavItem extends StatelessWidget {
       return IconButton(
         onPressed: onTap,
         visualDensity: VisualDensity.compact,
-        icon: Icon(icon, color: const Color(0xFF9E9E9E), size: 20),
+        icon: Icon(icon, color: AppColors.textMuted, size: 20),
       );
     }
 
@@ -79,18 +80,18 @@ class _NavItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFF4ADE80),
+          color: AppColors.navActive,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: Colors.black, size: 18),
+            Icon(icon, color: AppColors.onAccent, size: 18),
             const SizedBox(width: 6),
             Text(
               label,
               style: const TextStyle(
-                color: Colors.black,
+                color: AppColors.onAccent,
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
               ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/app_bottom_nav.dart';
 import '../../../game/presentation/providers/game_providers.dart';
 import '../../../home/presentation/widgets/home_app_bar.dart';
@@ -66,7 +67,7 @@ class _MainShellState extends ConsumerState<MainShell>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const HomeAppBar(),
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 0),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/constants/player_position.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../domain/entities/player_detail.dart';
 import '../../domain/entities/player_stat_line.dart';
@@ -22,10 +23,10 @@ class PlayerDetailScreen extends ConsumerWidget {
     final detailAsync = ref.watch(playerDetailProvider(playerId));
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textPrimary,
         title: detailAsync.maybeWhen(
           data: (player) => Text(player.name),
           orElse: () => const Text('선수 상세'),
@@ -35,12 +36,12 @@ class PlayerDetailScreen extends ConsumerWidget {
         child: detailAsync.when(
           data: (player) => _PlayerDetailBody(player: player),
           loading: () => const Center(
-            child: CircularProgressIndicator(color: Colors.white),
+            child: CircularProgressIndicator(color: AppColors.textPrimary),
           ),
           error: (error, stackTrace) => Center(
             child: Text(
               error is AppFailure ? error.message : '선수 정보를 불러오지 못했습니다.',
-              style: const TextStyle(color: Color(0xFF9E9E9E)),
+              style: const TextStyle(color: AppColors.textMuted),
             ),
           ),
         ),
@@ -69,7 +70,7 @@ class _PlayerDetailBody extends StatelessWidget {
                 Text(
                   player.name,
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     fontSize: 20,
                     fontWeight: FontWeight.w700,
                   ),
@@ -78,7 +79,7 @@ class _PlayerDetailBody extends StatelessWidget {
                 Text(
                   '${player.teamName} · ${player.position.displayName} · No.${player.backNumber}',
                   style: const TextStyle(
-                    color: Color(0xFF9E9E9E),
+                    color: AppColors.textMuted,
                     fontSize: 13,
                   ),
                 ),
@@ -90,7 +91,7 @@ class _PlayerDetailBody extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1C1C1E),
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -98,7 +99,7 @@ class _PlayerDetailBody extends StatelessWidget {
               for (final line in player.statLines) ...[
                 _StatRow(line: line),
                 if (line != player.statLines.last)
-                  const Divider(color: Color(0xFF2C2C2E), height: 20),
+                  const Divider(color: AppColors.surfaceHigh, height: 20),
               ],
             ],
           ),
@@ -108,7 +109,7 @@ class _PlayerDetailBody extends StatelessWidget {
           Text(
             player.position == PlayerPosition.pitcher ? '구단별 피안타율' : '구단별 안타율',
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 16,
               fontWeight: FontWeight.w700,
             ),
@@ -117,7 +118,7 @@ class _PlayerDetailBody extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFF1C1C1E),
+              color: AppColors.surface,
               borderRadius: BorderRadius.circular(20),
             ),
             child: Column(
@@ -125,7 +126,7 @@ class _PlayerDetailBody extends StatelessWidget {
                 for (final stat in player.vsTeamStats) ...[
                   _VsTeamStatRow(stat: stat),
                   if (stat != player.vsTeamStats.last)
-                    const Divider(color: Color(0xFF2C2C2E), height: 20),
+                    const Divider(color: AppColors.surfaceHigh, height: 20),
                 ],
               ],
             ),
@@ -148,12 +149,12 @@ class _StatRow extends StatelessWidget {
       children: [
         Text(
           line.label,
-          style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+          style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
         ),
         Text(
           line.value,
           style: const TextStyle(
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
@@ -179,14 +180,14 @@ class _VsTeamStatRow extends StatelessWidget {
             const SizedBox(width: 8),
             Text(
               stat.teamName,
-              style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ],
         ),
         Text(
           '${stat.avg} · ${stat.games}경기',
           style: const TextStyle(
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontSize: 15,
             fontWeight: FontWeight.w600,
           ),
