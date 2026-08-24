@@ -5,21 +5,70 @@ import 'package:go_router/go_router.dart';
 import '../../features/example/presentation/screens/example_screen.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
 import '../../features/game/presentation/screens/game_list_screen.dart';
-import '../../features/main/presentation/screens/main_screen.dart';
+import '../../features/home/presentation/screens/home_body.dart';
+import '../../features/main/presentation/screens/main_shell.dart';
 import '../../features/player/presentation/screens/player_detail_screen.dart';
+import '../../features/player/presentation/screens/player_section.dart';
+import '../../features/record/presentation/screens/record_section.dart';
+import '../../features/standing/presentation/screens/standing_section.dart';
 import '../../features/team/presentation/screens/team_detail_screen.dart';
+import '../../features/team/presentation/screens/team_section.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: MainScreen.routePath,
-    // Home <-> STAT, STAT 내부 탭 전환은 go_router가 아니라 Riverpod 상태
-    // 전환이라 여기(페이지=라우트 이동)에는 안 잡힌다.
+    initialLocation: '/',
     observers: [_RouteLoggingObserver()],
     routes: [
-      GoRoute(
-        path: MainScreen.routePath,
-        name: MainScreen.routeName,
-        builder: (context, state) => const MainScreen(),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            MainShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                name: 'home',
+                builder: (context, state) => const HomeBody(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/standings',
+                name: 'standings',
+                builder: (context, state) => const StandingSection(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/records',
+                name: 'records',
+                builder: (context, state) => const RecordSection(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/teams',
+                name: 'teams',
+                builder: (context, state) => const TeamSection(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/players',
+                name: 'players',
+                builder: (context, state) => const PlayerSection(),
+              ),
+            ],
+          ),
+        ],
       ),
       GoRoute(
         path: ExampleScreen.routePath,
