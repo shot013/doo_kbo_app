@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class AllStarRecord extends Equatable {
   const AllStarRecord({
@@ -54,7 +55,7 @@ class AllStarSection extends StatelessWidget {
             Text(
               '역대 미스터 올스타',
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.textPrimary,
                 fontSize: 18,
                 fontWeight: FontWeight.w700,
               ),
@@ -62,7 +63,7 @@ class AllStarSection extends StatelessWidget {
             SizedBox(width: 8),
             Text(
               '최근 10년',
-              style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
+              style: TextStyle(color: AppColors.textMuted, fontSize: 13),
             ),
           ],
         ),
@@ -79,13 +80,13 @@ class _AllStarTable extends StatelessWidget {
   final List<AllStarRecord> records;
 
   static const TextStyle _headerStyle = TextStyle(
-    color: Color(0xFF9E9E9E),
+    color: AppColors.textMuted,
     fontSize: 13,
     fontWeight: FontWeight.w600,
   );
 
   static const TextStyle _cellStyle = TextStyle(
-    color: Colors.white,
+    color: AppColors.textPrimary,
     fontSize: 14,
     height: 1.4,
   );
@@ -100,7 +101,7 @@ class _AllStarTable extends StatelessWidget {
           team: const Text('소속팀', style: _headerStyle),
           record: const Text('기록', style: _headerStyle),
         ),
-        const Divider(color: Color(0xFF2C2C2E), height: 24),
+        const Divider(color: AppColors.surfaceHigh, height: 24),
         for (final record in records) ...[
           _buildRow(
             season: Text(record.season, style: _cellStyle),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../domain/entities/record_category.dart';
 import '../providers/record_providers.dart';
 
@@ -49,13 +50,13 @@ class _ToggleChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: active ? const Color(0xFF4ADE80) : const Color(0xFF2C2C2E),
+          color: active ? AppColors.accent : AppColors.surfaceHigh,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: active ? Colors.black : const Color(0xFF9E9E9E),
+            color: active ? AppColors.onAccent : AppColors.textMuted,
             fontSize: 13,
             fontWeight: FontWeight.w700,
           ),

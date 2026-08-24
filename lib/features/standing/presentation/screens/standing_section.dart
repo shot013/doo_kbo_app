@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/bottom_nav_spacer.dart';
 import '../providers/standing_providers.dart';
 import '../widgets/standing_table.dart';
@@ -24,7 +25,7 @@ class StandingSection extends ConsumerWidget {
             loading: () => const Padding(
               padding: EdgeInsets.symmetric(vertical: 40),
               child: Center(
-                child: CircularProgressIndicator(color: Colors.white),
+                child: CircularProgressIndicator(color: AppColors.textPrimary),
               ),
             ),
             error: (error, stackTrace) => Padding(
@@ -32,7 +33,7 @@ class StandingSection extends ConsumerWidget {
               child: Center(
                 child: Text(
                   error is AppFailure ? error.message : '순위 정보를 불러오지 못했습니다.',
-                  style: const TextStyle(color: Color(0xFF9E9E9E)),
+                  style: const TextStyle(color: AppColors.textMuted),
                 ),
               ),
             ),
@@ -55,7 +56,7 @@ class _StandingHeader extends StatelessWidget {
         Text(
           '순위',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
@@ -84,7 +85,7 @@ class _DropdownLabel extends StatelessWidget {
       children: [
         Text(
           label,
-          style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+          style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
         ),
       ],
     );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../../player/presentation/screens/player_detail_screen.dart';
 import '../../domain/entities/pitcher_record.dart';
@@ -11,13 +12,13 @@ class PitcherRecordTable extends StatelessWidget {
   final List<PitcherRecord> records;
 
   static const TextStyle _headerStyle = TextStyle(
-    color: Color(0xFF9E9E9E),
+    color: AppColors.textMuted,
     fontSize: 13,
     fontWeight: FontWeight.w600,
   );
 
   static const TextStyle _cellStyle = TextStyle(
-    color: Colors.white,
+    color: AppColors.textPrimary,
     fontSize: 14,
   );
 
@@ -44,7 +45,7 @@ class PitcherRecordTable extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const Divider(color: Color(0xFF2C2C2E), height: 24),
+        const Divider(color: AppColors.surfaceHigh, height: 24),
         for (final record in records) ...[
           GestureDetector(
             onTap: () {
@@ -53,7 +54,7 @@ class PitcherRecordTable extends StatelessWidget {
                 showDialog<void>(
                   context: context,
                   builder: (context) => AlertDialog(
-                    backgroundColor: const Color(0xFF2C2C2E),
+                    backgroundColor: AppColors.surfaceHigh,
                     contentPadding: const EdgeInsets.all(0),
                     content: const Text(
                       '선수 ID가 없습니다',
@@ -155,12 +156,18 @@ class _PlayerBadge extends StatelessWidget {
             children: [
               Text(
                 playerName,
-                style: const TextStyle(color: Colors.white, fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
                 teamName,
-                style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 11),
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 11,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ],

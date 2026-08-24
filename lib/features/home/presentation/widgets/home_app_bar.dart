@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
 
 class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   const HomeAppBar({super.key});
@@ -9,7 +10,7 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       elevation: 0,
       leadingWidth: 50,
       titleSpacing: 0,
@@ -18,15 +19,19 @@ class HomeAppBar extends StatelessWidget implements PreferredSizeWidget {
         height: 36,
         alignment: Alignment.center,
         decoration: const BoxDecoration(
-          color: Color(0xFFFFC72C),
+          color: AppColors.gold,
           shape: BoxShape.circle,
         ),
-        child: const Icon(Icons.sports_baseball, color: Colors.black, size: 20),
+        child: const Icon(
+          Icons.sports_baseball,
+          color: AppColors.onAccent,
+          size: 20,
+        ),
       ),
       title: const Text(
         '직관',
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.textPrimary,
           fontSize: 24,
           fontWeight: FontWeight.w800,
           fontStyle: FontStyle.italic,

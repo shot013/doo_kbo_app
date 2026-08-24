@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/kbo_teams.dart';
 import '../../../../core/constants/player_position.dart';
 import '../../../../core/error/failures.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/bottom_nav_spacer.dart';
 import '../../../../core/widgets/player_list_row.dart';
 import '../providers/player_providers.dart';
@@ -23,7 +24,7 @@ class PlayerSection extends ConsumerWidget {
         const Text(
           '선수',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
@@ -43,7 +44,7 @@ class PlayerSection extends ConsumerWidget {
                       padding: EdgeInsets.symmetric(vertical: 40),
                       child: Text(
                         '검색 결과가 없습니다.',
-                        style: TextStyle(color: Color(0xFF9E9E9E)),
+                        style: TextStyle(color: AppColors.textMuted),
                       ),
                     ),
                   )
@@ -70,13 +71,13 @@ class PlayerSection extends ConsumerWidget {
             loading: () => const Center(
               child: Padding(
                 padding: EdgeInsets.symmetric(vertical: 40),
-                child: CircularProgressIndicator(color: Colors.white),
+                child: CircularProgressIndicator(color: AppColors.textPrimary),
               ),
             ),
             error: (error, stackTrace) => Center(
               child: Text(
                 error is AppFailure ? error.message : '선수 정보를 불러오지 못했습니다.',
-                style: const TextStyle(color: Color(0xFF9E9E9E)),
+                style: const TextStyle(color: AppColors.textMuted),
               ),
             ),
           ),
@@ -92,15 +93,15 @@ class _PlayerSearchField extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TextField(
-      style: const TextStyle(color: Colors.white),
+      style: const TextStyle(color: AppColors.textPrimary),
       onChanged: (value) =>
           ref.read(playerSearchQueryProvider.notifier).update(value),
       decoration: InputDecoration(
         hintText: '선수 또는 팀 이름 검색',
-        hintStyle: const TextStyle(color: Color(0xFF9E9E9E)),
-        prefixIcon: const Icon(Icons.search, color: Color(0xFF9E9E9E)),
+        hintStyle: const TextStyle(color: AppColors.textMuted),
+        prefixIcon: const Icon(Icons.search, color: AppColors.textMuted),
         filled: true,
-        fillColor: const Color(0xFF1C1C1E),
+        fillColor: AppColors.surface,
         contentPadding: const EdgeInsets.symmetric(vertical: 12),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(14),
@@ -195,13 +196,13 @@ class _FilterChip extends StatelessWidget {
         alignment: Alignment.center,
         padding: const EdgeInsets.symmetric(horizontal: 14),
         decoration: BoxDecoration(
-          color: active ? const Color(0xFF4ADE80) : const Color(0xFF2C2C2E),
+          color: active ? AppColors.accent : AppColors.surfaceHigh,
           borderRadius: BorderRadius.circular(18),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: active ? Colors.black : const Color(0xFF9E9E9E),
+            color: active ? AppColors.onAccent : AppColors.textMuted,
             fontSize: 13,
             fontWeight: FontWeight.w700,
           ),
