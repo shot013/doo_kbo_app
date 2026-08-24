@@ -43,6 +43,23 @@ chore: bump go_router to 17.3.0
   (CI에서도 동일하게 실행됩니다.)
 - Squash merge를 기본으로 사용합니다.
 
+## 로컬 훅 설정
+
+push하기 전에 CI와 동일한 검증(포맷 체크 → `flutter analyze` → `flutter test`)을
+자동으로 돌리는 `pre-push` 훅이 `.githooks/`에 준비되어 있습니다. 저장소를 새로
+clone했다면 아래 중 하나로 한 번만 활성화하세요.
+
+```
+# 방법 1: 이 저장소에서만 훅 경로를 .githooks로 지정
+git config core.hooksPath .githooks
+
+# 방법 2: .git/hooks에 직접 복사
+cp .githooks/pre-push .git/hooks/pre-push && chmod +x .git/hooks/pre-push
+```
+
+검증이 실패하면 push가 막힙니다. 급하게 우회해야 하면 `git push --no-verify`를
+쓰되, 왜 우회했는지 커밋/PR에 남겨두세요.
+
 ## 코드 작성 규칙
 
 - 새 기능은 `lib/features/example/`의 폴더 구조를 그대로 복사해서 시작하세요.

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
+import '../../../player/presentation/screens/player_detail_screen.dart';
 import '../../domain/entities/batter_record.dart';
 
 class BatterRecordTable extends StatelessWidget {
@@ -9,13 +12,13 @@ class BatterRecordTable extends StatelessWidget {
   final List<BatterRecord> records;
 
   static const TextStyle _headerStyle = TextStyle(
-    color: Color(0xFF9E9E9E),
+    color: AppColors.textMuted,
     fontSize: 13,
     fontWeight: FontWeight.w600,
   );
 
   static const TextStyle _cellStyle = TextStyle(
-    color: Colors.white,
+    color: AppColors.textPrimary,
     fontSize: 14,
   );
 
@@ -42,29 +45,61 @@ class BatterRecordTable extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const Divider(color: Color(0xFF2C2C2E), height: 24),
+        const Divider(color: AppColors.surfaceHigh, height: 24),
         for (final record in records) ...[
-          _buildRow(
-            rank: Text('${record.rank}', style: _cellStyle),
-            player: _PlayerBadge(
-              teamCode: record.teamCode,
-              playerName: record.playerName,
-              teamName: record.teamName,
-            ),
-            avg: Text(
-              record.avg,
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            homeRuns: Text(
-              '${record.homeRuns}',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
-            ),
-            rbi: Text(
-              '${record.rbi}',
-              style: _cellStyle,
-              textAlign: TextAlign.center,
+          GestureDetector(
+            onTap: () {
+              final playerId = record.playerId;
+              if (playerId == null) {
+                showDialog<void>(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    backgroundColor: AppColors.surfaceHigh,
+                    actionsPadding: const EdgeInsets.all(4),
+                    content: const Text(
+                      '선수 ID가 없습니다',
+                      style: TextStyle(color: AppColors.textPrimary),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text(
+                          '확인',
+                          style: TextStyle(color: AppColors.textPrimary),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+                return;
+              }
+              context.pushNamed(
+                PlayerDetailScreen.routeName,
+                pathParameters: {'id': playerId.toString()},
+              );
+            },
+            child: _buildRow(
+              rank: Text('${record.rank}', style: _cellStyle),
+              player: _PlayerBadge(
+                teamCode: record.teamCode,
+                playerName: record.playerName,
+                teamName: record.teamName,
+              ),
+              avg: Text(
+                record.avg,
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              homeRuns: Text(
+                '${record.homeRuns}',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
+              rbi: Text(
+                '${record.rbi}',
+                style: _cellStyle,
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
           const SizedBox(height: 16),
@@ -117,12 +152,18 @@ class _PlayerBadge extends StatelessWidget {
             children: [
               Text(
                 playerName,
-                style: const TextStyle(color: Colors.white, fontSize: 14),
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
                 teamName,
-                style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 11),
+                style: const TextStyle(
+                  color: AppColors.textMuted,
+                  fontSize: 11,
+                ),
                 overflow: TextOverflow.ellipsis,
               ),
             ],

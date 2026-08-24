@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/player_position.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/providers/favorite_teams_provider.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/player_list_row.dart';
 import '../../../player/domain/entities/player_summary.dart';
 import '../../../player/presentation/screens/player_detail_screen.dart';
@@ -26,10 +27,10 @@ class TeamDetailScreen extends ConsumerWidget {
     final isFavorite = favorites.contains(teamCode);
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        foregroundColor: Colors.white,
+        backgroundColor: AppColors.background,
+        foregroundColor: AppColors.textPrimary,
         title: detailAsync.maybeWhen(
           data: (detail) => Text(detail.summary.name),
           orElse: () => const Text('팀 상세'),
@@ -40,13 +41,13 @@ class TeamDetailScreen extends ConsumerWidget {
                 ref.read(favoriteTeamsProvider.notifier).toggle(teamCode),
             icon: Icon(
               isFavorite ? Icons.star : Icons.star_border,
-              color: isFavorite ? const Color(0xFF4ADE80) : Colors.white,
+              color: isFavorite ? AppColors.accent : AppColors.textPrimary,
               size: 20,
             ),
             label: Text(
               isFavorite ? '즐겨찾기됨' : '즐겨찾기',
               style: TextStyle(
-                color: isFavorite ? const Color(0xFF4ADE80) : Colors.white,
+                color: isFavorite ? AppColors.accent : AppColors.textPrimary,
                 fontSize: 13,
               ),
             ),
@@ -57,12 +58,12 @@ class TeamDetailScreen extends ConsumerWidget {
         child: detailAsync.when(
           data: (detail) => _TeamDetailBody(detail: detail),
           loading: () => const Center(
-            child: CircularProgressIndicator(color: Colors.white),
+            child: CircularProgressIndicator(color: AppColors.textPrimary),
           ),
           error: (error, stackTrace) => Center(
             child: Text(
               error is AppFailure ? error.message : '팀 정보를 불러오지 못했습니다.',
-              style: const TextStyle(color: Color(0xFF9E9E9E)),
+              style: const TextStyle(color: AppColors.textMuted),
             ),
           ),
         ),
@@ -91,7 +92,7 @@ class _TeamDetailBody extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: const Color(0xFF1C1C1E),
+            color: AppColors.surface,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Column(
@@ -100,7 +101,7 @@ class _TeamDetailBody extends StatelessWidget {
               Text(
                 '현재 ${summary.rank}위 · ${summary.wins}승 ${summary.losses}패',
                 style: const TextStyle(
-                  color: Colors.white,
+                  color: AppColors.textPrimary,
                   fontSize: 16,
                   fontWeight: FontWeight.w700,
                 ),
@@ -108,7 +109,7 @@ class _TeamDetailBody extends StatelessWidget {
               const SizedBox(height: 12),
               const Text(
                 '최근 5경기',
-                style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 12),
+                style: TextStyle(color: AppColors.textMuted, fontSize: 12),
               ),
               const SizedBox(height: 8),
               Row(
@@ -126,7 +127,7 @@ class _TeamDetailBody extends StatelessWidget {
         const Text(
           '선수단',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontSize: 16,
             fontWeight: FontWeight.w700,
           ),
@@ -137,7 +138,7 @@ class _TeamDetailBody extends StatelessWidget {
             Text(
               position.displayName,
               style: const TextStyle(
-                color: Color(0xFF4ADE80),
+                color: AppColors.accent,
                 fontSize: 14,
                 fontWeight: FontWeight.w700,
               ),
@@ -171,10 +172,10 @@ class _ResultBadge extends StatelessWidget {
     final isWin = result == 'W';
     final isLoss = result == 'L';
     final color = isWin
-        ? const Color(0xFF4ADE80)
+        ? AppColors.accent
         : isLoss
-        ? const Color(0xFF9E9E9E)
-        : Colors.white;
+        ? AppColors.textMuted
+        : AppColors.textPrimary;
 
     return Container(
       width: 28,

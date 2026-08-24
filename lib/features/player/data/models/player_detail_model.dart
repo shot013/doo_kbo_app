@@ -1,6 +1,7 @@
 import '../../../../core/constants/player_position.dart';
 import '../../domain/entities/player_detail.dart';
 import '../../domain/entities/player_stat_line.dart';
+import '../../domain/entities/player_vs_team_stat.dart';
 
 final class PlayerDetailModel extends PlayerDetail {
   const PlayerDetailModel({
@@ -11,10 +12,12 @@ final class PlayerDetailModel extends PlayerDetail {
     required super.position,
     required super.backNumber,
     required super.statLines,
+    required super.vsTeamStats,
   });
 
   factory PlayerDetailModel.fromJson(Map<String, dynamic> json) {
     final statLinesJson = json['statLines'] as List<dynamic>? ?? const [];
+    final vsTeamStatsJson = json['vsTeamStats'] as List<dynamic>? ?? const [];
     return PlayerDetailModel(
       id: json['id'] as String,
       name: json['name'] as String,
@@ -27,6 +30,16 @@ final class PlayerDetailModel extends PlayerDetail {
             (entry) => PlayerStatLine(
               label: (entry as Map<String, dynamic>)['label'] as String,
               value: entry['value'] as String,
+            ),
+          )
+          .toList(),
+      vsTeamStats: vsTeamStatsJson
+          .map(
+            (entry) => PlayerVsTeamStat(
+              teamCode: (entry as Map<String, dynamic>)['teamCode'] as String,
+              teamName: entry['teamName'] as String,
+              games: entry['games'] as int,
+              avg: entry['avg'] as String,
             ),
           )
           .toList(),

@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 class BatterRecord extends Equatable {
   const BatterRecord({
     required this.rank,
+    required this.playerId,
     required this.playerName,
     required this.teamCode,
     required this.teamName,
@@ -13,6 +14,7 @@ class BatterRecord extends Equatable {
   });
 
   final int rank;
+  final int? playerId;
   final String playerName;
   final String teamCode;
   final String teamName;
@@ -24,6 +26,7 @@ class BatterRecord extends Equatable {
   @override
   List<Object?> get props => [
     rank,
+    playerId,
     playerName,
     teamCode,
     teamName,

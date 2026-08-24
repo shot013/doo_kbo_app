@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../constants/player_position.dart';
+import '../theme/app_colors.dart';
 import 'team_logo.dart';
 
 /// `player`(선수 탭 목록)와 `team`(팀 상세 로스터)에서 공용으로 쓰는 선수 리스트 행.
@@ -50,7 +51,7 @@ class PlayerListRow extends StatelessWidget {
                   Text(
                     name,
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: AppColors.textPrimary,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -59,7 +60,7 @@ class PlayerListRow extends StatelessWidget {
                   Text(
                     subtitle ?? position.displayName,
                     style: const TextStyle(
-                      color: Color(0xFF9E9E9E),
+                      color: AppColors.textMuted,
                       fontSize: 12,
                     ),
                   ),
@@ -68,9 +69,13 @@ class PlayerListRow extends StatelessWidget {
             ),
             Text(
               trailingText,
-              style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 13),
             ),
-            const Icon(Icons.chevron_right, color: Color(0xFF9E9E9E), size: 18),
+            const Icon(
+              Icons.chevron_right,
+              color: AppColors.textMuted,
+              size: 18,
+            ),
           ],
         ),
       ),
@@ -90,13 +95,13 @@ class _BackNumberBadge extends StatelessWidget {
       height: 36,
       alignment: Alignment.center,
       decoration: const BoxDecoration(
-        color: Color(0xFF3A3A3C),
+        color: AppColors.border,
         shape: BoxShape.circle,
       ),
       child: Text(
         '$backNumber',
         style: const TextStyle(
-          color: Colors.white,
+          color: AppColors.textPrimary,
           fontSize: 13,
           fontWeight: FontWeight.w700,
         ),

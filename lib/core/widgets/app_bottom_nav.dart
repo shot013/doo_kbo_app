@@ -1,43 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../theme/app_colors.dart';
 
-import '../providers/bottom_nav_provider.dart';
+class _NavTab {
+  const _NavTab(this.icon, this.label);
 
-enum AppTab { home, stat }
+  final IconData icon;
+  final String label;
+}
 
-class AppBottomNav extends ConsumerWidget {
-  const AppBottomNav({super.key});
+const _tabs = [
+  _NavTab(Icons.home, 'HOME'),
+  _NavTab(Icons.emoji_events, '순위'),
+  _NavTab(Icons.bar_chart, '기록'),
+  _NavTab(Icons.groups, '팀'),
+  _NavTab(Icons.person, '선수'),
+];
+
+class AppBottomNav extends StatelessWidget {
+  const AppBottomNav({required this.navigationShell, super.key});
+
+  final StatefulNavigationShell navigationShell;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final activeTab = ref.watch(bottomNavIndexProvider);
-    final notifier = ref.read(bottomNavIndexProvider.notifier);
-
+  Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1E),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(32),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.min,
         children: [
-          _NavItem(
-            icon: Icons.home,
-            label: 'HOME',
-            active: activeTab == AppTab.home,
-            onTap: () => notifier.select(AppTab.home),
-          ),
-          // const Icon(Icons.donut_large, color: Color(0xFF9E9E9E)),
-          const SizedBox(width: 16),
-          _NavItem(
-            icon: Icons.bar_chart,
-            label: 'STAT',
-            active: activeTab == AppTab.stat,
-            onTap: () => notifier.select(AppTab.stat),
-          ),
-          // const Icon(Icons.person_outline, color: Color(0xFF9E9E9E)),
+          for (var i = 0; i < _tabs.length; i++) ...[
+            if (i != 0) const SizedBox(width: 2),
+            _NavItem(
+              icon: _tabs[i].icon,
+              label: _tabs[i].label,
+              active: navigationShell.currentIndex == i,
+              onTap: () => navigationShell.goBranch(
+                i,
+                initialLocation: i == navigationShell.currentIndex,
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -62,7 +69,8 @@ class _NavItem extends StatelessWidget {
     if (!active) {
       return IconButton(
         onPressed: onTap,
-        icon: Icon(icon, color: const Color(0xFF9E9E9E)),
+        visualDensity: VisualDensity.compact,
+        icon: Icon(icon, color: AppColors.textMuted, size: 20),
       );
     }
 
@@ -70,20 +78,20 @@ class _NavItem extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(24),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         decoration: BoxDecoration(
-          color: const Color(0xFF4ADE80),
+          color: AppColors.navActive,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(icon, color: Colors.black, size: 18),
+            Icon(icon, color: AppColors.onAccent, size: 18),
             const SizedBox(width: 6),
             Text(
               label,
               style: const TextStyle(
-                color: Colors.black,
+                color: AppColors.onAccent,
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
               ),

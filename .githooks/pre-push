@@ -1,0 +1,18 @@
+#!/bin/sh
+# push하기 전에 CI와 동일한 순서(포맷 체크 -> flutter analyze -> flutter test)로
+# 로컬에서 검증합니다. 하나라도 실패하면 push를 막습니다.
+# 활성화: git config core.hooksPath .githooks
+# 급하게 우회해야 할 때만: git push --no-verify
+
+set -e
+
+echo "[pre-push] dart format 체크..."
+dart format --output=none --set-exit-if-changed .
+
+echo "[pre-push] flutter analyze..."
+flutter analyze
+
+echo "[pre-push] flutter test..."
+flutter test
+
+echo "[pre-push] 모두 통과했습니다."

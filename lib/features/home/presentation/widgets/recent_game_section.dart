@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/error/failures.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../../game/domain/entities/best_performer.dart';
 import '../../../game/domain/entities/game_result.dart';
@@ -23,7 +24,7 @@ class RecentGameSection extends ConsumerWidget {
         Text(
           '최근 경기 결과${games.isEmpty ? '' : ' ${games.first.gameDate}'}',
           style: const TextStyle(
-            color: Colors.white,
+            color: AppColors.textPrimary,
             fontSize: 20,
             fontWeight: FontWeight.w700,
           ),
@@ -34,7 +35,7 @@ class RecentGameSection extends ConsumerWidget {
               ? const _RecentGameCardShell(
                   child: Text(
                     '최근 종료된 경기가 없습니다',
-                    style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+                    style: TextStyle(color: AppColors.textMuted, fontSize: 14),
                   ),
                 )
               : Column(
@@ -51,13 +52,13 @@ class RecentGameSection extends ConsumerWidget {
                 ),
           loading: () => const _RecentGameCardShell(
             child: Center(
-              child: CircularProgressIndicator(color: Colors.white),
+              child: CircularProgressIndicator(color: AppColors.textPrimary),
             ),
           ),
           error: (error, stackTrace) => _RecentGameCardShell(
             child: Text(
               error is AppFailure ? error.message : '최근 경기 정보를 불러오지 못했습니다.',
-              style: const TextStyle(color: Color(0xFF9E9E9E), fontSize: 14),
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ),
         ),
@@ -77,7 +78,7 @@ class _RecentGameCardShell extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C1C1E),
+        color: AppColors.surface,
         borderRadius: BorderRadius.circular(20),
       ),
       child: child,
@@ -110,7 +111,7 @@ class _RecentGameCard extends StatelessWidget {
                       child: Text(
                         game.homeTeamName,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -134,7 +135,7 @@ class _RecentGameCard extends StatelessWidget {
                 child: Text(
                   '  ${game.homeScore} : ${game.awayScore}  ',
                   style: const TextStyle(
-                    color: Colors.white,
+                    color: AppColors.textPrimary,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -148,7 +149,7 @@ class _RecentGameCard extends StatelessWidget {
                       child: Text(
                         game.awayTeamName,
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: AppColors.textPrimary,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -207,7 +208,10 @@ class _PitcherDecisionsRow extends StatelessWidget {
                 const SizedBox(width: 2),
                 Text(
                   pitcher.playerName,
-                  style: const TextStyle(color: Colors.white, fontSize: 11),
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontSize: 11,
+                  ),
                 ),
               ],
             ),
@@ -248,13 +252,13 @@ class _BestPerformerRow extends StatelessWidget {
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           decoration: BoxDecoration(
-            color: const Color(0xFF3A3A3C),
+            color: AppColors.border,
             borderRadius: BorderRadius.circular(8),
           ),
           child: const Text(
             '베스트 활약',
             style: TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 12,
               fontWeight: FontWeight.w600,
               height: 1.0,
@@ -266,7 +270,7 @@ class _BestPerformerRow extends StatelessWidget {
           child: Text(
             '${bestPerformer.playerName} · ${bestPerformer.line}',
             style: const TextStyle(
-              color: Colors.white,
+              color: AppColors.textPrimary,
               fontSize: 14,
               height: 1.0,
             ),

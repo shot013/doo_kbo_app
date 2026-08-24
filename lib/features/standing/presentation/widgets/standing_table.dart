@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../domain/entities/standing.dart';
 
@@ -9,13 +10,13 @@ class StandingTable extends StatelessWidget {
   final List<Standing> standings;
 
   static const TextStyle _headerStyle = TextStyle(
-    color: Color(0xFF9E9E9E),
+    color: AppColors.textMuted,
     fontSize: 13,
     fontWeight: FontWeight.w600,
   );
 
   static const TextStyle _cellStyle = TextStyle(
-    color: Colors.white,
+    color: AppColors.textPrimary,
     fontSize: 14,
   );
 
@@ -57,7 +58,7 @@ class StandingTable extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ),
-        const Divider(color: Color(0xFF2C2C2E), height: 24),
+        const Divider(color: AppColors.surfaceHigh, height: 24),
         for (final standing in standings) ...[
           _buildRow(
             rank: Text('${standing.rank}', style: _cellStyle),
@@ -138,8 +139,8 @@ class _TeamBadge extends StatelessWidget {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            standing.teamName,
-            style: const TextStyle(color: Colors.white, fontSize: 14),
+            standing.teamName.split(' ').first,
+            style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
             overflow: TextOverflow.ellipsis,
           ),
         ),
