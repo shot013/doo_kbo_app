@@ -72,3 +72,4 @@ lib/
 - UI/프론트엔드 변경은 가능하면 에뮬레이터(`flutter run -d emulator-5554`)에서 실제로 띄워 스크린샷으로 확인한 뒤 커밋한다.
 - 커밋/푸시/PR 생성은 사용자가 명시적으로 요청했을 때만 수행한다.
 - `MEMORY.md`(코드/git 히스토리만으로 알 수 없는 결정·진행 상황·배경)와 `ERRORS.md`(재발 가능하거나 원인 파악에 시간이 걸렸던 에러)는 이 저장소가 채택한 `doo_kbo_harness_kit` 문서 관례다. 작업 시작 전 관련 있으면 참고하고, 주요 결정을 내리거나 까다로운 에러를 해결했다면 각 파일의 작성 규칙에 맞춰 갱신한다.
+- push 전 포맷/analyze/test를 자동 검증하는 `pre-push` 훅이 `.githooks/`에 있다(설정 방법은 `CONTRIBUTING.md` 참고). 활성화하려면 `git config core.hooksPath ...`가 필요한데 이는 git 설정 변경이라 Claude가 직접 실행하지 않는다 — 대신 `.githooks/pre-push`를 `.git/hooks/pre-push`로 `cp`해서 파일만 배치한다. 훅이 있어도 커밋 전 검증은 그대로 직접 수행한다.
