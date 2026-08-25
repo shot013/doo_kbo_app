@@ -3,7 +3,13 @@
 ## 엔지니어링/인프라
 - [x] 로컬 빌드 환경 고정(cmdline-tools 설치) 또는 CI에 `flutter build appbundle`/`ipa` 단계 추가 — 릴리스 빌드를 사람 손이 아닌 파이프라인이 보장하도록
   - Android 미서명 빌드 검증만 CI에 추가함 (PR: chore/ci-release-build-verification). 실서명/iOS는 별도 결정 필요해 보류
-- [ ] 백엔드 HTTPS 전환 + 환경변수 기반 base URL (현재 `core/constants`에 하드코딩된 것으로 추정)
+- [ ] 백엔드 HTTPS 전환 + 환경변수 기반 base URL
+  - 환경변수 오버라이드(`--dart-define=BASE_URL=`)는 이미 있음 (`lib/core/constants/app_constants.dart`) — 하드코딩된 건 fallback 기본값(`http://15.164.113.221:3651`)뿐
+  - [ ] (백엔드, 별도 진행 중) 도메인 연결 + TLS 인증서 + 리버스 프록시/로드밸런서로 HTTPS 엔드포인트 확보
+  - [x] (클라이언트) CI `build-release`에 `--dart-define=BASE_URL=${{ vars.BASE_URL }}` 연결 — 도메인 준비되면 GitHub Actions repo variable만 등록하면 코드 수정 없이 반영
+  - [ ] (클라이언트) 도메인 확정되면 `app_constants.dart` fallback 기본값을 `https://<도메인>`으로 교체
+  - [ ] (클라이언트) iOS `Info.plist`의 `NSExceptionDomains`(`15.164.113.221` 예외) 제거
+  - [ ] (클라이언트) Android cleartext 관련 설정 확인·정리
 - [ ] 크래시 리포팅 최소 1종 도입 — 프로덕션 가시성 없이 배포량만 늘리는 건 리스크
 - [ ] 통합 테스트 인프라 구축 (`integration_test` 패키지) — 현재 위젯 테스트는 렌더링 확인 수준이지 실제 네비게이션/상태 전이 검증이 아님
 - [ ] 디자인 토큰을 코드가 아닌 별도 스펙 문서/파일로 고정 — 매번 스크린샷 대조로 색을 역추적하는 현재 방식은 확장 안 됨

@@ -46,5 +46,11 @@ jobs:
       # key.properties가 없으므로 android/app/build.gradle.kts의 release
       # signingConfig가 debug 키로 폴백된다. 이 빌드는 서명 결과물이 아니라
       # "릴리스 빌드가 깨지지 않는지"만 검증하기 위한 것이다.
+      #
+      # vars.BASE_URL이 비어 있으면 AppConstants.baseUrl은 기존 기본값으로
+      # 폴백한다 (lib/core/constants/app_constants.dart). 백엔드가 HTTPS
+      # 도메인을 갖추면 저장소 Settings > Secrets and variables > Actions에
+      # BASE_URL(예: https://api.jikgwan.app)을 등록하는 것만으로 이후
+      # 빌드부터 자동으로 반영된다.
       - name: Build release app bundle (unsigned verification)
-        run: flutter build appbundle --release
+        run: flutter build appbundle --release --dart-define=BASE_URL=${{ vars.BASE_URL }}
