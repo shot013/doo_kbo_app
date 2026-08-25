@@ -43,6 +43,42 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
+      # google-services.json은 key.properties와 마찬가지로 저장소에
+      # 커밋하지 않는다 (.gitignore). google-services Gradle 플러그인은
+      # 이 파일이 없으면 빌드 자체가 실패하므로, 실제 Firebase 프로젝트와
+      # 무관하게 구조만 유효한 더미 파일을 빌드 직전에 만들어 넣는다.
+      # 이 잡은 "릴리스 빌드가 깨지지 않는지"만 검증하는 용도라 실제
+      # Firebase 시크릿은 필요하지 않다.
+      - name: Write placeholder google-services.json
+        run: |
+          cat > android/app/google-services.json <<'JSON'
+          {
+            "project_info": {
+              "project_number": "000000000000",
+              "project_id": "ci-placeholder",
+              "storage_bucket": "ci-placeholder.appspot.com"
+            },
+            "client": [
+              {
+                "client_info": {
+                  "mobilesdk_app_id": "1:000000000000:android:0000000000000000000000",
+                  "android_client_info": {
+                    "package_name": "com.kbo.app"
+                  }
+                },
+                "oauth_client": [],
+                "api_key": [
+                  { "current_key": "AIzaSyCIPlaceholderKeyNotARealSecret000" }
+                ],
+                "services": {
+                  "appinvite_service": { "other_platform_oauth_client": [] }
+                }
+              }
+            ],
+            "configuration_version": "1"
+          }
+          JSON
+
       # key.properties가 없으므로 android/app/build.gradle.kts의 release
       # signingConfig가 debug 키로 폴백된다. 이 빌드는 서명 결과물이 아니라
       # "릴리스 빌드가 깨지지 않는지"만 검증하기 위한 것이다.
