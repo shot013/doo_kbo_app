@@ -12,3 +12,6 @@ GeneratedPluginRegistrant.java
 key.properties
 **/*.keystore
 **/*.jks
+
+# Firebase 설정 파일 (프로젝트별로 발급받아 로컬에 직접 배치)
+app/google-services.json
