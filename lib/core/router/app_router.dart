@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +19,14 @@ import '../../features/team/presentation/screens/team_section.dart';
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: '/',
-    observers: [_RouteLoggingObserver()],
+    observers: [
+      _RouteLoggingObserver(),
+      // 위젯 테스트는 main()을 거치지 않아 Firebase.initializeApp()이 호출되지
+      // 않는다. Firebase.apps로 초기화 여부를 확인해 테스트 환경에서는
+      // observer를 아예 추가하지 않는다.
+      if (Firebase.apps.isNotEmpty)
+        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+    ],
     routes: [
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) =>
