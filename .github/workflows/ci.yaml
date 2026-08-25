@@ -28,3 +28,23 @@ jobs:
 
       - name: Test
         run: flutter test
+
+  build-release:
+    needs: analyze-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # key.properties가 없으므로 android/app/build.gradle.kts의 release
+      # signingConfig가 debug 키로 폴백된다. 이 빌드는 서명 결과물이 아니라
+      # "릴리스 빌드가 깨지지 않는지"만 검증하기 위한 것이다.
+      - name: Build release app bundle (unsigned verification)
+        run: flutter build appbundle --release
