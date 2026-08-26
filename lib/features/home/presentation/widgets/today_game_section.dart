@@ -126,7 +126,7 @@ class _GameCard extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          game.homeTeamName,
+                          game.homeTeamVisibleName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: AppColors.textPrimary,
@@ -162,7 +162,7 @@ class _GameCard extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          game.awayTeamName,
+                          game.awayTeamVisibleName,
                           textAlign: TextAlign.center,
                           style: const TextStyle(
                             color: AppColors.textPrimary,

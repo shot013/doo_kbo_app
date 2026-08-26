@@ -33,7 +33,7 @@ void main() {
       expect(model.homeTeamCode, 'LG');
       expect(model.homeTeamVisibleName, 'LG');
       expect(model.awayTeamCode, 'KT');
-      expect(model.awayTeamVisibleName, 'kt');
+      expect(model.awayTeamVisibleName, 'KT');
       expect(model.homeScore, isNull);
       expect(model.awayScore, isNull);
       expect(model.homeStarterPitcher, '박시원');

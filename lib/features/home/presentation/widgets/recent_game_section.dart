@@ -109,7 +109,7 @@ class _RecentGameCard extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        game.homeTeamName,
+                        game.homeTeamVisibleName,
                         style: const TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 16,
@@ -147,7 +147,7 @@ class _RecentGameCard extends StatelessWidget {
                     Container(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        game.awayTeamName,
+                        game.awayTeamVisibleName,
                         style: const TextStyle(
                           color: AppColors.textPrimary,
                           fontSize: 16,
