@@ -8,6 +8,7 @@
   - [x] (클라이언트, doo_kbo_app) Firebase Analytics + Crashlytics 연동, 에뮬레이터에서 초기화 확인 (PR: feat/firebase-analytics-crashlytics)
   - [ ] (클라이언트) iOS Xcode 프로젝트에 GoogleService-Info.plist 리소스 등록 (Windows에서 Xcode 실행 불가로 보류)
 - [ ] 통합 테스트 인프라 구축 (`integration_test` 패키지) — 현재 위젯 테스트는 렌더링 확인 수준이지 실제 네비게이션/상태 전이 검증이 아님
-- [ ] 디자인 토큰을 코드가 아닌 별도 스펙 문서/파일로 고정 — 매번 스크린샷 대조로 색을 역추적하는 현재 방식은 확장 안 됨
+- [x] 디자인 토큰을 코드가 아닌 별도 스펙 문서/파일로 고정 — 매번 스크린샷 대조로 색을 역추적하는 현재 방식은 확장 안 됨
+  - docs/DESIGN_TOKENS.md 추가 (컬러 팔레트 9개 토큰 정리, `app_colors.dart`가 원본이고 이 문서는 참고용). spacing/typography는 아직 코드에서 상수화되어 있지 않아 범위에서 제외
 - [ ] main의 orphaned 커밋(`54115cd`) 정리 — 다음 안전한 시점에 rebase
 - [ ] 리뷰 프로세스 실질화 — 단일 작업자 구조라면 문서상 "1명 승인" 요건을 현실에 맞게 재정의하거나, 실제 두 번째 검토자를 두는 방안 검토
