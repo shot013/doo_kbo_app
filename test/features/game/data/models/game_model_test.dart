@@ -31,7 +31,9 @@ void main() {
       expect(model.scheduledAt, DateTime.parse('2026-08-20T10:00:00.000Z'));
       expect(model.stadium, '잠실');
       expect(model.homeTeamCode, 'LG');
+      expect(model.homeTeamVisibleName, 'LG');
       expect(model.awayTeamCode, 'KT');
+      expect(model.awayTeamVisibleName, 'kt');
       expect(model.homeScore, isNull);
       expect(model.awayScore, isNull);
       expect(model.homeStarterPitcher, '박시원');

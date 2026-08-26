@@ -33,6 +33,9 @@ class Standing extends Equatable {
   final String? homeRecord;
   final String? awayRecord;
 
+  /// 표시용 짧은 팀명 (예: "LG 트윈스" -> "LG").
+  String get teamVisibleName => teamName.split(' ').first;
+
   @override
   List<Object?> get props => [
     seasonYear,

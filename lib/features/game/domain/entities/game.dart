@@ -37,6 +37,10 @@ class Game extends Equatable {
   final String? currentInning;
   final GameStatus status;
 
+  /// 표시용 짧은 팀명 (예: "LG 트윈스" -> "LG").
+  String get homeTeamVisibleName => homeTeamName.split(' ').first;
+  String get awayTeamVisibleName => awayTeamName.split(' ').first;
+
   @override
   List<Object?> get props => [
     id,

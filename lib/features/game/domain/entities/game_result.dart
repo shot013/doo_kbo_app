@@ -30,6 +30,10 @@ class GameResult extends Equatable {
   final BestPerformer? bestPerformer;
   final List<PitcherDecision> pitchers;
 
+  /// 표시용 짧은 팀명 (예: "LG 트윈스" -> "LG").
+  String get homeTeamVisibleName => homeTeamName.split(' ').first;
+  String get awayTeamVisibleName => awayTeamName.split(' ').first;
+
   @override
   List<Object?> get props => [
     gameId,

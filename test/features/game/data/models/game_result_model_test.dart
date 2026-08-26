@@ -48,6 +48,8 @@ void main() {
 
       expect(model.homeScore, 4);
       expect(model.awayScore, 16);
+      expect(model.homeTeamVisibleName, 'LG');
+      expect(model.awayTeamVisibleName, 'kt');
       expect(model.bestPerformer, isNotNull);
       expect(model.bestPerformer!.playerName, '힐리어드');
       expect(model.bestPerformer!.line, '3타수 2안타 3타점');
