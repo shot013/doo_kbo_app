@@ -139,7 +139,7 @@ class _TeamBadge extends StatelessWidget {
         const SizedBox(width: 8),
         Flexible(
           child: Text(
-            standing.teamName.split(' ').first,
+            standing.teamVisibleName,
             style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
             overflow: TextOverflow.ellipsis,
           ),

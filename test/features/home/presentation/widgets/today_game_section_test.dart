@@ -29,7 +29,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('오늘의 경기'), findsOneWidget);
-    expect(find.text('LG 트윈스'), findsOneWidget);
-    expect(find.text('두산 베어스'), findsOneWidget);
+    expect(find.text('LG'), findsOneWidget);
+    expect(find.text('두산'), findsOneWidget);
   });
 }
