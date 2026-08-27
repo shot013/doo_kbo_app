@@ -7,6 +7,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../domain/entities/player_detail.dart';
 import '../../domain/entities/player_stat_line.dart';
+import '../../domain/entities/player_vs_batter_stat.dart';
+import '../../domain/entities/player_vs_pitcher_stat.dart';
 import '../../domain/entities/player_vs_team_stat.dart';
 import '../providers/player_providers.dart';
 
@@ -132,6 +134,62 @@ class _PlayerDetailBody extends StatelessWidget {
             ),
           ),
         ],
+        if (player.vsPitcherStats.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          const Text(
+            '상대 투수별 안타율',
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                for (final stat in player.vsPitcherStats) ...[
+                  _VsPitcherStatRow(stat: stat),
+                  if (stat != player.vsPitcherStats.last)
+                    const Divider(color: AppColors.surfaceHigh, height: 20),
+                ],
+              ],
+            ),
+          ),
+        ],
+        if (player.vsBatterStats.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          const Text(
+            '상대 타자별 삼진율',
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surface,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              children: [
+                for (final stat in player.vsBatterStats) ...[
+                  _VsBatterStatRow(stat: stat),
+                  if (stat != player.vsBatterStats.last)
+                    const Divider(color: AppColors.surfaceHigh, height: 20),
+                ],
+              ],
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -186,6 +244,72 @@ class _VsTeamStatRow extends StatelessWidget {
         ),
         Text(
           '${stat.avg} · ${stat.games}경기',
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _VsPitcherStatRow extends StatelessWidget {
+  const _VsPitcherStatRow({required this.stat});
+
+  final PlayerVsPitcherStat stat;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            TeamLogo(teamCode: stat.pitcherTeamCode, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              '${stat.pitcherTeamCode} · ${stat.pitcherName}',
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
+            ),
+          ],
+        ),
+        Text(
+          '${stat.avg} · ${stat.atBats}타수 ${stat.hits}안타',
+          style: const TextStyle(
+            color: AppColors.textPrimary,
+            fontSize: 15,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _VsBatterStatRow extends StatelessWidget {
+  const _VsBatterStatRow({required this.stat});
+
+  final PlayerVsBatterStat stat;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            TeamLogo(teamCode: stat.batterTeamCode, size: 24),
+            const SizedBox(width: 8),
+            Text(
+              '${stat.batterTeamCode} · ${stat.batterName}',
+              style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
+            ),
+          ],
+        ),
+        Text(
+          '${stat.strikeoutRate} · ${stat.atBats}타수 ${stat.strikeouts}삼진',
           style: const TextStyle(
             color: AppColors.textPrimary,
             fontSize: 15,

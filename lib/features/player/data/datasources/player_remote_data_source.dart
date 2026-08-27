@@ -5,6 +5,8 @@ import '../../../../core/constants/kbo_teams.dart';
 import '../../../../core/constants/player_position.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/player_stat_line.dart';
+import '../../domain/entities/player_vs_batter_stat.dart';
+import '../../domain/entities/player_vs_pitcher_stat.dart';
 import '../../domain/entities/player_vs_team_stat.dart';
 import '../models/player_detail_model.dart';
 import '../models/player_summary_model.dart';
@@ -130,6 +132,54 @@ class PlayerDummyDataSource implements PlayerRemoteDataSource {
               avg: '0.3${(20 + team.code.length * 7) % 80}',
             ),
       ],
+      vsPitcherStats: seed.position == PlayerPosition.pitcher
+          ? const []
+          : [
+              for (final team in kKboTeams)
+                if (team.code != seed.teamCode) _dummyVsPitcherStat(team),
+            ],
+      vsBatterStats: seed.position != PlayerPosition.pitcher
+          ? const []
+          : [
+              for (final team in kKboTeams)
+                if (team.code != seed.teamCode) _dummyVsBatterStat(team),
+            ],
     );
   }
+}
+
+PlayerVsPitcherStat _dummyVsPitcherStat(KboTeam team) {
+  final pitcher = kDummyPlayerRoster.firstWhere(
+    (candidate) =>
+        candidate.teamCode == team.code &&
+        candidate.position == PlayerPosition.pitcher,
+  );
+  final atBats = 3 + team.code.length;
+  final hits = 1 + team.code.length % 3;
+  return PlayerVsPitcherStat(
+    pitcherId: pitcher.backNumber,
+    pitcherName: pitcher.name,
+    pitcherTeamCode: team.code,
+    atBats: atBats,
+    hits: hits,
+    avg: (hits / atBats).toStringAsFixed(3),
+  );
+}
+
+PlayerVsBatterStat _dummyVsBatterStat(KboTeam team) {
+  final batter = kDummyPlayerRoster.firstWhere(
+    (candidate) =>
+        candidate.teamCode == team.code &&
+        candidate.position != PlayerPosition.pitcher,
+  );
+  final atBats = 3 + team.code.length;
+  final strikeouts = 1 + team.code.length % 3;
+  return PlayerVsBatterStat(
+    batterId: batter.backNumber,
+    batterName: batter.name,
+    batterTeamCode: team.code,
+    atBats: atBats,
+    strikeouts: strikeouts,
+    strikeoutRate: (strikeouts / atBats).toStringAsFixed(3),
+  );
 }
