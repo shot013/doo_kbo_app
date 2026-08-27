@@ -145,8 +145,8 @@ class PlayerDummyDataSource implements PlayerRemoteDataSource {
                               candidate.position == PlayerPosition.pitcher,
                         )
                         .name,
-                    teamCode: team.code,
-                    teamName: team.name,
+                    pitcherTeamCode: team.code,
+                    pitcherTeamName: team.name,
                     games: 3 + team.code.length,
                     avg: '0.2${(10 + team.code.length * 5) % 80}',
                   ),
@@ -164,8 +164,8 @@ class PlayerDummyDataSource implements PlayerRemoteDataSource {
                               candidate.position != PlayerPosition.pitcher,
                         )
                         .name,
-                    teamCode: team.code,
-                    teamName: team.name,
+                    batterTeamCode: team.code,
+                    batterTeamName: team.name,
                     games: 3 + team.code.length,
                     avg: '0.2${(10 + team.code.length * 5) % 80}',
                   ),

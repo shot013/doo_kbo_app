@@ -56,8 +56,8 @@ final class PlayerDetailModel extends PlayerDetail {
             (entry) => PlayerVsPitcherStat(
               pitcherName:
                   (entry as Map<String, dynamic>)['pitcherName'] as String,
-              teamCode: entry['teamCode'] as String,
-              teamName: entry['teamName'] as String,
+              pitcherTeamCode: entry['teamCode'] as String,
+              pitcherTeamName: entry['teamName'] as String,
               games: entry['games'] as int,
               avg: entry['avg'] as String,
             ),
@@ -68,8 +68,8 @@ final class PlayerDetailModel extends PlayerDetail {
             (entry) => PlayerVsBatterStat(
               batterName:
                   (entry as Map<String, dynamic>)['batterName'] as String,
-              teamCode: entry['teamCode'] as String,
-              teamName: entry['teamName'] as String,
+              batterTeamCode: entry['teamCode'] as String,
+              batterTeamName: entry['teamName'] as String,
               games: entry['games'] as int,
               avg: entry['avg'] as String,
             ),

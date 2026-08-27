@@ -4,18 +4,24 @@ import 'package:equatable/equatable.dart';
 class PlayerVsBatterStat extends Equatable {
   const PlayerVsBatterStat({
     required this.batterName,
-    required this.teamCode,
-    required this.teamName,
+    required this.batterTeamCode,
+    required this.batterTeamName,
     required this.games,
     required this.avg,
   });
 
   final String batterName;
-  final String teamCode;
-  final String teamName;
+  final String batterTeamCode;
+  final String batterTeamName;
   final int games;
   final String avg;
 
   @override
-  List<Object?> get props => [batterName, teamCode, teamName, games, avg];
+  List<Object?> get props => [
+    batterName,
+    batterTeamCode,
+    batterTeamName,
+    games,
+    avg,
+  ];
 }

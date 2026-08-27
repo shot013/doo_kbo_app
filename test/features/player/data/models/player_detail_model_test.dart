@@ -40,7 +40,7 @@ void main() {
       expect(model.vsTeamStats.first.avg, '0.439');
       expect(model.vsPitcherStats, hasLength(1));
       expect(model.vsPitcherStats.first.pitcherName, '김광현');
-      expect(model.vsPitcherStats.first.teamCode, 'SK');
+      expect(model.vsPitcherStats.first.pitcherTeamCode, 'SK');
       expect(model.vsPitcherStats.first.games, 5);
       expect(model.vsPitcherStats.first.avg, '0.321');
       expect(model.vsBatterStats, isEmpty);
@@ -67,7 +67,7 @@ void main() {
 
       expect(model.vsBatterStats, hasLength(1));
       expect(model.vsBatterStats.first.batterName, '레이예스');
-      expect(model.vsBatterStats.first.teamCode, 'LT');
+      expect(model.vsBatterStats.first.batterTeamCode, 'LT');
       expect(model.vsBatterStats.first.games, 8);
       expect(model.vsBatterStats.first.avg, '0.412');
       expect(model.vsPitcherStats, isEmpty);
