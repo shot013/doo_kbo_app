@@ -84,3 +84,53 @@ jobs:
       # "릴리스 빌드가 깨지지 않는지"만 검증하기 위한 것이다.
       - name: Build release app bundle (unsigned verification)
         run: flutter build appbundle --release
+
+  # main에 push될 때만(=develop→main PR이 머지될 때) 실행되어, 실제 서명된
+  # AAB를 빌드하고 fastlane으로 Play Console '테스트' 비공개 테스트 트랙에
+  # 업로드한다. build-release와 달리 이 잡은 실제 시크릿(서명 키,
+  # google-services.json, Play 서비스 계정 키)을 쓴다.
+  deploy-play-store:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: analyze-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Restore release keystore
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 -d > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storePassword=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          keyPassword=${{ secrets.ANDROID_KEY_PASSWORD }}
+          keyAlias=${{ secrets.ANDROID_KEY_ALIAS }}
+          storeFile=upload-keystore.jks
+          EOF
+
+      - name: Restore real google-services.json
+        run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > android/app/google-services.json
+
+      - name: Build signed release app bundle
+        run: flutter build appbundle --release
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: android
+
+      - name: Restore Play Store service account key
+        run: echo "${{ secrets.PLAY_STORE_JSON_KEY_BASE64 }}" | base64 -d > "$RUNNER_TEMP/play-store-key.json"
+
+      - name: Upload to Play Store closed testing track
+        working-directory: android
+        env:
+          PLAY_STORE_JSON_KEY_PATH: ${{ runner.temp }}/play-store-key.json
+        run: bundle exec fastlane deploy_closed_testing
