@@ -7,7 +7,10 @@ platform :android do
   lane :deploy_closed_testing do
     upload_to_play_store(
       track: "테스트",
-      aab: "../../build/app/outputs/bundle/release/app-release.aab",
+      aab: File.expand_path(
+        "../../build/app/outputs/bundle/release/app-release.aab",
+        __dir__,
+      ),
       release_status: "completed",
       skip_upload_metadata: true,
       skip_upload_images: true,
