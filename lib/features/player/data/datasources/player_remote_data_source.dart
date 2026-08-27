@@ -5,6 +5,8 @@ import '../../../../core/constants/kbo_teams.dart';
 import '../../../../core/constants/player_position.dart';
 import '../../../../core/error/exceptions.dart';
 import '../../domain/entities/player_stat_line.dart';
+import '../../domain/entities/player_vs_batter_stat.dart';
+import '../../domain/entities/player_vs_pitcher_stat.dart';
 import '../../domain/entities/player_vs_team_stat.dart';
 import '../models/player_detail_model.dart';
 import '../models/player_summary_model.dart';
@@ -130,6 +132,44 @@ class PlayerDummyDataSource implements PlayerRemoteDataSource {
               avg: '0.3${(20 + team.code.length * 7) % 80}',
             ),
       ],
+      vsPitcherStats: seed.position == PlayerPosition.pitcher
+          ? const []
+          : [
+              for (final team in kKboTeams)
+                if (team.code != seed.teamCode)
+                  PlayerVsPitcherStat(
+                    pitcherName: kDummyPlayerRoster
+                        .firstWhere(
+                          (candidate) =>
+                              candidate.teamCode == team.code &&
+                              candidate.position == PlayerPosition.pitcher,
+                        )
+                        .name,
+                    teamCode: team.code,
+                    teamName: team.name,
+                    games: 3 + team.code.length,
+                    avg: '0.2${(10 + team.code.length * 5) % 80}',
+                  ),
+            ],
+      vsBatterStats: seed.position != PlayerPosition.pitcher
+          ? const []
+          : [
+              for (final team in kKboTeams)
+                if (team.code != seed.teamCode)
+                  PlayerVsBatterStat(
+                    batterName: kDummyPlayerRoster
+                        .firstWhere(
+                          (candidate) =>
+                              candidate.teamCode == team.code &&
+                              candidate.position != PlayerPosition.pitcher,
+                        )
+                        .name,
+                    teamCode: team.code,
+                    teamName: team.name,
+                    games: 3 + team.code.length,
+                    avg: '0.2${(10 + team.code.length * 5) % 80}',
+                  ),
+            ],
     );
   }
 }

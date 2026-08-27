@@ -1,6 +1,8 @@
 import '../../../../core/constants/player_position.dart';
 import '../../domain/entities/player_detail.dart';
 import '../../domain/entities/player_stat_line.dart';
+import '../../domain/entities/player_vs_batter_stat.dart';
+import '../../domain/entities/player_vs_pitcher_stat.dart';
 import '../../domain/entities/player_vs_team_stat.dart';
 
 final class PlayerDetailModel extends PlayerDetail {
@@ -13,11 +15,17 @@ final class PlayerDetailModel extends PlayerDetail {
     required super.backNumber,
     required super.statLines,
     required super.vsTeamStats,
+    required super.vsPitcherStats,
+    required super.vsBatterStats,
   });
 
   factory PlayerDetailModel.fromJson(Map<String, dynamic> json) {
     final statLinesJson = json['statLines'] as List<dynamic>? ?? const [];
     final vsTeamStatsJson = json['vsTeamStats'] as List<dynamic>? ?? const [];
+    final vsPitcherStatsJson =
+        json['vsPitcherStats'] as List<dynamic>? ?? const [];
+    final vsBatterStatsJson =
+        json['vsBatterStats'] as List<dynamic>? ?? const [];
     return PlayerDetailModel(
       id: json['id'] as String,
       name: json['name'] as String,
@@ -37,6 +45,30 @@ final class PlayerDetailModel extends PlayerDetail {
           .map(
             (entry) => PlayerVsTeamStat(
               teamCode: (entry as Map<String, dynamic>)['teamCode'] as String,
+              teamName: entry['teamName'] as String,
+              games: entry['games'] as int,
+              avg: entry['avg'] as String,
+            ),
+          )
+          .toList(),
+      vsPitcherStats: vsPitcherStatsJson
+          .map(
+            (entry) => PlayerVsPitcherStat(
+              pitcherName:
+                  (entry as Map<String, dynamic>)['pitcherName'] as String,
+              teamCode: entry['teamCode'] as String,
+              teamName: entry['teamName'] as String,
+              games: entry['games'] as int,
+              avg: entry['avg'] as String,
+            ),
+          )
+          .toList(),
+      vsBatterStats: vsBatterStatsJson
+          .map(
+            (entry) => PlayerVsBatterStat(
+              batterName:
+                  (entry as Map<String, dynamic>)['batterName'] as String,
+              teamCode: entry['teamCode'] as String,
               teamName: entry['teamName'] as String,
               games: entry['games'] as int,
               avg: entry['avg'] as String,
