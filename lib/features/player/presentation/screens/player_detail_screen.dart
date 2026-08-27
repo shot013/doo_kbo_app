@@ -165,7 +165,7 @@ class _PlayerDetailBody extends StatelessWidget {
         if (player.vsBatterStats.isNotEmpty) ...[
           const SizedBox(height: 24),
           const Text(
-            '상대 타자별 피안타율',
+            '상대 타자별 삼진율',
             style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 16,
@@ -270,13 +270,13 @@ class _VsPitcherStatRow extends StatelessWidget {
             TeamLogo(teamCode: stat.pitcherTeamCode, size: 24),
             const SizedBox(width: 8),
             Text(
-              '${stat.pitcherTeamName} · ${stat.pitcherName}',
+              '${stat.pitcherTeamCode} · ${stat.pitcherName}',
               style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ],
         ),
         Text(
-          '${stat.avg} · ${stat.games}경기',
+          '${stat.avg} · ${stat.atBats}타수 ${stat.hits}안타',
           style: const TextStyle(
             color: AppColors.textPrimary,
             fontSize: 15,
@@ -303,13 +303,13 @@ class _VsBatterStatRow extends StatelessWidget {
             TeamLogo(teamCode: stat.batterTeamCode, size: 24),
             const SizedBox(width: 8),
             Text(
-              '${stat.batterTeamName} · ${stat.batterName}',
+              '${stat.batterTeamCode} · ${stat.batterName}',
               style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ],
         ),
         Text(
-          '${stat.avg} · ${stat.games}경기',
+          '${stat.strikeoutRate} · ${stat.atBats}타수 ${stat.strikeouts}삼진',
           style: const TextStyle(
             color: AppColors.textPrimary,
             fontSize: 15,

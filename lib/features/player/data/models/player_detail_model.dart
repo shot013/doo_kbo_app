@@ -54,11 +54,11 @@ final class PlayerDetailModel extends PlayerDetail {
       vsPitcherStats: vsPitcherStatsJson
           .map(
             (entry) => PlayerVsPitcherStat(
-              pitcherName:
-                  (entry as Map<String, dynamic>)['pitcherName'] as String,
-              pitcherTeamCode: entry['teamCode'] as String,
-              pitcherTeamName: entry['teamName'] as String,
-              games: entry['games'] as int,
+              pitcherId: (entry as Map<String, dynamic>)['pitcherId'] as int,
+              pitcherName: entry['pitcherName'] as String,
+              pitcherTeamCode: entry['pitcherTeamCode'] as String,
+              atBats: entry['atBats'] as int,
+              hits: entry['hits'] as int,
               avg: entry['avg'] as String,
             ),
           )
@@ -66,12 +66,12 @@ final class PlayerDetailModel extends PlayerDetail {
       vsBatterStats: vsBatterStatsJson
           .map(
             (entry) => PlayerVsBatterStat(
-              batterName:
-                  (entry as Map<String, dynamic>)['batterName'] as String,
-              batterTeamCode: entry['teamCode'] as String,
-              batterTeamName: entry['teamName'] as String,
-              games: entry['games'] as int,
-              avg: entry['avg'] as String,
+              batterId: (entry as Map<String, dynamic>)['batterId'] as int,
+              batterName: entry['batterName'] as String,
+              batterTeamCode: entry['batterTeamCode'] as String,
+              atBats: entry['atBats'] as int,
+              strikeouts: entry['strikeouts'] as int,
+              strikeoutRate: entry['strikeoutRate'] as String,
             ),
           )
           .toList(),

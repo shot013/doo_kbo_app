@@ -136,40 +136,50 @@ class PlayerDummyDataSource implements PlayerRemoteDataSource {
           ? const []
           : [
               for (final team in kKboTeams)
-                if (team.code != seed.teamCode)
-                  PlayerVsPitcherStat(
-                    pitcherName: kDummyPlayerRoster
-                        .firstWhere(
-                          (candidate) =>
-                              candidate.teamCode == team.code &&
-                              candidate.position == PlayerPosition.pitcher,
-                        )
-                        .name,
-                    pitcherTeamCode: team.code,
-                    pitcherTeamName: team.name,
-                    games: 3 + team.code.length,
-                    avg: '0.2${(10 + team.code.length * 5) % 80}',
-                  ),
+                if (team.code != seed.teamCode) _dummyVsPitcherStat(team),
             ],
       vsBatterStats: seed.position != PlayerPosition.pitcher
           ? const []
           : [
               for (final team in kKboTeams)
-                if (team.code != seed.teamCode)
-                  PlayerVsBatterStat(
-                    batterName: kDummyPlayerRoster
-                        .firstWhere(
-                          (candidate) =>
-                              candidate.teamCode == team.code &&
-                              candidate.position != PlayerPosition.pitcher,
-                        )
-                        .name,
-                    batterTeamCode: team.code,
-                    batterTeamName: team.name,
-                    games: 3 + team.code.length,
-                    avg: '0.2${(10 + team.code.length * 5) % 80}',
-                  ),
+                if (team.code != seed.teamCode) _dummyVsBatterStat(team),
             ],
     );
   }
+}
+
+PlayerVsPitcherStat _dummyVsPitcherStat(KboTeam team) {
+  final pitcher = kDummyPlayerRoster.firstWhere(
+    (candidate) =>
+        candidate.teamCode == team.code &&
+        candidate.position == PlayerPosition.pitcher,
+  );
+  final atBats = 3 + team.code.length;
+  final hits = 1 + team.code.length % 3;
+  return PlayerVsPitcherStat(
+    pitcherId: pitcher.backNumber,
+    pitcherName: pitcher.name,
+    pitcherTeamCode: team.code,
+    atBats: atBats,
+    hits: hits,
+    avg: (hits / atBats).toStringAsFixed(3),
+  );
+}
+
+PlayerVsBatterStat _dummyVsBatterStat(KboTeam team) {
+  final batter = kDummyPlayerRoster.firstWhere(
+    (candidate) =>
+        candidate.teamCode == team.code &&
+        candidate.position != PlayerPosition.pitcher,
+  );
+  final atBats = 3 + team.code.length;
+  final strikeouts = 1 + team.code.length % 3;
+  return PlayerVsBatterStat(
+    batterId: batter.backNumber,
+    batterName: batter.name,
+    batterTeamCode: team.code,
+    atBats: atBats,
+    strikeouts: strikeouts,
+    strikeoutRate: (strikeouts / atBats).toStringAsFixed(3),
+  );
 }

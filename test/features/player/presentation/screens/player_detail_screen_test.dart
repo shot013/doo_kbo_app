@@ -41,7 +41,7 @@ void main() {
     expect(find.text('선수 투1'), findsWidgets);
     expect(find.textContaining('kt wiz'), findsWidgets);
     expect(find.text('구단별 피안타율'), findsOneWidget);
-    expect(find.text('상대 타자별 피안타율'), findsOneWidget);
+    expect(find.text('상대 타자별 삼진율'), findsOneWidget);
     expect(find.text('상대 투수별 안타율'), findsNothing);
   });
 }
