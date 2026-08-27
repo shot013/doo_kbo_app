@@ -1,0 +1,17 @@
+default_platform(:android)
+
+platform :android do
+  desc "release AAB(flutter build appbundle --release로 미리 빌드된 결과물)를 " \
+       "Play Console '테스트' 비공개 테스트 트랙에 업로드한다. " \
+       "CI(.github/workflows/ci.yaml)에서 main에 push될 때만 실행된다."
+  lane :deploy_closed_testing do
+    upload_to_play_store(
+      track: "테스트",
+      aab: "../../build/app/outputs/bundle/release/app-release.aab",
+      release_status: "completed",
+      skip_upload_metadata: true,
+      skip_upload_images: true,
+      skip_upload_screenshots: true,
+    )
+  end
+end

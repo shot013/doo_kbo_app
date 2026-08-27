@@ -15,3 +15,9 @@ key.properties
 
 # Firebase 설정 파일 (프로젝트별로 발급받아 로컬에 직접 배치)
 app/google-services.json
+
+# fastlane이 실행 중 만드는 로그/리포트. Gemfile.lock은 재현성을 위해 커밋한다.
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
