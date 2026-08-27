@@ -270,7 +270,7 @@ class _VsPitcherStatRow extends StatelessWidget {
             TeamLogo(teamCode: stat.pitcherTeamCode, size: 24),
             const SizedBox(width: 8),
             Text(
-              '${stat.pitcherTeamCode} · ${stat.pitcherName}',
+              stat.pitcherName,
               style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ],
@@ -303,7 +303,7 @@ class _VsBatterStatRow extends StatelessWidget {
             TeamLogo(teamCode: stat.batterTeamCode, size: 24),
             const SizedBox(width: 8),
             Text(
-              '${stat.batterTeamCode} · ${stat.batterName}',
+              stat.batterName,
               style: const TextStyle(color: AppColors.textMuted, fontSize: 14),
             ),
           ],
