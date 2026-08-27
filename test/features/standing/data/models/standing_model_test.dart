@@ -22,6 +22,7 @@ void main() {
       });
 
       expect(model.teamCode, 'KT');
+      expect(model.teamVisibleName, 'KT');
       expect(model.rank, 1);
       expect(model.gamesPlayed, 107);
       expect(model.winRate, '0.606');

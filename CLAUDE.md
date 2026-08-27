@@ -28,7 +28,7 @@ lib/
     error/                # exceptions.dart (data layer 예외), failures.dart (AppFailure, domain/presentation에서 사용)
     network/               # dio_client.dart (dioProvider), network_info.dart
     router/                 # app_router.dart — 모든 feature가 여기에 라우트를 등록
-    theme/                  # AppTheme
+    theme/                  # AppTheme, AppColors (색은 항상 여기 상수로만 참조 — 화면에 Color(0xFF...) 직접 쓰지 않음. 토큰 표는 docs/DESIGN_TOKENS.md)
     usecase/                # UseCase<ResultType, Params> 기본 인터페이스
     utils/                  # Result<T> (Ok/Err) sealed class — 모든 usecase/repository의 반환 타입
   features/{name}/
