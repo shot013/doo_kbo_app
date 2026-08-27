@@ -1,7 +1,21 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <!-- EC2 백엔드 API(http://15.164.113.221:3651) 호출에 필요. 디버그 빌드는
          Flutter 툴이 자동으로 붙여주지만 release 빌드는 명시하지 않으면 빠진다. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+
+    <!-- firebase_analytics가 자동으로 추가하는 권한. 이 앱은 광고 타겟팅/
+         리마케팅을 쓰지 않고 크래시 리포팅·기본 사용 지표 목적이라 명시적으로
+         제거한다. 이 권한이 남아있으면 Play Console의 "광고 ID 사용 안 함"
+         선언과 실제 AAB 내용이 불일치해 배포가 거부된다. -->
+    <uses-permission
+        android:name="com.google.android.gms.permission.AD_ID"
+        tools:node="remove"/>
+    <!-- Android 13+ Privacy Sandbox(AdServices)용 동일 계열 권한. 위와 같은
+         이유로 함께 제거한다. -->
+    <uses-permission
+        android:name="android.permission.ACCESS_ADSERVICES_AD_ID"
+        tools:node="remove"/>
     <application
         android:label="JIKGWAN"
         android:name="${applicationName}"
