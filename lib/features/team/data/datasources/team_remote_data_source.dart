@@ -58,15 +58,15 @@ class TeamDummyDataSource implements TeamRemoteDataSource {
   }
 
   @override
-  Future<TeamDetailModel> getTeamDetail(String code) async {
+  Future<TeamDetailModel> getTeamDetail(String teamCode) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     final summary = _dummyTeams.firstWhere(
-      (team) => team.code == code,
+      (team) => team.teamCode == teamCode,
       orElse: () => throw const ServerException('팀을 찾을 수 없습니다.'),
     );
     final roster = [
       for (final seed in kDummyPlayerRoster)
-        if (seed.teamCode == code)
+        if (seed.teamCode == teamCode)
           PlayerSummaryModel(
             id: seed.id,
             name: seed.name,
@@ -83,8 +83,8 @@ class TeamDummyDataSource implements TeamRemoteDataSource {
 
 const _dummyTeams = [
   TeamSummaryModel(
-    code: 'KT',
-    name: 'kt wiz',
+    teamCode: 'KT',
+    teamName: 'kt wiz',
     rank: 1,
     wins: 60,
     losses: 37,
@@ -98,8 +98,8 @@ const _dummyTeams = [
     recentForm: ['W', 'W', 'L', 'W', 'W'],
   ),
   TeamSummaryModel(
-    code: 'SS',
-    name: '삼성 라이온즈',
+    teamCode: 'SS',
+    teamName: '삼성 라이온즈',
     rank: 2,
     wins: 59,
     losses: 41,
@@ -113,8 +113,8 @@ const _dummyTeams = [
     recentForm: ['W', 'L', 'W', 'W', 'W'],
   ),
   TeamSummaryModel(
-    code: 'LG',
-    name: 'LG 트윈스',
+    teamCode: 'LG',
+    teamName: 'LG 트윈스',
     rank: 3,
     wins: 56,
     losses: 46,
@@ -128,8 +128,8 @@ const _dummyTeams = [
     recentForm: ['L', 'W', 'W', 'L', 'W'],
   ),
   TeamSummaryModel(
-    code: 'HT',
-    name: 'KIA 타이거즈',
+    teamCode: 'HT',
+    teamName: 'KIA 타이거즈',
     rank: 4,
     wins: 54,
     losses: 46,
@@ -143,8 +143,8 @@ const _dummyTeams = [
     recentForm: ['W', 'W', 'L', 'L', 'W'],
   ),
   TeamSummaryModel(
-    code: 'OB',
-    name: '두산 베어스',
+    teamCode: 'OB',
+    teamName: '두산 베어스',
     rank: 5,
     wins: 53,
     losses: 46,
@@ -158,8 +158,8 @@ const _dummyTeams = [
     recentForm: ['L', 'W', 'W', 'W', 'L'],
   ),
   TeamSummaryModel(
-    code: 'HH',
-    name: '한화 이글스',
+    teamCode: 'HH',
+    teamName: '한화 이글스',
     rank: 6,
     wins: 48,
     losses: 50,
@@ -173,8 +173,8 @@ const _dummyTeams = [
     recentForm: ['L', 'L', 'W', 'W', 'L'],
   ),
   TeamSummaryModel(
-    code: 'NC',
-    name: 'NC 다이노스',
+    teamCode: 'NC',
+    teamName: 'NC 다이노스',
     rank: 7,
     wins: 44,
     losses: 51,
@@ -188,8 +188,8 @@ const _dummyTeams = [
     recentForm: ['W', 'L', 'L', 'W', 'L'],
   ),
   TeamSummaryModel(
-    code: 'LT',
-    name: '롯데 자이언츠',
+    teamCode: 'LT',
+    teamName: '롯데 자이언츠',
     rank: 8,
     wins: 44,
     losses: 56,
@@ -203,8 +203,8 @@ const _dummyTeams = [
     recentForm: ['L', 'L', 'W', 'L', 'L'],
   ),
   TeamSummaryModel(
-    code: 'SK',
-    name: 'SSG 랜더스',
+    teamCode: 'SK',
+    teamName: 'SSG 랜더스',
     rank: 9,
     wins: 41,
     losses: 60,
@@ -218,8 +218,8 @@ const _dummyTeams = [
     recentForm: ['L', 'L', 'L', 'W', 'L'],
   ),
   TeamSummaryModel(
-    code: 'WO',
-    name: '키움 히어로즈',
+    teamCode: 'WO',
+    teamName: '키움 히어로즈',
     rank: 10,
     wins: 39,
     losses: 65,
