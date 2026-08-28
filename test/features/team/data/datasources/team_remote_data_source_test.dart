@@ -4,6 +4,7 @@ import 'package:jikgwan/core/error/exceptions.dart';
 import 'package:jikgwan/features/team/data/datasources/team_remote_data_source.dart';
 
 import '../../../../support/fake_http_client_adapter.dart';
+import '../../../../support/team_fixtures.dart';
 
 void main() {
   group('TeamRemoteDataSourceImpl.getTeams', () {
@@ -12,23 +13,7 @@ void main() {
       () async {
         final dio = Dio(BaseOptions(baseUrl: 'http://test'))
           ..httpClientAdapter = FakeHttpClientAdapter.success({
-            'data': [
-              {
-                'teamCode': 'KT',
-                'teamName': 'kt wiz',
-                'rank': 1,
-                'wins': 64,
-                'losses': 41,
-                'draws': 3,
-                'winRate': '0.610',
-                'gamesBehind': '0.0',
-                'battingAverage': '0.279',
-                'era': '5.65',
-                'runsScored': 598,
-                'runsAllowed': 506,
-                'recentForm': ['L', 'L', 'W', 'D', 'W'],
-              },
-            ],
+            'data': [teamSummaryJson()],
           });
         final dataSource = TeamRemoteDataSourceImpl(dio);
 
@@ -63,21 +48,7 @@ void main() {
       () async {
         final dio = Dio(BaseOptions(baseUrl: 'http://test'))
           ..httpClientAdapter = FakeHttpClientAdapter.success({
-            'summary': {
-              'teamCode': 'KT',
-              'teamName': 'kt wiz',
-              'rank': 1,
-              'wins': 64,
-              'losses': 41,
-              'draws': 3,
-              'winRate': '0.610',
-              'gamesBehind': '0.0',
-              'battingAverage': '0.279',
-              'era': '5.65',
-              'runsScored': 598,
-              'runsAllowed': 506,
-              'recentForm': ['L', 'L', 'W', 'D', 'W'],
-            },
+            'summary': teamSummaryJson(),
             'roster': [
               {
                 'id': 'p1',
