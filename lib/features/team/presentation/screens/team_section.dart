@@ -63,7 +63,7 @@ class _TeamCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       onTap: () => context.pushNamed(
         TeamDetailScreen.routeName,
-        pathParameters: {'code': team.code},
+        pathParameters: {'code': team.teamCode},
       ),
       child: Container(
         padding: const EdgeInsets.all(14),
@@ -73,7 +73,7 @@ class _TeamCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            TeamLogo(teamCode: team.code, size: 36),
+            TeamLogo(teamCode: team.teamCode, size: 36),
             const SizedBox(width: 10),
             Expanded(
               child: Column(
@@ -81,7 +81,7 @@ class _TeamCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    team.name,
+                    team.teamName,
                     style: const TextStyle(
                       color: AppColors.textPrimary,
                       fontSize: 14,

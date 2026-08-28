@@ -2,8 +2,8 @@ import '../../domain/entities/team_summary.dart';
 
 final class TeamSummaryModel extends TeamSummary {
   const TeamSummaryModel({
-    required super.code,
-    required super.name,
+    required super.teamCode,
+    required super.teamName,
     required super.rank,
     required super.wins,
     required super.losses,
@@ -20,8 +20,8 @@ final class TeamSummaryModel extends TeamSummary {
   factory TeamSummaryModel.fromJson(Map<String, dynamic> json) {
     final recentFormJson = json['recentForm'] as List<dynamic>? ?? const [];
     return TeamSummaryModel(
-      code: json['code'] as String,
-      name: json['name'] as String,
+      teamCode: json['teamCode'] as String,
+      teamName: json['teamName'] as String,
       rank: json['rank'] as int,
       wins: json['wins'] as int,
       losses: json['losses'] as int,
