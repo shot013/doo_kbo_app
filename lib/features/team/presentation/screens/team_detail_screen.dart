@@ -32,7 +32,7 @@ class TeamDetailScreen extends ConsumerWidget {
         backgroundColor: AppColors.background,
         foregroundColor: AppColors.textPrimary,
         title: detailAsync.maybeWhen(
-          data: (detail) => Text(detail.summary.name),
+          data: (detail) => Text(detail.summary.teamName),
           orElse: () => const Text('팀 상세'),
         ),
         actions: [

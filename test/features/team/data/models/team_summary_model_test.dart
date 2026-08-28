@@ -5,8 +5,8 @@ void main() {
   group('TeamSummaryModel.fromJson', () {
     test('parses every field, including batting average, ERA, and runs', () {
       final json = {
-        'code': 'KT',
-        'name': 'kt wiz',
+        'teamCode': 'KT',
+        'teamName': 'kt wiz',
         'rank': 1,
         'wins': 64,
         'losses': 41,
@@ -22,8 +22,8 @@ void main() {
 
       final model = TeamSummaryModel.fromJson(json);
 
-      expect(model.code, 'KT');
-      expect(model.name, 'kt wiz');
+      expect(model.teamCode, 'KT');
+      expect(model.teamName, 'kt wiz');
       expect(model.rank, 1);
       expect(model.wins, 64);
       expect(model.losses, 41);
@@ -39,8 +39,8 @@ void main() {
 
     test('defaults recentForm to an empty list when missing', () {
       final json = {
-        'code': 'KT',
-        'name': 'kt wiz',
+        'teamCode': 'KT',
+        'teamName': 'kt wiz',
         'rank': 1,
         'wins': 64,
         'losses': 41,

@@ -14,8 +14,8 @@ void main() {
           ..httpClientAdapter = FakeHttpClientAdapter.success({
             'data': [
               {
-                'code': 'KT',
-                'name': 'kt wiz',
+                'teamCode': 'KT',
+                'teamName': 'kt wiz',
                 'rank': 1,
                 'wins': 64,
                 'losses': 41,
@@ -35,7 +35,7 @@ void main() {
         final teams = await dataSource.getTeams();
 
         expect(teams, hasLength(1));
-        expect(teams.first.code, 'KT');
+        expect(teams.first.teamCode, 'KT');
         expect(teams.first.battingAverage, '0.279');
         expect(teams.first.era, '5.65');
         expect(teams.first.runsScored, 598);
@@ -64,8 +64,8 @@ void main() {
         final dio = Dio(BaseOptions(baseUrl: 'http://test'))
           ..httpClientAdapter = FakeHttpClientAdapter.success({
             'summary': {
-              'code': 'KT',
-              'name': 'kt wiz',
+              'teamCode': 'KT',
+              'teamName': 'kt wiz',
               'rank': 1,
               'wins': 64,
               'losses': 41,
@@ -94,7 +94,7 @@ void main() {
 
         final detail = await dataSource.getTeamDetail('KT');
 
-        expect(detail.summary.code, 'KT');
+        expect(detail.summary.teamCode, 'KT');
         expect(detail.roster, hasLength(1));
         expect(detail.roster.first.name, '홍길동');
       },
