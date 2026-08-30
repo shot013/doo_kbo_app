@@ -2,16 +2,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jikgwan/core/constants/player_position.dart';
 import 'package:jikgwan/features/player/data/models/player_detail_model.dart';
 
+import '../../../../support/player_fixtures.dart';
+
 void main() {
   group('PlayerDetailModel.fromJson', () {
     test('parses statLines and vsTeamStats', () {
       final model = PlayerDetailModel.fromJson({
-        'id': '54529',
-        'name': '레이예스',
-        'teamCode': 'LT',
-        'teamName': '롯데 자이언츠',
-        'position': 'outfielder',
-        'backNumber': 29,
+        ...playerSummaryJson(),
         'statLines': [
           {'label': '타율', 'value': '0.359'},
           {'label': '경기', 'value': '109'},
@@ -51,12 +48,14 @@ void main() {
 
     test('parses vsBatterStats for pitchers', () {
       final model = PlayerDetailModel.fromJson({
-        'id': '99001',
-        'name': '김광현',
-        'teamCode': 'SK',
-        'teamName': 'SSG 랜더스',
-        'position': 'pitcher',
-        'backNumber': 29,
+        ...playerSummaryJson(
+          id: '99001',
+          name: '김광현',
+          teamCode: 'SK',
+          teamName: 'SSG 랜더스',
+          position: 'pitcher',
+          backNumber: 29,
+        ),
         'vsBatterStats': [
           {
             'batterId': 54944,
@@ -81,14 +80,7 @@ void main() {
 
     test('defaults statLines, vsTeamStats, vsPitcherStats, vsBatterStats to '
         'empty lists when missing', () {
-      final model = PlayerDetailModel.fromJson({
-        'id': '54529',
-        'name': '레이예스',
-        'teamCode': 'LT',
-        'teamName': '롯데 자이언츠',
-        'position': 'outfielder',
-        'backNumber': 29,
-      });
+      final model = PlayerDetailModel.fromJson(playerSummaryJson());
 
       expect(model.statLines, isEmpty);
       expect(model.vsTeamStats, isEmpty);

@@ -2,18 +2,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:jikgwan/core/constants/player_position.dart';
 import 'package:jikgwan/features/player/data/models/player_summary_model.dart';
 
+import '../../../../support/player_fixtures.dart';
+
 void main() {
   group('PlayerSummaryModel.fromJson', () {
     test('parses every field, mapping position by lowercase enum name', () {
-      final model = PlayerSummaryModel.fromJson({
-        'id': '54529',
-        'name': '레이예스',
-        'teamCode': 'LT',
-        'teamName': '롯데 자이언츠',
-        'position': 'outfielder',
-        'backNumber': 29,
-        'primaryStat': '타율 0.359',
-      });
+      final model = PlayerSummaryModel.fromJson(playerSummaryJson());
 
       expect(model.id, '54529');
       expect(model.name, '레이예스');
@@ -32,15 +26,17 @@ void main() {
       };
 
       for (final entry in expected.entries) {
-        final model = PlayerSummaryModel.fromJson({
-          'id': '1',
-          'name': '선수',
-          'teamCode': 'KT',
-          'teamName': 'kt wiz',
-          'position': entry.key,
-          'backNumber': 1,
-          'primaryStat': '',
-        });
+        final model = PlayerSummaryModel.fromJson(
+          playerSummaryJson(
+            id: '1',
+            name: '선수',
+            teamCode: 'KT',
+            teamName: 'kt wiz',
+            position: entry.key,
+            backNumber: 1,
+            primaryStat: '',
+          ),
+        );
         expect(model.position, entry.value, reason: entry.key);
       }
     });
