@@ -4,6 +4,7 @@ import 'package:jikgwan/core/error/exceptions.dart';
 import 'package:jikgwan/features/team/data/datasources/team_remote_data_source.dart';
 
 import '../../../../support/fake_http_client_adapter.dart';
+import '../../../../support/player_fixtures.dart';
 import '../../../../support/team_fixtures.dart';
 
 void main() {
@@ -50,15 +51,15 @@ void main() {
           ..httpClientAdapter = FakeHttpClientAdapter.success({
             'summary': teamSummaryJson(),
             'roster': [
-              {
-                'id': 'p1',
-                'name': '홍길동',
-                'teamCode': 'KT',
-                'teamName': 'kt wiz',
-                'position': 'pitcher',
-                'backNumber': 1,
-                'primaryStat': '평균자책 3.50',
-              },
+              playerSummaryJson(
+                id: 'p1',
+                name: '홍길동',
+                teamCode: 'KT',
+                teamName: 'kt wiz',
+                position: 'pitcher',
+                backNumber: 1,
+                primaryStat: '평균자책 3.50',
+              ),
             ],
           });
         final dataSource = TeamRemoteDataSourceImpl(dio);
