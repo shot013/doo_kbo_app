@@ -91,7 +91,7 @@ class _TeamCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    '${team.rank}위 · ${team.wins}승 ${team.losses}패 ${team.draws}무',
+                    '${team.rank}위(게임차 ${team.gamesBehind}) · ${team.wins}승 ${team.losses}패 ${team.draws}무 · 승률 ${team.winRate}',
                     style: const TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
