@@ -4,6 +4,7 @@ import 'package:jikgwan/core/error/exceptions.dart';
 import 'package:jikgwan/features/player/data/datasources/player_remote_data_source.dart';
 
 import '../../../../support/fake_http_client_adapter.dart';
+import '../../../../support/player_fixtures.dart';
 
 void main() {
   group('PlayerRemoteDataSourceImpl.getPlayers', () {
@@ -12,17 +13,7 @@ void main() {
       () async {
         final dio = Dio(BaseOptions(baseUrl: 'http://test'))
           ..httpClientAdapter = FakeHttpClientAdapter.success({
-            'data': [
-              {
-                'id': '54529',
-                'name': '레이예스',
-                'teamCode': 'LT',
-                'teamName': '롯데 자이언츠',
-                'position': 'outfielder',
-                'backNumber': 29,
-                'primaryStat': '타율 0.359',
-              },
-            ],
+            'data': [playerSummaryJson()],
           });
         final dataSource = PlayerRemoteDataSourceImpl(dio);
 
@@ -51,12 +42,7 @@ void main() {
     test('parses the response body directly (no "data" envelope)', () async {
       final dio = Dio(BaseOptions(baseUrl: 'http://test'))
         ..httpClientAdapter = FakeHttpClientAdapter.success({
-          'id': '54529',
-          'name': '레이예스',
-          'teamCode': 'LT',
-          'teamName': '롯데 자이언츠',
-          'position': 'outfielder',
-          'backNumber': 29,
+          ...playerSummaryJson(),
           'statLines': <Map<String, dynamic>>[],
           'vsTeamStats': <Map<String, dynamic>>[],
         });
