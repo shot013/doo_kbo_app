@@ -4,11 +4,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:jikgwan/app.dart';
 import 'package:jikgwan/core/network/network_info.dart';
+import 'package:jikgwan/core/storage/shared_preferences_provider.dart';
 import 'package:jikgwan/features/example/presentation/screens/example_screen.dart';
 import 'package:jikgwan/features/game/data/datasources/game_remote_data_source.dart';
 import 'package:jikgwan/features/game/presentation/providers/game_providers.dart';
 import 'package:jikgwan/features/standing/data/datasources/standing_remote_data_source.dart';
 import 'package:jikgwan/features/standing/presentation/providers/standing_providers.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class _FakeNetworkInfo implements NetworkInfo {
   const _FakeNetworkInfo();
@@ -19,6 +21,9 @@ class _FakeNetworkInfo implements NetworkInfo {
 
 void main() {
   testWidgets('shows the home screen on launch', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final sharedPreferences = await SharedPreferences.getInstance();
+
     await tester.pumpWidget(
       ProviderScope(
         // 실제 플러그인(connectivity_plus)의 플랫폼 채널이나 실제 백엔드를 타지
@@ -31,6 +36,7 @@ void main() {
           standingRemoteDataSourceProvider.overrideWithValue(
             const StandingDummyDataSource(),
           ),
+          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
         ],
         child: const App(),
       ),
@@ -42,6 +48,9 @@ void main() {
   });
 
   testWidgets('shows the KBO team list after loading', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final sharedPreferences = await SharedPreferences.getInstance();
+
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
@@ -52,6 +61,7 @@ void main() {
           standingRemoteDataSourceProvider.overrideWithValue(
             const StandingDummyDataSource(),
           ),
+          sharedPreferencesProvider.overrideWithValue(sharedPreferences),
         ],
         child: const App(),
       ),
