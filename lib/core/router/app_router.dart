@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/action_log/presentation/providers/action_log_providers.dart';
 import '../../features/example/presentation/screens/example_screen.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
 import '../../features/game/presentation/screens/game_list_screen.dart';
@@ -22,6 +23,7 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: '/',
     observers: [
       _RouteLoggingObserver(),
+      ref.watch(actionLogObserverProvider),
       // 위젯 테스트는 main()을 거치지 않아 Firebase.initializeApp()이 호출되지
       // 않는다. Firebase.apps로 초기화 여부를 확인해 테스트 환경에서는
       // observer를 아예 추가하지 않는다.
