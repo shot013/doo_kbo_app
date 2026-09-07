@@ -6,9 +6,12 @@ import '../../domain/entities/pitcher_decision_type.dart';
 import '../../domain/entities/player_stat_type.dart';
 import '../models/best_performer_model.dart';
 import '../models/game_model.dart';
+import '../models/game_preview_model.dart';
 import '../models/game_result_model.dart';
 import '../models/game_stat_model.dart';
 import '../models/pitcher_decision_model.dart';
+import '../models/pitcher_matchup_model.dart';
+import '../models/team_preview_stats_model.dart';
 
 abstract interface class GameRemoteDataSource {
   Future<List<GameModel>> getGames({int? seasonYear, String? gameDate});
@@ -16,6 +19,8 @@ abstract interface class GameRemoteDataSource {
   Future<List<GameStatModel>> getGameStats(String gameId);
 
   Future<List<GameResultModel>> getRecentGameResults({String? date});
+
+  Future<GamePreviewModel> getGamePreview(String gameId);
 }
 
 /// 실제 백엔드가 준비되면 사용할 구현체입니다.
@@ -72,6 +77,21 @@ class GameRemoteDataSourceImpl implements GameRemoteDataSource {
       throw const ServerException();
     }
   }
+
+  @override
+  Future<GamePreviewModel> getGamePreview(String gameId) async {
+    try {
+      final response = await _dio.get<Map<String, dynamic>>(
+        '/game-previews/$gameId',
+      );
+      return GamePreviewModel.fromJson(response.data ?? const {});
+    } on DioException catch (e) {
+      if (e.response?.statusCode == 404) {
+        throw const NotFoundException();
+      }
+      throw const ServerException();
+    }
+  }
 }
 
 /// 백엔드가 아직 없는 스캐폴딩 단계에서 화면을 바로 확인할 수 있도록 만든
@@ -95,6 +115,15 @@ class GameDummyDataSource implements GameRemoteDataSource {
   Future<List<GameResultModel>> getRecentGameResults({String? date}) async {
     await Future<void>.delayed(const Duration(milliseconds: 300));
     return _dummyGameResults;
+  }
+
+  @override
+  Future<GamePreviewModel> getGamePreview(String gameId) async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    if (gameId != _dummyGamePreview.gameId) {
+      throw const NotFoundException();
+    }
+    return _dummyGamePreview;
   }
 }
 
@@ -231,3 +260,48 @@ const _dummyGameResults = [
     ],
   ),
 ];
+
+final _dummyGamePreview = GamePreviewModel(
+  gameId: '20260713OBLG0',
+  homeTeam: const TeamPreviewStatsModel(
+    record: '60승 37패 2무',
+    recentForm: 'W W L W W',
+    era: '3.65',
+    battingAverage: '0.279',
+    avgRunsScored: '5.4',
+    avgRunsAllowed: '4.1',
+  ),
+  awayTeam: const TeamPreviewStatsModel(
+    record: '53승 46패 4무',
+    recentForm: 'L W W W L',
+    era: '4.04',
+    battingAverage: '0.270',
+    avgRunsScored: '4.7',
+    avgRunsAllowed: '4.6',
+  ),
+  homePitcher: const PitcherMatchupModel(
+    style: '우완 정통파',
+    seasonRecord: '10승 5패',
+    headToHeadRecord: '2승 1패',
+    era: '3.10',
+    war: '3.2',
+    games: '20',
+    avgInnings: '6.1',
+    qualityStarts: '14',
+    whip: '1.15',
+  ),
+  awayPitcher: const PitcherMatchupModel(
+    style: '좌완 언더핸드',
+    seasonRecord: '8승 7패',
+    headToHeadRecord: '1승 2패',
+    era: '3.85',
+    war: '2.1',
+    games: '19',
+    avgInnings: '5.2',
+    qualityStarts: '10',
+    whip: '1.28',
+  ),
+  scrapedAt: DateTime(2026, 7, 13, 9),
+  createdAt: DateTime(2026, 7, 13, 9),
+  updatedAt: DateTime(2026, 7, 13, 9),
+);

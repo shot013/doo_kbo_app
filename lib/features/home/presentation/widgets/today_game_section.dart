@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -7,6 +8,7 @@ import '../../../../core/widgets/team_logo.dart';
 import '../../../game/domain/entities/game.dart';
 import '../../../game/domain/entities/game_status.dart';
 import '../../../game/presentation/providers/game_providers.dart';
+import '../../../game/presentation/screens/game_preview_screen.dart';
 
 class TodayGameSection extends ConsumerWidget {
   const TodayGameSection({super.key});
@@ -97,110 +99,118 @@ class _GameCard extends StatelessWidget {
       children: games.map((game) {
         final String gameTime = _gameTimeLabel(game);
 
-        return Container(
-          width: double.maxFinite,
-          margin: const EdgeInsets.only(bottom: 16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.surfaceHigh,
-            borderRadius: BorderRadius.circular(20),
+        return InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => context.pushNamed(
+            GamePreviewScreen.routeName,
+            pathParameters: {'id': game.id},
+            extra: game,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                '${gameTime.isNotEmpty ? '$gameTime ' : ''}${game.stadium ?? ''} (${_statusLabel(game)})',
-                style: const TextStyle(
-                  color: AppColors.textMuted,
-                  fontSize: 14,
+          child: Container(
+            width: double.maxFinite,
+            margin: const EdgeInsets.only(bottom: 16),
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColors.surfaceHigh,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  '${gameTime.isNotEmpty ? '$gameTime ' : ''}${game.stadium ?? ''} (${_statusLabel(game)})',
+                  style: const TextStyle(
+                    color: AppColors.textMuted,
+                    fontSize: 14,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  TeamLogo(teamCode: game.homeTeamCode, size: 40),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          game.homeTeamVisibleName,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        if (game.homeStarterPitcher != null &&
-                            game.homeStarterPitcher != '')
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    TeamLogo(teamCode: game.homeTeamCode, size: 40),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Column(
+                        children: [
                           Text(
-                            game.homeStarterPitcher!,
+                            game.homeTeamVisibleName,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              color: Color.fromARGB(255, 212, 212, 212),
-                              fontSize: 12,
+                              color: AppColors.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    child: const Text(
-                      '   VS   ',
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                          if (game.homeStarterPitcher != null &&
+                              game.homeStarterPitcher != '')
+                            Text(
+                              game.homeStarterPitcher!,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 212, 212, 212),
+                                fontSize: 12,
+                              ),
+                            ),
+                        ],
                       ),
                     ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Text(
-                          game.awayTeamVisibleName,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
+                    Container(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        '   VS   ',
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
-                        if (game.awayStarterPitcher != null &&
-                            game.awayStarterPitcher != '')
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        children: [
                           Text(
-                            game.awayStarterPitcher!,
+                            game.awayTeamVisibleName,
                             textAlign: TextAlign.center,
                             style: const TextStyle(
-                              color: Color.fromARGB(255, 212, 212, 212),
-                              fontSize: 12,
+                              color: AppColors.textPrimary,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                      ],
+                          if (game.awayStarterPitcher != null &&
+                              game.awayStarterPitcher != '')
+                            Text(
+                              game.awayStarterPitcher!,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Color.fromARGB(255, 212, 212, 212),
+                                fontSize: 12,
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    TeamLogo(teamCode: game.awayTeamCode, size: 40),
+                  ],
+                ),
+                const SizedBox(height: 8),
+
+                /// 게임중이거나 종료된 경우 점수 표시한다.
+                if (game.status == GameStatus.inProgress ||
+                    game.status == GameStatus.finished)
+                  Text(
+                    '${game.homeScore} - ${game.awayScore}',
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                  const SizedBox(width: 6),
-                  TeamLogo(teamCode: game.awayTeamCode, size: 40),
-                ],
-              ),
-              const SizedBox(height: 8),
-
-              /// 게임중이거나 종료된 경우 점수 표시한다.
-              if (game.status == GameStatus.inProgress ||
-                  game.status == GameStatus.finished)
-                Text(
-                  '${game.homeScore} - ${game.awayScore}',
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-            ],
+              ],
+            ),
           ),
         );
       }).toList(),
