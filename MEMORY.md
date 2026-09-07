@@ -11,7 +11,9 @@
 
 ## 결정 사항
 
-_(아직 없음 — 아키텍처/의존성/정책 관련 주요 결정이 생기면 여기에 기록)_
+- **`GET /game-previews/:gameId`는 없으면 404를 내려준다는 게 API 스펙에 명시돼 있어서**, 이걸 다른 실패와 구분되는 `NotFoundException`/`NotFoundFailure`(`core/error/`)로 별도 처리했다. 오늘 경기가 아직 스크래핑 전일 수 있는 등 404가 흔히 일어날 수 있는 정상적인 상황이라, `GamePreviewScreen`에서 무서운 일반 오류 메시지 대신 "아직 이 경기의 프리뷰 정보가 없습니다."라는 별도 문구를 보여준다.
+- `GamePreview` 응답 JSON은 홈/원정 필드명이 완전히 규칙적이지 않다 — 대부분 `{side}Team{Field}` 패턴(`homeTeamEra`, `awayTeamBattingAverage` 등)인데 `recentForm`만 예외로 `homeRecentForm`/`awayRecentForm`(중간에 `Team`이 없음)이다. `TeamPreviewStatsModel.homeFromJson`/`awayFromJson`을 문자열 조합 대신 키를 하나하나 명시해서 이 불규칙성을 코드에 그대로 반영해뒀다 — 나중에 필드가 더 추가되더라도 접두사 패턴을 함부로 믿지 말 것.
+- `GamePreview` API 응답에는 홈/원정 팀 코드·이름이 아예 없다(전력비교 수치뿐). 그래서 "오늘의 경기" 카드에서 프리뷰 화면으로 이동할 때 이미 들고 있던 `Game` 객체를 go_router의 `extra`로 통째로 넘긴다(`GamePreviewScreen(gameId:, game:)`, `game`은 nullable) — 이 앱에서 `extra`를 쓰는 첫 사례다. `game`이 없어도(딥링크 등) 헤더 없이 통계만 보여주도록 만들어뒀다.
 
 ## 진행 중 / 예정
 

@@ -6,8 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../features/example/presentation/screens/example_screen.dart';
+import '../../features/game/domain/entities/game.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
 import '../../features/game/presentation/screens/game_list_screen.dart';
+import '../../features/game/presentation/screens/game_preview_screen.dart';
 import '../../features/home/presentation/screens/home_body.dart';
 import '../../features/main/presentation/screens/main_shell.dart';
 import '../../features/player/presentation/screens/player_detail_screen.dart';
@@ -97,6 +99,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: GameDetailScreen.routeName,
         builder: (context, state) =>
             GameDetailScreen(gameId: state.pathParameters['id']!),
+      ),
+      GoRoute(
+        path: GamePreviewScreen.routePath,
+        name: GamePreviewScreen.routeName,
+        builder: (context, state) => GamePreviewScreen(
+          gameId: state.pathParameters['id']!,
+          game: state.extra as Game?,
+        ),
       ),
       GoRoute(
         path: TeamDetailScreen.routePath,

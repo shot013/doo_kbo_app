@@ -9,3 +9,9 @@ final class CacheException implements Exception {
 
   final String message;
 }
+
+final class NotFoundException implements Exception {
+  const NotFoundException([this.message = '요청한 정보를 찾을 수 없습니다.']);
+
+  final String message;
+}

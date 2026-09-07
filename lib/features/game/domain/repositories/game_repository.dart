@@ -1,5 +1,6 @@
 import '../../../../core/utils/result.dart';
 import '../entities/game.dart';
+import '../entities/game_preview.dart';
 import '../entities/game_result.dart';
 import '../entities/game_stat.dart';
 
@@ -9,4 +10,6 @@ abstract interface class GameRepository {
   Future<Result<List<GameStat>>> getGameStats(String gameId);
 
   Future<Result<List<GameResult>>> getRecentGameResults({String? date});
+
+  Future<Result<GamePreview>> getGamePreview(String gameId);
 }
