@@ -6,9 +6,11 @@ import '../../../../core/utils/result.dart';
 import '../../data/datasources/game_remote_data_source.dart';
 import '../../data/repositories/game_repository_impl.dart';
 import '../../domain/entities/game.dart';
+import '../../domain/entities/game_preview.dart';
 import '../../domain/entities/game_result.dart';
 import '../../domain/entities/game_stat.dart';
 import '../../domain/repositories/game_repository.dart';
+import '../../domain/usecases/get_game_preview.dart';
 import '../../domain/usecases/get_game_stats.dart';
 import '../../domain/usecases/get_games.dart';
 import '../../domain/usecases/get_recent_game_results.dart';
@@ -34,6 +36,23 @@ final getGameStatsProvider = Provider<GetGameStats>((ref) {
 
 final getRecentGameResultsProvider = Provider<GetRecentGameResults>((ref) {
   return GetRecentGameResults(ref.watch(gameRepositoryProvider));
+});
+
+final getGamePreviewProvider = Provider<GetGamePreview>((ref) {
+  return GetGamePreview(ref.watch(gameRepositoryProvider));
+});
+
+final gamePreviewProvider = FutureProvider.family<GamePreview, String>((
+  ref,
+  gameId,
+) async {
+  final result = await ref
+      .read(getGamePreviewProvider)
+      .call(GetGamePreviewParams(gameId));
+  return switch (result) {
+    Ok<GamePreview>(:final value) => value,
+    Err<GamePreview>(:final failure) => throw failure,
+  };
 });
 
 final gameListProvider = AsyncNotifierProvider<GameListNotifier, List<Game>>(

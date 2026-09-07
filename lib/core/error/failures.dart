@@ -19,3 +19,7 @@ final class CacheFailure extends AppFailure {
 final class UnknownFailure extends AppFailure {
   const UnknownFailure([super.message = '알 수 없는 오류가 발생했습니다.']);
 }
+
+final class NotFoundFailure extends AppFailure {
+  const NotFoundFailure([super.message = '요청한 정보를 찾을 수 없습니다.']);
+}
