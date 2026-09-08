@@ -62,5 +62,42 @@ void main() {
         throwsArgumentError,
       );
     });
+
+    test('toJson round-trips every field through fromJson', () {
+      final original = GameModel.fromJson(baseJson());
+
+      final reparsed = GameModel.fromJson(original.toJson());
+
+      expect(reparsed.id, original.id);
+      expect(reparsed.seasonYear, original.seasonYear);
+      expect(reparsed.gameDate, original.gameDate);
+      expect(reparsed.scheduledAt, original.scheduledAt);
+      expect(reparsed.stadium, original.stadium);
+      expect(reparsed.homeTeamCode, original.homeTeamCode);
+      expect(reparsed.homeTeamName, original.homeTeamName);
+      expect(reparsed.awayTeamCode, original.awayTeamCode);
+      expect(reparsed.awayTeamName, original.awayTeamName);
+      expect(reparsed.homeScore, original.homeScore);
+      expect(reparsed.awayScore, original.awayScore);
+      expect(reparsed.homeStarterPitcher, original.homeStarterPitcher);
+      expect(reparsed.awayStarterPitcher, original.awayStarterPitcher);
+      expect(reparsed.currentInning, original.currentInning);
+      expect(reparsed.status, original.status);
+    });
+
+    test('toJson maps every known status back to its wire string', () {
+      const expected = {
+        GameStatus.scheduled: 'SCHEDULED',
+        GameStatus.inProgress: 'IN_PROGRESS',
+        GameStatus.finished: 'FINISHED',
+        GameStatus.cancelled: 'CANCELLED',
+        GameStatus.postponed: 'POSTPONED',
+      };
+
+      for (final entry in expected.entries) {
+        final model = GameModel.fromJson(baseJson(status: entry.value));
+        expect(model.toJson()['status'], entry.value, reason: entry.value);
+      }
+    });
   });
 }

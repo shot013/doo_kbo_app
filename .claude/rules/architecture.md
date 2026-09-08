@@ -7,3 +7,5 @@
 - `presentation`은 `AsyncValue.when(data:, loading:, error:)`로 상태를 분기한다.
 - 새 feature 추가 시 `lib/core/router/app_router.dart`에 라우트를 반드시 등록한다.
 - 원본 데이터를 화면 표시용으로 가공하는 로직(예: 팀 정식명에서 축약 표시명 추출)은 `presentation` 위젯에 inline으로 두지 않고 해당 `domain` entity의 getter로 만든다. 여러 화면에서 같은 가공이 필요해지면 중복 구현하지 말고 이 getter를 재사용한다 (예: `Standing.teamVisibleName`, `Game`/`GameResult`의 `homeTeamVisibleName`/`awayTeamVisibleName`). 색상도 같은 원칙 — `Color(0xFF...)`를 위젯에 직접 쓰지 않고 `core/theme/app_colors.dart`의 `AppColors` 상수만 참조한다 (`docs/DESIGN_TOKENS.md` 참고).
+- go_router의 `extra`로 domain 엔티티(실제 런타임 인스턴스는 `data`의 Model)를 넘길 때는 그 Model에 `toJson()`을 반드시 구현해둔다. 라우터/DevTools가 라우트 상태를 표시하려고 `extra`를 직렬화하는데, `toJson()`이 없으면 `NoSuchMethodError`가 던져진다 — 릴리즈 빌드는 무시되지만, IDE 디버거가 "예외 발생 시 중단"으로 붙어있으면 그 순간 isolate가 멈춰 ANR로 이어진다 (예: `GamePreviewScreen`의 `game` extra, `GameModel.toJson()`, `ERRORS.md`의 2026-09-08 항목 참고). `fromJson`이 있는 Model은 대칭으로 `toJson`도 같이 만드는 걸 기본으로 한다.
+- 디버그 전용 로깅(`dioProvider`의 `LogInterceptor` 등)이 응답 본문 전체를 동기적으로 출력하게 두지 않는다. 응답이 큰 API에서는 안드로이드 logcat 파이프가 밀려 메인 스레드가 막히고 ANR로 이어질 수 있다 — `debugPrint` + 길이 제한을 기본으로 한다.
