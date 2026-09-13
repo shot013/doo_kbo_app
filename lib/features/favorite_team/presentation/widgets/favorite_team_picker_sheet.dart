@@ -7,7 +7,7 @@ import '../../../team/domain/entities/team_summary.dart';
 import '../../../team/presentation/providers/team_providers.dart';
 import '../providers/favorite_team_providers.dart';
 
-/// MY팀을 고르는 bottom sheet. 팀을 탭하면 바로 저장하고 닫힌다.
+/// 즐겨찾기 팀을 고르는 bottom sheet. 팀을 탭하면 바로 저장하고 닫힌다.
 ///
 /// `MainShell`이 탭마다 독립된 Navigator를 쓰는 `StatefulShellRoute`라서,
 /// `useRootNavigator: true` 없이 열면 이 시트가 탭 내부 Navigator에 붙어
@@ -40,7 +40,7 @@ class _FavoriteTeamPickerSheet extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'MY팀 설정',
+              '즐겨찾기 팀 설정',
               style: TextStyle(
                 color: AppColors.textPrimary,
                 fontSize: 18,
@@ -83,7 +83,7 @@ class _FavoriteTeamPickerSheet extends ConsumerWidget {
                     }
                   },
                   child: const Text(
-                    'MY팀 해제',
+                    '즐겨찾기 해제',
                     style: TextStyle(color: AppColors.textMuted),
                   ),
                 ),
