@@ -29,7 +29,7 @@ class TodayGameSection extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
 
-        /// 오늘의 경기 + MY팀 설정
+        /// 오늘의 경기 + 즐겨찾기 팀 설정
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -44,7 +44,7 @@ class TodayGameSection extends ConsumerWidget {
             TextButton(
               onPressed: () => showFavoriteTeamPicker(context),
               child: const Text(
-                'MY팀 설정',
+                '즐겨찾기 팀 설정',
                 style: TextStyle(color: AppColors.textMuted, fontSize: 13),
               ),
             ),
@@ -285,7 +285,7 @@ class _EmptyGameCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            '오늘은 MY팀 경기가 없습니다',
+            '오늘은 즐겨찾기 팀 경기가 없습니다',
             style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 16,
