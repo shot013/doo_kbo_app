@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
+import '../../../favorite_team/presentation/providers/favorite_team_providers.dart';
+import '../../../favorite_team/presentation/widgets/favorite_team_picker_sheet.dart';
 import '../../../game/domain/entities/game.dart';
 import '../../../game/domain/entities/game_status.dart';
 import '../../../game/presentation/providers/game_providers.dart';
@@ -16,6 +18,7 @@ class TodayGameSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final gamesAsync = ref.watch(todayGamesProvider);
+    final favoriteTeamCode = ref.watch(favoriteTeamCodeProvider).value;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -26,11 +29,11 @@ class TodayGameSection extends ConsumerWidget {
         ),
         const SizedBox(height: 8),
 
-        /// 오늘의 경기 + 더 보기
-        const Row(
+        /// 오늘의 경기 + 즐겨찾기 팀 설정
+        Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               '오늘의 경기',
               style: TextStyle(
                 color: AppColors.textPrimary,
@@ -38,12 +41,31 @@ class TodayGameSection extends ConsumerWidget {
                 fontWeight: FontWeight.w700,
               ),
             ),
+            TextButton(
+              onPressed: () => showFavoriteTeamPicker(context),
+              child: const Text(
+                '즐겨찾기 팀 설정',
+                style: TextStyle(color: AppColors.textMuted, fontSize: 13),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16),
         gamesAsync.when(
-          data: (games) =>
-              games.isEmpty ? const _EmptyGameCard() : _GameCard(games),
+          data: (games) {
+            final visibleGames = favoriteTeamCode == null
+                ? games
+                : games
+                      .where(
+                        (game) =>
+                            game.homeTeamCode == favoriteTeamCode ||
+                            game.awayTeamCode == favoriteTeamCode,
+                      )
+                      .toList();
+            return visibleGames.isEmpty
+                ? const _EmptyGameCard()
+                : _GameCard(visibleGames);
+          },
           loading: () => const _GameCardShell(
             child: Center(
               child: CircularProgressIndicator(color: AppColors.textPrimary),
@@ -263,7 +285,7 @@ class _EmptyGameCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           const Text(
-            '오늘은 MY팀 경기가 없습니다',
+            '오늘은 즐겨찾기 팀 경기가 없습니다',
             style: TextStyle(
               color: AppColors.textPrimary,
               fontSize: 16,

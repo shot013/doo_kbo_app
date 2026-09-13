@@ -10,6 +10,7 @@ void main() {
 
       expect(model.teamCode, 'KT');
       expect(model.teamName, 'kt wiz');
+      expect(model.teamVisibleName, 'KT');
       expect(model.rank, 1);
       expect(model.wins, 64);
       expect(model.losses, 41);

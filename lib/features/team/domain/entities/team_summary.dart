@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/utils/team_name.dart';
+
 class TeamSummary extends Equatable {
   const TeamSummary({
     required this.teamCode,
@@ -32,6 +34,8 @@ class TeamSummary extends Equatable {
 
   /// 최근 5경기 결과. 오래된 경기부터 순서대로 'W'/'L'/'D'.
   final List<String> recentForm;
+
+  String get teamVisibleName => shortTeamName(teamName);
 
   @override
   List<Object?> get props => [
