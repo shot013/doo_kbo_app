@@ -95,13 +95,13 @@ class _RecentGameCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _RecentGameCardShell(
-      child: GestureDetector(
-        onTap: () => context.pushNamed(
-          GamePreviewScreen.routeName,
-          pathParameters: {'id': game.gameId},
-          extra: game,
-        ),
+    return GestureDetector(
+      onTap: () => context.pushNamed(
+        GamePreviewScreen.routeName,
+        pathParameters: {'id': game.gameId},
+        extra: game,
+      ),
+      child: _RecentGameCardShell(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
