@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -9,6 +10,7 @@ import '../../../game/domain/entities/game_result.dart';
 import '../../../game/domain/entities/pitcher_decision.dart';
 import '../../../game/domain/entities/pitcher_decision_type.dart';
 import '../../../game/presentation/providers/game_providers.dart';
+import '../../../game/presentation/screens/game_preview_screen.dart';
 
 class RecentGameSection extends ConsumerWidget {
   const RecentGameSection({super.key});
@@ -94,89 +96,96 @@ class _RecentGameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _RecentGameCardShell(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TeamLogo(teamCode: game.homeTeamCode, size: 40),
-              const SizedBox(width: 6),
-              Flexible(
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        game.homeTeamVisibleName,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    if (game
-                        .getPitchersByTeam(game.homeTeamCode)
-                        .isNotEmpty) ...[
+      child: GestureDetector(
+        onTap: () => context.pushNamed(
+          GamePreviewScreen.routeName,
+          pathParameters: {'id': game.gameId},
+          extra: game,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                TeamLogo(teamCode: game.homeTeamCode, size: 40),
+                const SizedBox(width: 6),
+                Flexible(
+                  child: Column(
+                    children: [
                       Container(
                         alignment: Alignment.centerRight,
-                        child: _PitcherDecisionsRow(
-                          pitchers: game.getPitchersByTeam(game.homeTeamCode),
+                        child: Text(
+                          game.homeTeamVisibleName,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
+                      if (game
+                          .getPitchersByTeam(game.homeTeamCode)
+                          .isNotEmpty) ...[
+                        Container(
+                          alignment: Alignment.centerRight,
+                          child: _PitcherDecisionsRow(
+                            pitchers: game.getPitchersByTeam(game.homeTeamCode),
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
-                ),
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  '  ${game.homeScore} : ${game.awayScore}  ',
-                  style: const TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-              Flexible(
-                child: Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        game.awayTeamVisibleName,
-                        style: const TextStyle(
-                          color: AppColors.textPrimary,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                Container(
+                  alignment: Alignment.center,
+                  child: Text(
+                    '  ${game.homeScore} : ${game.awayScore}  ',
+                    style: const TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
-                    if (game
-                        .getPitchersByTeam(game.awayTeamCode)
-                        .isNotEmpty) ...[
+                  ),
+                ),
+                Flexible(
+                  child: Column(
+                    children: [
                       Container(
                         alignment: Alignment.centerLeft,
-                        child: _PitcherDecisionsRow(
-                          pitchers: game.getPitchersByTeam(game.awayTeamCode),
+                        child: Text(
+                          game.awayTeamVisibleName,
+                          style: const TextStyle(
+                            color: AppColors.textPrimary,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
+                      if (game
+                          .getPitchersByTeam(game.awayTeamCode)
+                          .isNotEmpty) ...[
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          child: _PitcherDecisionsRow(
+                            pitchers: game.getPitchersByTeam(game.awayTeamCode),
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 6),
-              TeamLogo(teamCode: game.awayTeamCode, size: 40),
+                const SizedBox(width: 6),
+                TeamLogo(teamCode: game.awayTeamCode, size: 40),
+              ],
+            ),
+            if (game.bestPerformer != null) ...[
+              const SizedBox(height: 20),
+              _BestPerformerRow(bestPerformer: game.bestPerformer!),
             ],
-          ),
-          if (game.bestPerformer != null) ...[
-            const SizedBox(height: 20),
-            _BestPerformerRow(bestPerformer: game.bestPerformer!),
           ],
-        ],
+        ),
       ),
     );
   }

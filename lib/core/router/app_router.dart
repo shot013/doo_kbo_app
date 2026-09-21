@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/example/presentation/screens/example_screen.dart';
 import '../../features/game/domain/entities/game.dart';
+import '../../features/game/domain/entities/game_result.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
 import '../../features/game/presentation/screens/game_list_screen.dart';
 import '../../features/game/presentation/screens/game_preview_screen.dart';
@@ -105,7 +106,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: GamePreviewScreen.routeName,
         builder: (context, state) => GamePreviewScreen(
           gameId: state.pathParameters['id']!,
-          game: state.extra as Game?,
+          matchup: _gamePreviewMatchupFromExtra(state.extra),
         ),
       ),
       GoRoute(
@@ -123,6 +124,29 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// "오늘의 경기"는 [Game], "최근 경기 결과"는 [GameResult]를 `extra`로 넘기므로
+/// 두 타입 모두에서 [GamePreviewMatchup]을 뽑아낸다. 둘 다 아니면(딥링크 등)
+/// null을 반환해 헤더 없이 통계만 보여준다.
+GamePreviewMatchup? _gamePreviewMatchupFromExtra(Object? extra) {
+  if (extra is Game) {
+    return (
+      homeTeamCode: extra.homeTeamCode,
+      homeTeamVisibleName: extra.homeTeamVisibleName,
+      awayTeamCode: extra.awayTeamCode,
+      awayTeamVisibleName: extra.awayTeamVisibleName,
+    );
+  }
+  if (extra is GameResult) {
+    return (
+      homeTeamCode: extra.homeTeamCode,
+      homeTeamVisibleName: extra.homeTeamVisibleName,
+      awayTeamCode: extra.awayTeamCode,
+      awayTeamVisibleName: extra.awayTeamVisibleName,
+    );
+  }
+  return null;
+}
 
 /// 페이지(라우트)가 바뀔 때마다 콘솔에 로그를 남긴다.
 class _RouteLoggingObserver extends NavigatorObserver {

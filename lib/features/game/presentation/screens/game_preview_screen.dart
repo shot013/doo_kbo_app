@@ -4,21 +4,31 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
-import '../../domain/entities/game.dart';
 import '../../domain/entities/game_preview.dart';
 import '../providers/game_providers.dart';
 
+/// "오늘의 경기"(진행 전/중 경기)와 "최근 경기 결과"(종료된 경기) 카드는 각각
+/// [Game]/[GameResult] 인스턴스를 넘기는데, 이 화면은 헤더에 표시할 팀 코드/
+/// 표시명 4개만 필요하다. 두 도메인 타입을 이 record로 정규화해 화면이 어느
+/// 쪽에서 왔는지 몰라도 되게 한다.
+typedef GamePreviewMatchup = ({
+  String homeTeamCode,
+  String homeTeamVisibleName,
+  String awayTeamCode,
+  String awayTeamVisibleName,
+});
+
 class GamePreviewScreen extends ConsumerWidget {
-  const GamePreviewScreen({required this.gameId, this.game, super.key});
+  const GamePreviewScreen({required this.gameId, this.matchup, super.key});
 
   static const routeName = 'gamePreview';
   static const routePath = '/games/:id/preview';
 
   final String gameId;
 
-  /// "오늘의 경기" 카드에서 넘어올 때 이미 갖고 있던 팀 정보를 그대로 받아
-  /// 헤더에 표시한다. 딥링크 등으로 이 값 없이 접근하면 헤더 없이 통계만 보여준다.
-  final Game? game;
+  /// 카드에서 넘어올 때 이미 갖고 있던 팀 정보를 그대로 받아 헤더에 표시한다.
+  /// 딥링크 등으로 이 값 없이 접근하면 헤더 없이 통계만 보여준다.
+  final GamePreviewMatchup? matchup;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +38,7 @@ class GamePreviewScreen extends ConsumerWidget {
       backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('경기 프리뷰')),
       body: previewAsync.when(
-        data: (preview) => _GamePreviewBody(preview: preview, game: game),
+        data: (preview) => _GamePreviewBody(preview: preview, matchup: matchup),
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.textPrimary),
         ),
@@ -52,21 +62,21 @@ class GamePreviewScreen extends ConsumerWidget {
 }
 
 class _GamePreviewBody extends StatelessWidget {
-  const _GamePreviewBody({required this.preview, required this.game});
+  const _GamePreviewBody({required this.preview, required this.matchup});
 
   final GamePreview preview;
-  final Game? game;
+  final GamePreviewMatchup? matchup;
 
   @override
   Widget build(BuildContext context) {
-    final homeLabel = game?.homeTeamVisibleName ?? '홈';
-    final awayLabel = game?.awayTeamVisibleName ?? '원정';
+    final homeLabel = matchup?.homeTeamVisibleName ?? '홈';
+    final awayLabel = matchup?.awayTeamVisibleName ?? '원정';
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        if (game != null) _MatchupHeader(game: game!),
-        if (game != null) const SizedBox(height: 20),
+        if (matchup != null) _MatchupHeader(matchup: matchup!),
+        if (matchup != null) const SizedBox(height: 20),
         _ComparisonTable(
           title: '팀 전력비교',
           homeLabel: homeLabel,
@@ -163,9 +173,9 @@ class _GamePreviewBody extends StatelessWidget {
 }
 
 class _MatchupHeader extends StatelessWidget {
-  const _MatchupHeader({required this.game});
+  const _MatchupHeader({required this.matchup});
 
-  final Game game;
+  final GamePreviewMatchup matchup;
 
   @override
   Widget build(BuildContext context) {
@@ -173,8 +183,8 @@ class _MatchupHeader extends StatelessWidget {
       children: [
         Expanded(
           child: _TeamHeader(
-            code: game.homeTeamCode,
-            label: game.homeTeamVisibleName,
+            code: matchup.homeTeamCode,
+            label: matchup.homeTeamVisibleName,
           ),
         ),
         const Text(
@@ -187,8 +197,8 @@ class _MatchupHeader extends StatelessWidget {
         ),
         Expanded(
           child: _TeamHeader(
-            code: game.awayTeamCode,
-            label: game.awayTeamVisibleName,
+            code: matchup.awayTeamCode,
+            label: matchup.awayTeamVisibleName,
           ),
         ),
       ],
