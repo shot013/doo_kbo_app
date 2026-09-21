@@ -33,4 +33,23 @@ final class PitcherDecisionModel extends PitcherDecision {
       _ => throw ArgumentError('Unknown PitcherDecisionType: $value'),
     };
   }
+
+  Map<String, dynamic> toJson() => {
+    'decision': _decisionToJson(decision),
+    'playerName': playerName,
+    'teamCode': teamCode,
+    'inningsPitched': inningsPitched,
+    'earnedRuns': earnedRuns,
+    'strikeoutsPitched': strikeoutsPitched,
+    'era': era,
+  };
+
+  static String _decisionToJson(PitcherDecisionType decision) {
+    return switch (decision) {
+      PitcherDecisionType.win => 'WIN',
+      PitcherDecisionType.loss => 'LOSS',
+      PitcherDecisionType.save => 'SAVE',
+      PitcherDecisionType.hold => 'HOLD',
+    };
+  }
 }

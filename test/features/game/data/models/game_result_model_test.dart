@@ -113,5 +113,46 @@ void main() {
         expect(model.pitchers.single.decision, entry.value, reason: entry.key);
       }
     });
+
+    test('toJson round-trips every field through fromJson', () {
+      final original = GameResultModel.fromJson({
+        'gameId': '20260820KTLG0',
+        'gameDate': '2026-08-20',
+        'stadium': '잠실',
+        'homeTeamCode': 'LG',
+        'homeTeamName': 'LG 트윈스',
+        'awayTeamCode': 'KT',
+        'awayTeamName': 'kt wiz',
+        'homeScore': 4,
+        'awayScore': 16,
+        'bestPerformer': {
+          'playerName': '힐리어드',
+          'teamCode': 'KT',
+          'atBats': 3,
+          'hits': 2,
+          'rbi': 3,
+          'runs': 2,
+          'line': '3타수 2안타 3타점',
+        },
+        'pitchers': [
+          {
+            'decision': 'WIN',
+            'playerName': '고영표',
+            'teamCode': 'KT',
+            'inningsPitched': '6.0',
+            'earnedRuns': 3,
+            'strikeoutsPitched': 6,
+            'era': '3.74',
+          },
+        ],
+      });
+
+      final roundTripped = GameResultModel.fromJson(original.toJson());
+
+      expect(roundTripped.gameId, original.gameId);
+      expect(roundTripped.homeScore, original.homeScore);
+      expect(roundTripped.bestPerformer!.playerName, '힐리어드');
+      expect(roundTripped.pitchers.single.decision, PitcherDecisionType.win);
+    });
   });
 }

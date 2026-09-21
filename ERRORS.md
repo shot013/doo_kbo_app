@@ -55,3 +55,13 @@
 **해결**: `GameModel.toJson()`을 `fromJson`과 대칭으로 추가(도메인 필드 전체 + `GameStatus` → wire string 역매핑). `dio_client.dart`의 `LogInterceptor`는 `logPrint`를 `debugPrint` 기반으로 교체하고 한 줄을 1000자로 제한.
 
 **재발 방지**: go_router `extra`로 Model 인스턴스를 넘기는 새 화면을 만들 때는 그 Model에 `toJson()`이 있는지 먼저 확인한다(`.claude/rules/architecture.md`에 규칙으로 추가함). `avoid_print` 린트는 `logPrint: print`처럼 함수를 값으로 참조하는 경우는 잡지 못하므로, 새 인터셉터/로거를 추가할 때 이 패턴을 직접 확인한다. 디버그 전용 증상은 CLI `flutter run`만으로는 재현이 안 될 수 있으니, IDE 디버거(특히 "예외 발생 시 중단" 설정)를 재현 조건에 포함해서 확인한다.
+
+### [2026-09-21] "최근 경기 결과" 카드를 눌러 프리뷰 화면으로 이동하면 `NoSuchMethodError: GameResultModel.toJson`
+
+**증상**: `NoSuchMethodError (NoSuchMethodError: Class 'GameResultModel' has no instance method 'toJson'. Receiver: Instance of 'GameResultModel'. Tried calling: toJson())`.
+
+**원인**: 2026-09-08 항목과 동일한 패턴이 다른 화면에서 재발함. "최근 경기 결과" 카드에 탭 시 `GamePreviewScreen`으로 이동하는 기능이 추가되면서 go_router의 `extra`로 `GameResult`(런타임 인스턴스는 `GameResultModel`)를 그대로 넘겼는데(`recent_game_section.dart`의 `context.pushNamed(..., extra: game)`), `GameResultModel`과 그 안의 `BestPerformerModel`/`PitcherDecisionModel`에 `toJson()`이 없었음.
+
+**해결**: `BestPerformerModel.toJson()`, `PitcherDecisionModel.toJson()`(+ `PitcherDecisionType` → wire string 역매핑), `GameResultModel.toJson()`을 `fromJson`과 대칭으로 추가. `GameResultModel.toJson()`은 중첩된 `bestPerformer`/`pitchers`를 각각 `BestPerformerModel`/`PitcherDecisionModel`로 캐스트해서 직렬화한다(도메인 타입(`BestPerformer`/`PitcherDecision`)에는 `toJson()`이 없으므로).
+
+**재발 방지**: go_router `extra`로 넘기는 Model이 다른 도메인 엔티티를 중첩으로 갖고 있으면, 그 중첩 타입들도 전부 `toJson()`을 가지고 있는지 확인한다(엔티티 하나만 확인하고 끝내지 않는다). `extra:`를 쓰는 새 `context.push*` 호출을 추가할 때마다 이 체크리스트를 먼저 확인하는 습관이 필요함 — 이번에도 기능 구현 후 별도로 지적받고 나서야 발견함.

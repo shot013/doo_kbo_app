@@ -22,4 +22,14 @@ final class BestPerformerModel extends BestPerformer {
       line: json['line'] as String,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    'playerName': playerName,
+    'teamCode': teamCode,
+    'atBats': atBats,
+    'hits': hits,
+    'rbi': rbi,
+    'runs': runs,
+    'line': line,
+  };
 }
