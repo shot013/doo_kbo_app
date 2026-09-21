@@ -266,6 +266,8 @@ class _BestPerformerRow extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 10),
+        TeamLogo(teamCode: bestPerformer.teamCode, size: 20),
+        const SizedBox(width: 6),
         Expanded(
           child: Text(
             '${bestPerformer.playerName} · ${bestPerformer.line}',
