@@ -7,7 +7,14 @@
       "Bash(dart format *)",
       "Bash(flutter analyze *)",
       "Bash(flutter test *)",
-      "Bash(flutter run *)"
+      "Bash(flutter run *)",
+      "Bash(git fetch *)",
+      "Bash(git merge-base *)",
+      "Bash(adb shell getprop *)",
+      "Bash(adb exec-out screencap *)",
+      "Bash(flutter devices)",
+      "Bash(flutter doctor)",
+      "Bash(gh --version)"
     ]
   },
   "hooks": {
