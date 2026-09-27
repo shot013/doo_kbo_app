@@ -2,6 +2,7 @@ import '../../domain/entities/pitcher_matchup.dart';
 
 final class PitcherMatchupModel extends PitcherMatchup {
   const PitcherMatchupModel({
+    required super.name,
     required super.style,
     required super.seasonRecord,
     required super.headToHeadRecord,
@@ -15,6 +16,7 @@ final class PitcherMatchupModel extends PitcherMatchup {
 
   factory PitcherMatchupModel.homeFromJson(Map<String, dynamic> json) {
     return PitcherMatchupModel(
+      name: json['homePitcherName'] as String?,
       style: json['homePitcherStyle'] as String?,
       seasonRecord: json['homePitcherSeasonRecord'] as String?,
       headToHeadRecord: json['homePitcherHeadToHeadRecord'] as String?,
@@ -29,6 +31,7 @@ final class PitcherMatchupModel extends PitcherMatchup {
 
   factory PitcherMatchupModel.awayFromJson(Map<String, dynamic> json) {
     return PitcherMatchupModel(
+      name: json['awayPitcherName'] as String?,
       style: json['awayPitcherStyle'] as String?,
       seasonRecord: json['awayPitcherSeasonRecord'] as String?,
       headToHeadRecord: json['awayPitcherHeadToHeadRecord'] as String?,
