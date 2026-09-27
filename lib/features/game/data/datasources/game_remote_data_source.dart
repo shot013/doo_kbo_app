@@ -280,6 +280,7 @@ final _dummyGamePreview = GamePreviewModel(
     avgRunsAllowed: '4.6',
   ),
   homePitcher: const PitcherMatchupModel(
+    name: '이민호',
     style: '우완 정통파',
     seasonRecord: '10승 5패',
     headToHeadRecord: '2승 1패',
@@ -291,6 +292,7 @@ final _dummyGamePreview = GamePreviewModel(
     whip: '1.15',
   ),
   awayPitcher: const PitcherMatchupModel(
+    name: '곽빈',
     style: '좌완 언더핸드',
     seasonRecord: '8승 7패',
     headToHeadRecord: '1승 2패',

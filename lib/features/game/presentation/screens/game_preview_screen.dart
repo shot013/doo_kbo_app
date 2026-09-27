@@ -119,6 +119,8 @@ class _GamePreviewBody extends StatelessWidget {
           title: '선발투수 매치업',
           homeLabel: homeLabel,
           awayLabel: awayLabel,
+          homeSubLabel: preview.homePitcher.name,
+          awaySubLabel: preview.awayPitcher.name,
           rows: [
             (
               label: '구질',
@@ -239,11 +241,17 @@ class _ComparisonTable extends StatelessWidget {
     required this.homeLabel,
     required this.awayLabel,
     required this.rows,
+    this.homeSubLabel,
+    this.awaySubLabel,
   });
 
   final String title;
   final String homeLabel;
   final String awayLabel;
+
+  /// 팀명 아래에 함께 보여줄 보조 라벨(예: 선발투수 이름). null이면 표시하지 않는다.
+  final String? homeSubLabel;
+  final String? awaySubLabel;
   final List<_ComparisonRow> rows;
 
   @override
@@ -268,30 +276,18 @@ class _ComparisonTable extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Text(
-                  homeLabel,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 12,
-                  ),
-                ),
+                child: _ColumnHeader(label: homeLabel, subLabel: homeSubLabel),
               ),
-              const Expanded(child: SizedBox()),
+              const Expanded(child: SizedBox(height: 0)), // 가운데 VS 열
               Expanded(
-                child: Text(
-                  awayLabel,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textMuted,
-                    fontSize: 12,
-                  ),
-                ),
+                child: _ColumnHeader(label: awayLabel, subLabel: awaySubLabel),
               ),
             ],
           ),
+          const SizedBox(height: 8),
           for (final row in rows)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 6),
@@ -334,6 +330,41 @@ class _ComparisonTable extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+class _ColumnHeader extends StatelessWidget {
+  const _ColumnHeader({required this.label, this.subLabel});
+
+  final String label;
+  final String? subLabel;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          label,
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: AppColors.textMuted, fontSize: 12),
+        ),
+        if (subLabel != null && subLabel!.isNotEmpty)
+          Column(
+            children: [
+              const SizedBox(height: 4),
+              Text(
+                subLabel!,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: AppColors.textPrimary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+          ),
+      ],
     );
   }
 }

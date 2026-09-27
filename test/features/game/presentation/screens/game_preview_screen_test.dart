@@ -37,6 +37,8 @@ void main() {
     expect(find.text('팀 전력비교'), findsOneWidget);
     expect(find.text('선발투수 매치업'), findsOneWidget);
     expect(find.text('우완 정통파'), findsOneWidget);
+    expect(find.text('이민호'), findsOneWidget);
+    expect(find.text('곽빈'), findsOneWidget);
   });
 
   testWidgets('shows a friendly message when no preview exists yet', (

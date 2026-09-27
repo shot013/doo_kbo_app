@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 class PitcherMatchup extends Equatable {
   const PitcherMatchup({
+    required this.name,
     required this.style,
     required this.seasonRecord,
     required this.headToHeadRecord,
@@ -13,6 +14,7 @@ class PitcherMatchup extends Equatable {
     required this.whip,
   });
 
+  final String? name;
   final String? style;
   final String? seasonRecord;
   final String? headToHeadRecord;
@@ -25,6 +27,7 @@ class PitcherMatchup extends Equatable {
 
   @override
   List<Object?> get props => [
+    name,
     style,
     seasonRecord,
     headToHeadRecord,
