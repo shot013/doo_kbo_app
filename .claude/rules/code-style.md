@@ -1,13 +1,7 @@
 # 코드 스타일 규칙 (항상 적용)
 
-`analysis_options.yaml`에 정의된 규칙을 코드 작성 시점부터 지킨다 (analyze 실행 후 고치지 않는다):
+`analysis_options.yaml`에 정의된 규칙을 코드 작성 시점부터 지킨다 (`flutter analyze` 실행 후 고치지 않는다):
 
-- 모든 함수/메서드에 반환 타입을 명시한다 (`always_declare_return_types`).
-- `print()` 대신 로깅을 쓰거나 디버그 코드를 남기지 않는다 (`avoid_print`).
-- import는 상대 경로로 작성한다 (`prefer_relative_imports`).
-- 문자열은 작은따옴표를 쓴다 (`prefer_single_quotes`).
-- 가능하면 `const` 생성자/선언을 쓴다 (`prefer_const_constructors`, `prefer_const_declarations`).
-- 지역 변수는 재할당하지 않는 한 `final`로 선언한다 (`prefer_final_locals`).
-- 여러 줄 인자/리스트 끝에 trailing comma를 붙인다 (`require_trailing_commas`).
-- `Future`를 반환하는 호출은 `await`하거나 명시적으로 무시한다 (`unawaited_futures`, `unawaited()` 사용).
-- Dart/Flutter 코드를 수정한 뒤에는 `flutter analyze`가 경고 없이 통과하는 것을 목표로 한다.
+`strict-casts`/`strict-inference`/`strict-raw-types`(JSON은 `as`로 명시 캐스트), `always_declare_return_types`, `avoid_print`(`debugPrint` 사용), `prefer_relative_imports`, `prefer_single_quotes`, `prefer_const_*`, `prefer_final_locals`, `directives_ordering`, `sort_child_properties_last`, `unawaited_futures`(`await` 또는 `unawaited()`), `cancel_subscriptions`.
+
+포맷 항목은 `format-dart` 훅이 처리하므로 여기 적지 않는다. `logPrint: print`처럼 `print`를 함수 값으로 넘기면 `avoid_print`가 못 잡으니 직접 확인한다.

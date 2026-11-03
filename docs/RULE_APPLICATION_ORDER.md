@@ -10,10 +10,13 @@ doo_kbo_app은 단일 Flutter 클라이언트라 프론트/서버/DB/인프라�
 
 ## 0. 세션 시작 시 — 항상, 자동
 
-1. `CLAUDE.md` — 빌드/테스트/린트 명령, 아키텍처 요약, "Claude Code 작업 규칙" 섹션
-2. `.claude/rules/architecture.md` — `domain`이 Flutter SDK/`data`/`presentation`을 import하지 않는 등 레이어링 강제 규칙
-3. `.claude/rules/code-style.md` — `analysis_options.yaml` 린트 규칙
-4. `.claude/rules/git-workflow.md` — 브랜치/커밋/PR 규칙
+1. **`doo_kbo_harness_kit/KIT_RULES.md`** — 키트 공통 규칙(규칙 배치 기준, `MEMORY.md`/`ERRORS.md` 읽는 법,
+   규칙 수정 시점, PR base·PR 단위·커밋 전 검증). `CLAUDE.md` 맨 위에서 import되어 **가장 먼저** 적용됩니다.
+   파일이 없으면 **check-kit hook**(SessionStart)이 경고를 띄웁니다.
+2. `CLAUDE.md` — 키트와 다른 점, 빌드/테스트/린트 명령, 아키텍처 요약
+3. `.claude/rules/architecture.md` — 레이어링, 에러 흐름, Riverpod, 색상, `extra` 직렬화 등
+4. `.claude/rules/code-style.md` — `analysis_options.yaml` 린트 규칙
+5. `.claude/rules/git-workflow.md` — 이 앱 고유의, 판단이 필요한 git/PR 규칙 (공통 git 규칙은 1번, 형식 검사는 `guard-git` 훅)
 
 (킷의 `api-docs-sync.md`는 doo_kbo_app에는 없음 — 이 앱은 백엔드 API를 소비만 하고
 정의하지 않아서 적용되지 않았습니다.)
@@ -37,11 +40,12 @@ doo_kbo_app은 단일 Flutter 클라이언트라 프론트/서버/DB/인프라�
 2. `/verify` skill로 CI와 동일한 순서(`dart format` 체크 → `flutter analyze` → `flutter test`)를
    로컬에서 재현합니다.
 3. UI/프론트엔드 변경은 가능하면 에뮬레이터(`flutter run -d emulator-5554`)에서 실제로 띄워
-   스크린샷으로 확인한 뒤 커밋합니다 (doo_kbo_app 고유 규칙, `CLAUDE.md` "Claude Code 작업 규칙").
+   스크린샷으로 확인한 뒤 커밋합니다 (`/verify` 스킬).
 
 ## 4. 커밋 / PR
 
-- `git-workflow.md`의 브랜치명·커밋 메시지(Conventional Commits) 규칙 적용
+- 브랜치 생성·커밋·push 명령은 **guard-git hook**이 브랜치명, Conventional Commits,
+  `main` 직접 push, `git config` 변경을 자동으로 검사해 위반 시 차단합니다.
 - PR은 항상 `main`이 아니라 **`develop`을 base로** 합니다 (doo_kbo_app 고유 규칙).
 - `gh` CLI를 쓸 수 없는 환경이므로, `.github/PULL_REQUEST_TEMPLATE.md` 형식으로 제목/본문을
   URL-인코딩해 채운 compare 링크(`https://github.com/shot013/doo_kbo_app/compare/develop...{branch}?expand=1`)를
@@ -52,8 +56,8 @@ doo_kbo_app은 단일 Flutter 클라이언트라 프론트/서버/DB/인프라�
 ## 4.5 push 시 — 로컬, 활성화되어 있으면 자동
 
 - `.githooks/pre-push`가 push 직전 포맷/`flutter analyze`/`flutter test`를 다시 검증합니다.
-- 활성화(`git config core.hooksPath .githooks`)는 git 설정 변경이라 Claude가 직접 실행하지
-  않고, 대신 `.githooks/pre-push`를 `.git/hooks/pre-push`로 복사만 해둡니다. 훅이 있어도
+- 활성화(`git config core.hooksPath .githooks`)는 git 설정 변경이라 Claude가 실행하지 않고(guard-git
+  hook이 차단), 대신 `.githooks/pre-push`를 `.git/hooks/pre-push`로 복사만 해둡니다. 훅이 있어도
   3단계의 로컬 검증은 그대로 직접 수행합니다.
 
 ## 5. PR 병합 전 — 원격, 자동 (`.github/workflows/ci.yaml`)
@@ -71,5 +75,5 @@ dart format 체크 → flutter analyze → flutter test
 특정 단계에 묶여 있지 않고 작업 전반에 걸쳐 있습니다. `doo_kbo_harness_kit`의 문서 관례를
 그대로 채택했습니다.
 
-- 세션 시작 시 읽어서 "왜 지금 이 상태인지" 파악
+- 매번 전부 읽지 않고, 디버깅 전에는 `ERRORS.md`를 증상 키워드로 grep, 판단에 배경이 필요하면 `MEMORY.md`의 해당 섹션만 읽음
 - 주요 결정을 내리거나 까다로운 에러를 해결하면 그때그때 기록

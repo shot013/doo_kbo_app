@@ -38,6 +38,8 @@ final playerListProvider =
 
 /// 검색어/포지션/팀 필터 중 하나라도 바뀌면 [build]가 다시 실행되어
 /// 그때마다 서버에 새로 요청한다(클라이언트 사이드 필터링을 하지 않음).
+/// 정렬(타자는 타율순, 투수는 평균자책순, 기록 없는 선수는 뒤로)도 서버가
+/// 처리하므로 응답 순서를 그대로 쓴다 — 클라이언트 정렬을 추가하지 않는다.
 class PlayerListNotifier extends AsyncNotifier<List<PlayerSummary>> {
   @override
   Future<List<PlayerSummary>> build() async {
