@@ -49,3 +49,6 @@ app.*.map.json
 
 # Claude Code 프로젝트 설정 템플릿 킷 (자체 .git을 가진 별도 저장소, 서브모듈 아님)
 doo_kbo_harness_kit/
+
+# 버그 리포트 작업 폴더 (/bug-report 스킬의 스크린샷·기록, 이슈에 첨부하고 커밋하지 않는다)
+/bug-reports/

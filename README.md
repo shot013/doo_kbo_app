@@ -143,7 +143,7 @@ flowchart TD
 |---|---|---|---|
 | 규칙 | 키트 `KIT_RULES.md` → `CLAUDE.md` → `.claude/rules/*` | 항상 (매 턴) | 레이어링, 오류 흐름, 색상, PR·충돌 확인 같은 판단 기준 |
 | 훅 | `.claude/hooks/*` | 도구 호출 때 자동 | 키트 확인, 생성 파일 보호, 자동 포맷, git 규약 강제 |
-| 스킬 | `.claude/skills/*` | 관련 작업일 때 | `/add-feature`, `/verify`, `/emulator-qa` |
+| 스킬 | `.claude/skills/*` | 관련 작업일 때 | `/add-feature`, `/verify`, `/emulator-qa`, `/bug-report` |
 | 서브에이전트 | `.claude/agents/flutter-reviewer.md` | 여러 파일 변경 후 | 린터가 못 잡는 아키텍처 리뷰 |
 
 자세한 설명은 [docs/CLAUDE_CODE.md](docs/CLAUDE_CODE.md), 단계별 발동 순서는 [docs/RULE_APPLICATION_ORDER.md](docs/RULE_APPLICATION_ORDER.md)에 있습니다.
