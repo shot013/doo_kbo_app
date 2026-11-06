@@ -43,7 +43,7 @@ flowchart LR
 | UI | Material 3 다크 테마, flutter_svg 2 (구단 로고), 색은 `AppColors` 토큰으로만 사용 ([docs/DESIGN_TOKENS.md](docs/DESIGN_TOKENS.md)) |
 | 모니터링 | Firebase Analytics, Firebase Crashlytics |
 | 코드 품질 | flutter_lints + 엄격한 `analysis_options.yaml` (strict-casts, strict-inference 등), equatable, `flutter test` |
-| CI/CD | GitHub Actions — PR마다 포맷 체크 → `flutter analyze` → `flutter test` → 릴리즈 빌드 검증, `main`에 머지되면 fastlane으로 Play Console 비공개 테스트 트랙에 업로드 |
+| CI/CD | GitHub Actions — PR마다 포맷 체크 → `flutter analyze` → `flutter test` → 릴리즈 빌드 검증, `main`에 머지되면 fastlane으로 Play Console 비공개 테스트 트랙에 업로드 (빌드 번호는 Play Console의 최대 versionCode + 1로 자동 결정) |
 | 백엔드 | 자체 API 서버 (`doo_kbo_scraping_server`, Nest.js) — KBO 데이터를 스크래핑해 JSON으로 제공 |
 | AI 개발 환경 | Claude Code + 공용 하네스 [doo_kbo_harness_kit](https://github.com/shot013/doo_kbo_harness_kit) |
 
@@ -143,7 +143,7 @@ flowchart TD
 |---|---|---|---|
 | 규칙 | 키트 `KIT_RULES.md` → `CLAUDE.md` → `.claude/rules/*` | 항상 (매 턴) | 레이어링, 오류 흐름, 색상, PR·충돌 확인 같은 판단 기준 |
 | 훅 | `.claude/hooks/*` | 도구 호출 때 자동 | 키트 확인, 생성 파일 보호, 자동 포맷, git 규약 강제 |
-| 스킬 | `.claude/skills/*` | 관련 작업일 때 | `/add-feature`, `/verify`, `/emulator-qa` |
+| 스킬 | `.claude/skills/*` | 관련 작업일 때 | `/add-feature`, `/verify`, `/emulator-qa`, `/bug-report` |
 | 서브에이전트 | `.claude/agents/flutter-reviewer.md` | 여러 파일 변경 후 | 린터가 못 잡는 아키텍처 리뷰 |
 
 자세한 설명은 [docs/CLAUDE_CODE.md](docs/CLAUDE_CODE.md), 단계별 발동 순서는 [docs/RULE_APPLICATION_ORDER.md](docs/RULE_APPLICATION_ORDER.md)에 있습니다.

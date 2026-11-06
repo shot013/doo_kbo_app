@@ -48,6 +48,8 @@
 
 - **add-feature** — `lib/features/example/`을 복사해 새 feature를 만드는 절차 (domain → data → presentation → 라우트 등록)
 - **verify** — CI와 동일하게 `dart format` → `flutter analyze` → `flutter test`를 실행하고, UI 변경이면 에뮬레이터로 확인하는 절차
+- **emulator-qa** — `docs/TEST_SCENARIOS.md`의 시나리오를 에뮬레이터에서 직접 탭하며 확인하고 결과표를 내는 절차
+- **bug-report** — 버그를 에뮬레이터에서 재현하며 스크린샷, 디바이스 정보, 재현 경로(화면·탭·입력 기록)를 모아 GitHub 이슈용 리포트를 만드는 절차
 
 ## Hooks — `.claude/settings.json`, `.claude/hooks/`
 
