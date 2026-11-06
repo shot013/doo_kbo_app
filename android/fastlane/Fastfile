@@ -1,6 +1,38 @@
 default_platform(:android)
 
 platform :android do
+  # Play는 이미 올라간 versionCode를 다시 받지 않으므로, 매 배포마다 Play에 올라간 가장 큰 값 + 1을 쓴다.
+  # 존재하지 않는 트랙은 조회에 실패하므로 건너뛴다. 모든 트랙 조회가 실패하면(권한·인증 문제)
+  # 추측한 번호로 빌드하지 않고 여기서 멈춘다.
+  desc "Play Console 트랙들에 올라간 versionCode 중 가장 큰 값 + 1을 다음 빌드 번호로 정해 " \
+       "BUILD_NUMBER(GITHUB_ENV)로 내보낸다. pubspec.yaml의 빌드 번호가 더 크면 그 값을 쓴다."
+  lane :next_build_number do
+    tracks = ["production", "테스트", "beta", "alpha", "internal"]
+    codes = []
+    tracks.each do |track|
+      # Play API가 versionCode를 문자열로 줄 수 있어, 문자열 비교("9" > "14")가 되지 않게 숫자로 바꾼다.
+      found = google_play_track_version_codes(track: track).map(&:to_i)
+      UI.message("#{track} 트랙 versionCode: #{found.inspect}")
+      codes.concat(found)
+    rescue StandardError => e
+      UI.important("#{track} 트랙을 조회하지 못해 건너뜀 (없는 트랙이면 정상): #{e.message}")
+    end
+    UI.user_error!("Play Console에서 versionCode를 하나도 찾지 못했다. 서비스 계정 권한과 트랙 이름을 확인할 것.") if codes.empty?
+
+    pubspec = File.read(File.expand_path("../../pubspec.yaml", __dir__))
+    local = pubspec[/^version:\s*[^+\s]+\+(\d+)/, 1].to_i
+    build_number = [codes.max + 1, local].max
+    UI.success("다음 빌드 번호: #{build_number} (Play 최대 #{codes.max}, pubspec #{local})")
+
+    File.open(ENV["GITHUB_ENV"], "a") { |f| f.puts("BUILD_NUMBER=#{build_number}") } if ENV["GITHUB_ENV"]
+    if ENV["GITHUB_STEP_SUMMARY"]
+      File.open(ENV["GITHUB_STEP_SUMMARY"], "a") do |f|
+        f.puts("빌드 번호: **#{build_number}** (Play Console 최대 versionCode #{codes.max}, pubspec #{local})")
+      end
+    end
+    build_number
+  end
+
   desc "release AAB(flutter build appbundle --release로 미리 빌드된 결과물)를 " \
        "Play Console '테스트' 비공개 테스트 트랙에 업로드한다. " \
        "CI(.github/workflows/ci.yaml)에서 main에 push될 때만 실행된다."
