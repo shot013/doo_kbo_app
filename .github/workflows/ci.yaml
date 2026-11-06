@@ -117,9 +117,6 @@ jobs:
       - name: Restore real google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}" | base64 -d > android/app/google-services.json
 
-      - name: Build signed release app bundle
-        run: flutter build appbundle --release
-
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -128,6 +125,18 @@ jobs:
 
       - name: Restore Play Store service account key
         run: echo "${{ secrets.PLAY_STORE_JSON_KEY_BASE64 }}" | base64 -d > "$RUNNER_TEMP/play-store-key.json"
+
+      # 빌드 번호를 손으로 올리지 않는다. Play Console에 올라간 가장 큰 versionCode + 1을
+      # fastlane이 조회해 BUILD_NUMBER로 내보낸다 (android/fastlane/Fastfile의 next_build_number).
+      # 조회에 실패하면 이 단계에서 멈춰, 추측한 번호로 빌드·업로드하지 않는다.
+      - name: Determine next build number from Play Console
+        working-directory: android
+        env:
+          PLAY_STORE_JSON_KEY_PATH: ${{ runner.temp }}/play-store-key.json
+        run: bundle exec fastlane next_build_number
+
+      - name: Build signed release app bundle
+        run: flutter build appbundle --release --build-number="${BUILD_NUMBER:?next_build_number 단계에서 빌드 번호가 정해지지 않았다}"
 
       - name: Upload to Play Store closed testing track
         working-directory: android

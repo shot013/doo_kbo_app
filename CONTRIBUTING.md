@@ -12,7 +12,7 @@
   - `feat`(또는 `feature`) — 새 기능. 예: `feat/favorite-team`
   - `fix`, `hotfix` — 버그 수정
   - `refactor`, `test`, `docs`, `perf`, `style` — 각 커밋 타입과 같은 성격의 변경
-  - `chore` — 빌드/설정/의존성 등 코드 동작에 영향 없는 변경. 예: `chore/bump-version-2.0.0+14`
+  - `chore` — 빌드/설정/의존성 등 코드 동작에 영향 없는 변경. 예: `chore/bump-go-router`
   - `ci` — CI/배포 파이프라인 변경
 - `release/{version}` — 배포 준비 (버전 고정, 최종 QA)
 
