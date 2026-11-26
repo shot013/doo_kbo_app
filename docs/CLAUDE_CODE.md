@@ -50,6 +50,7 @@
 - **verify** — CI와 동일하게 `dart format` → `flutter analyze` → `flutter test`를 실행하고, UI 변경이면 에뮬레이터로 확인하는 절차
 - **emulator-qa** — `docs/TEST_SCENARIOS.md`의 시나리오를 에뮬레이터에서 직접 탭하며 확인하고 결과표를 내는 절차
 - **bug-report** — 버그를 에뮬레이터에서 재현하며 스크린샷, 디바이스 정보, 재현 경로(화면·탭·입력 기록)를 모아 GitHub 이슈용 리포트를 만드는 절차
+- **figma-screens** — 앱 화면을 Figma 파일 "직관 앱 화면"에 `AppColors` 변수와 공용 컴포넌트로 다시 그리고 탭별 프로토타입을 연결하는 절차 (MCP 호출 한도 포함)
 
 ## Hooks — `.claude/settings.json`, `.claude/hooks/`
 
