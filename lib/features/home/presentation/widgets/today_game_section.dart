@@ -11,6 +11,7 @@ import '../../../game/domain/entities/game.dart';
 import '../../../game/domain/entities/game_status.dart';
 import '../../../game/presentation/providers/game_providers.dart';
 import '../../../game/presentation/screens/game_preview_screen.dart';
+import '../../../game_summary/presentation/screens/game_summary_screen.dart';
 
 class TodayGameSection extends ConsumerWidget {
   const TodayGameSection({super.key});
@@ -301,7 +302,7 @@ class _EmptyGameCard extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton(
-              onPressed: () {},
+              onPressed: () => context.pushNamed(GameSummaryScreen.routeName),
               style: OutlinedButton.styleFrom(
                 backgroundColor: AppColors.border,
                 foregroundColor: AppColors.textPrimary,

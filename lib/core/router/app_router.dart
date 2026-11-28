@@ -7,10 +7,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/example/presentation/screens/example_screen.dart';
 import '../../features/game/domain/entities/game.dart';
-import '../../features/game/domain/entities/game_result.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
 import '../../features/game/presentation/screens/game_list_screen.dart';
 import '../../features/game/presentation/screens/game_preview_screen.dart';
+import '../../features/game_summary/presentation/screens/game_summary_screen.dart';
 import '../../features/home/presentation/screens/home_body.dart';
 import '../../features/main/presentation/screens/main_shell.dart';
 import '../../features/player/presentation/screens/player_detail_screen.dart';
@@ -110,6 +110,13 @@ final routerProvider = Provider<GoRouter>((ref) {
         ),
       ),
       GoRoute(
+        path: GameSummaryScreen.routePath,
+        name: GameSummaryScreen.routeName,
+        builder: (context, state) => GameSummaryScreen(
+          initialGameId: state.uri.queryParameters['gameId'],
+        ),
+      ),
+      GoRoute(
         path: TeamDetailScreen.routePath,
         name: TeamDetailScreen.routeName,
         builder: (context, state) =>
@@ -125,19 +132,11 @@ final routerProvider = Provider<GoRouter>((ref) {
   );
 });
 
-/// "오늘의 경기"는 [Game], "최근 경기 결과"는 [GameResult]를 `extra`로 넘기므로
-/// 두 타입 모두에서 [GamePreviewMatchup]을 뽑아낸다. 둘 다 아니면(딥링크 등)
-/// null을 반환해 헤더 없이 통계만 보여준다.
+/// "오늘의 경기" 카드는 [Game]을 `extra`로 넘기므로 여기서 [GamePreviewMatchup]을
+/// 뽑아낸다. 아니면(딥링크 등) null을 반환해 헤더 없이 통계만 보여준다.
+/// "최근 경기 결과" 카드는 프리뷰 대신 경기 요약을 연다 (KAN-5).
 GamePreviewMatchup? _gamePreviewMatchupFromExtra(Object? extra) {
   if (extra is Game) {
-    return (
-      homeTeamCode: extra.homeTeamCode,
-      homeTeamVisibleName: extra.homeTeamVisibleName,
-      awayTeamCode: extra.awayTeamCode,
-      awayTeamVisibleName: extra.awayTeamVisibleName,
-    );
-  }
-  if (extra is GameResult) {
     return (
       homeTeamCode: extra.homeTeamCode,
       homeTeamVisibleName: extra.homeTeamVisibleName,

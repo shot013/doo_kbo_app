@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/theme/app_colors.dart';
+import '../../../../core/widgets/toggle_chip.dart';
 import '../../domain/entities/record_category.dart';
 import '../providers/record_providers.dart';
 
@@ -15,53 +15,18 @@ class RecordCategoryToggle extends ConsumerWidget {
 
     return Row(
       children: [
-        _ToggleChip(
+        ToggleChip(
           label: '타자 기록',
           active: active == RecordCategory.batting,
           onTap: () => notifier.select(RecordCategory.batting),
         ),
         const SizedBox(width: 8),
-        _ToggleChip(
+        ToggleChip(
           label: '투수 기록',
           active: active == RecordCategory.pitching,
           onTap: () => notifier.select(RecordCategory.pitching),
         ),
       ],
-    );
-  }
-}
-
-class _ToggleChip extends StatelessWidget {
-  const _ToggleChip({
-    required this.label,
-    required this.active,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool active;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: active ? AppColors.accent : AppColors.surfaceHigh,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: active ? AppColors.onAccent : AppColors.textMuted,
-            fontSize: 13,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
     );
   }
 }
