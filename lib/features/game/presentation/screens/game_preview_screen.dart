@@ -7,10 +7,9 @@ import '../../../../core/widgets/team_logo.dart';
 import '../../domain/entities/game_preview.dart';
 import '../providers/game_providers.dart';
 
-/// "오늘의 경기"(진행 전/중 경기)와 "최근 경기 결과"(종료된 경기) 카드는 각각
-/// [Game]/[GameResult] 인스턴스를 넘기는데, 이 화면은 헤더에 표시할 팀 코드/
-/// 표시명 4개만 필요하다. 두 도메인 타입을 이 record로 정규화해 화면이 어느
-/// 쪽에서 왔는지 몰라도 되게 한다.
+/// "오늘의 경기" 카드는 [Game] 인스턴스를 넘기는데, 이 화면은 헤더에 표시할
+/// 팀 코드/표시명 4개만 필요하다. 이 record로 정규화해 화면이 도메인 타입을
+/// 몰라도 되게 한다. ("최근 경기 결과" 카드는 프리뷰 대신 경기 요약을 연다.)
 typedef GamePreviewMatchup = ({
   String homeTeamCode,
   String homeTeamVisibleName,

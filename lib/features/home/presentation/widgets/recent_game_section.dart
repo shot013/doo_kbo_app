@@ -10,7 +10,7 @@ import '../../../game/domain/entities/game_result.dart';
 import '../../../game/domain/entities/pitcher_decision.dart';
 import '../../../game/domain/entities/pitcher_decision_type.dart';
 import '../../../game/presentation/providers/game_providers.dart';
-import '../../../game/presentation/screens/game_preview_screen.dart';
+import '../../../game_summary/presentation/screens/game_summary_screen.dart';
 
 class RecentGameSection extends ConsumerWidget {
   const RecentGameSection({super.key});
@@ -96,10 +96,10 @@ class _RecentGameCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      // 종료된 경기라 프리뷰 대신 그 경기를 선택한 경기 요약을 연다 (KAN-5).
       onTap: () => context.pushNamed(
-        GamePreviewScreen.routeName,
-        pathParameters: {'id': game.gameId},
-        extra: game,
+        GameSummaryScreen.routeName,
+        queryParameters: {'gameId': game.gameId},
       ),
       child: _RecentGameCardShell(
         child: Column(
