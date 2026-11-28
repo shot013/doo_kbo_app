@@ -133,16 +133,7 @@ class _OutsBar extends StatelessWidget {
               color: i.isEven ? AppColors.border : AppColors.surfaceHigh,
               borderRadius: BorderRadius.circular(6),
             ),
-            child: Text(
-              pitcher.playerName,
-              maxLines: 1,
-              overflow: TextOverflow.clip,
-              style: const TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 11,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+            child: _FittingName(pitcher.playerName),
           ),
         ),
       );
@@ -183,6 +174,38 @@ class _OutsBar extends StatelessWidget {
           child: Row(children: segments),
         ),
       ],
+    );
+  }
+}
+
+/// 막대 안의 투수 이름. 짧게 던진 투수는 칸이 좁아 이름이 잘려 보이므로
+/// (`우규`, `주`), 다 들어가지 않으면 비워 둔다. 이름은 아래 표에 모두 있다.
+class _FittingName extends StatelessWidget {
+  const _FittingName(this.name);
+
+  final String name;
+
+  static const _style = TextStyle(
+    color: AppColors.textPrimary,
+    fontSize: 11,
+    fontWeight: FontWeight.w600,
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final painter = TextPainter(
+          text: TextSpan(text: name, style: _style),
+          maxLines: 1,
+          textDirection: Directionality.of(context),
+          textScaler: MediaQuery.textScalerOf(context),
+        )..layout();
+        final fits = painter.width <= constraints.maxWidth - 4;
+        painter.dispose();
+        if (!fits) return const SizedBox.shrink();
+        return Text(name, maxLines: 1, style: _style);
+      },
     );
   }
 }
