@@ -65,3 +65,13 @@
 **해결**: `BestPerformerModel.toJson()`, `PitcherDecisionModel.toJson()`(+ `PitcherDecisionType` → wire string 역매핑), `GameResultModel.toJson()`을 `fromJson`과 대칭으로 추가. `GameResultModel.toJson()`은 중첩된 `bestPerformer`/`pitchers`를 각각 `BestPerformerModel`/`PitcherDecisionModel`로 캐스트해서 직렬화한다(도메인 타입(`BestPerformer`/`PitcherDecision`)에는 `toJson()`이 없으므로).
 
 **재발 방지**: go_router `extra`로 넘기는 Model이 다른 도메인 엔티티를 중첩으로 갖고 있으면, 그 중첩 타입들도 전부 `toJson()`을 가지고 있는지 확인한다(엔티티 하나만 확인하고 끝내지 않는다). `extra:`를 쓰는 새 `context.push*` 호출을 추가할 때마다 이 체크리스트를 먼저 확인하는 습관이 필요함 — 이번에도 기능 구현 후 별도로 지적받고 나서야 발견함.
+
+### [2026-11-27] 코드 변경 없이 CI `flutter analyze`가 실패함
+
+**증상**: 로컬과 이전 CI에서 통과하던 브랜치가 CI에서 `info • 'material.dart' ... deprecated` 류 메시지 수십 개로 `flutter analyze` 단계에서 실패했다. 실패한 파일들은 PR에서 건드리지 않은 파일이었다.
+
+**원인**: `ci.yaml`의 `subosito/flutter-action`이 `channel: stable`만 지정해 매 실행마다 최신 stable을 받았는데, stable이 3.47.9에서 3.50.x로 올라가며 새 deprecation이 생겼다. `flutter analyze`는 info도 실패로 처리한다.
+
+**해결**: `ci.yaml`의 각 `channel: stable` 아래에 `flutter-version: 3.47.9`를 추가해 버전을 고정했다.
+
+**재발 방지**: 코드와 무관한 파일에서 analyze가 갑자기 실패하면 CI 로그의 Flutter 버전부터 확인한다. 버전을 올릴 때는 로컬에서 같은 버전으로 analyze를 통과시킨 뒤 `flutter-version`을 바꾼다.

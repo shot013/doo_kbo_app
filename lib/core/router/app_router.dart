@@ -5,6 +5,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../features/attendance/presentation/screens/add_attendance_screen.dart';
+import '../../features/attendance/presentation/screens/my_attendance_screen.dart';
 import '../../features/example/presentation/screens/example_screen.dart';
 import '../../features/game/domain/entities/game.dart';
 import '../../features/game/presentation/screens/game_detail_screen.dart';
@@ -114,7 +116,20 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: GameSummaryScreen.routeName,
         builder: (context, state) => GameSummaryScreen(
           initialGameId: state.uri.queryParameters['gameId'],
+          date: state.uri.queryParameters['date'],
         ),
+      ),
+      GoRoute(
+        path: MyAttendanceScreen.routePath,
+        name: MyAttendanceScreen.routeName,
+        builder: (context, state) => const MyAttendanceScreen(),
+        routes: [
+          GoRoute(
+            path: AddAttendanceScreen.routePath,
+            name: AddAttendanceScreen.routeName,
+            builder: (context, state) => const AddAttendanceScreen(),
+          ),
+        ],
       ),
       GoRoute(
         path: TeamDetailScreen.routePath,

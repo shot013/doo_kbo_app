@@ -5,6 +5,7 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/widgets/team_logo.dart';
 import '../../../../core/widgets/toggle_chip.dart';
+import '../../../attendance/presentation/widgets/attend_game_button.dart';
 import '../../../favorite_team/presentation/providers/favorite_team_providers.dart';
 import '../../../game/domain/entities/game_result.dart';
 import '../../../game/presentation/providers/game_providers.dart';
@@ -16,9 +17,10 @@ import '../widgets/pitching_tab.dart';
 import '../widgets/runs_tab.dart';
 import '../widgets/summary_card.dart';
 
-/// 경기 요약 (정책서 5.8). HOME 빈 카드 버튼과 최근 경기 결과 카드에서 연다.
+/// 경기 요약 (정책서 5.8). HOME 빈 카드 버튼과 최근 경기 결과 카드에서는 최근
+/// 경기일로, 나의 직관 목록에서는 [date]로 연다.
 class GameSummaryScreen extends ConsumerWidget {
-  const GameSummaryScreen({this.initialGameId, super.key});
+  const GameSummaryScreen({this.initialGameId, this.date, super.key});
 
   static const routeName = 'gameSummary';
   static const routePath = '/game-summary';
@@ -27,17 +29,29 @@ class GameSummaryScreen extends ConsumerWidget {
   /// 버튼에서 열면 null(MY팀 경기 → 첫 경기).
   final String? initialGameId;
 
+  /// 경기 칩을 보일 날짜 `YYYY-MM-DD`. null이면 최근 경기일.
+  final String? date;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final resultsAsync = ref.watch(recentGameResultsProvider);
+    final date = this.date;
+    final resultsAsync = date == null
+        ? ref.watch(recentGameResultsProvider)
+        : ref.watch(gameResultsOnDateProvider(date));
 
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(title: const Text('경기 요약')),
       body: resultsAsync.when(
         data: (games) => games.isEmpty
-            ? const _CenteredMessage('최근 종료된 경기가 없습니다')
-            : _SummaryBody(games: games, initialGameId: initialGameId),
+            ? _CenteredMessage(
+                date == null ? '최근 종료된 경기가 없습니다' : '이 날 종료된 경기가 없습니다',
+              )
+            : _SummaryBody(
+                games: games,
+                initialGameId: initialGameId,
+                isRecent: date == null,
+              ),
         loading: () => const Center(
           child: CircularProgressIndicator(color: AppColors.textPrimary),
         ),
@@ -50,15 +64,24 @@ class GameSummaryScreen extends ConsumerWidget {
 }
 
 class _SummaryBody extends ConsumerWidget {
-  const _SummaryBody({required this.games, required this.initialGameId});
+  const _SummaryBody({
+    required this.games,
+    required this.initialGameId,
+    required this.isRecent,
+  });
 
   final List<GameResult> games;
   final String? initialGameId;
+  final bool isRecent;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favoriteTeamCode = ref.watch(favoriteTeamCodeProvider).value;
-    final gameList = SummaryGameList(games, favoriteTeamCode: favoriteTeamCode);
+    final gameList = SummaryGameList(
+      games,
+      favoriteTeamCode: favoriteTeamCode,
+      isRecent: isRecent,
+    );
     final selectedId = ref.watch(selectedSummaryGameIdProvider);
     final game = gameList.select(selectedId ?? initialGameId)!;
     // 요약이 없는 경기(404)로 바꾸면 토글이 사라져도, 다른 경기로 돌아왔을 때
@@ -76,6 +99,8 @@ class _SummaryBody extends ConsumerWidget {
         _GameChips(gameList: gameList, selected: game),
         const SizedBox(height: 16),
         _ScoreCard(game: game),
+        const SizedBox(height: 12),
+        AttendGameButton(game: game),
         const SizedBox(height: 16),
         _SummarySection(game: game),
       ],
