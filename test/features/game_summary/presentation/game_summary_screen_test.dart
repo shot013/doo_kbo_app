@@ -174,8 +174,9 @@ Future<void> _pump(
   String? initialGameId,
   String? favoriteTeamCode,
   GameSummaryRemoteDataSource? summaryDataSource,
+  double width = 800,
 }) async {
-  tester.view.physicalSize = const Size(800, 3000);
+  tester.view.physicalSize = Size(width, 3000);
   tester.view.devicePixelRatio = 1;
   addTearDown(tester.view.reset);
 
@@ -224,6 +225,17 @@ void main() {
     expect(find.text('최유격 솔로 홈런 (동점)'), findsOneWidget);
     expect(find.text('6회말'), findsOneWidget);
     expect(find.text('4:3'), findsOneWidget);
+  });
+
+  testWidgets('hides pitcher names that do not fit their bar', (tester) async {
+    await _pump(tester, width: 320);
+
+    await tester.tap(find.text('투수 교체'));
+    await tester.pumpAndSettle();
+
+    // 1이닝만 던진 홍좌완은 막대가 좁아 표에만, 정두산은 막대와 표 둘 다.
+    expect(find.text('홍좌완'), findsOneWidget);
+    expect(find.text('정두산'), findsNWidgets(2));
   });
 
   testWidgets('switches between the three toggles', (tester) async {
