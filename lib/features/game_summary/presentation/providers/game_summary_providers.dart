@@ -1,9 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/error/failures.dart';
 import '../../../../core/network/dio_client.dart';
 import '../../../../core/network/network_info.dart';
+import '../../../../core/network/retry_policy.dart';
 import '../../../../core/utils/result.dart';
+import '../../../game/domain/entities/game_result.dart';
+import '../../../game/domain/usecases/get_recent_game_results.dart';
+import '../../../game/presentation/providers/game_providers.dart';
 import '../../data/datasources/game_summary_remote_data_source.dart';
 import '../../data/repositories/game_summary_repository_impl.dart';
 import '../../domain/entities/game_summary.dart';
@@ -39,14 +42,22 @@ final gameSummaryProvider = FutureProvider.autoDispose
       };
     }, retry: gameSummaryRetry);
 
-/// 요약 없음(404)과 오프라인은 다시 해도 결과가 같으니 재시도 없이 바로
-/// 보이고, 서버 오류만 짧게 두 번까지 재시도한다 (KAN-5 사용자 선택, 앱 전체의
-/// 기본 재시도 BUG-09는 그대로 둔다).
-Duration? gameSummaryRetry(int retryCount, Object error) {
-  if (error is NotFoundFailure || error is NetworkFailure) return null;
-  if (retryCount >= 2) return null;
-  return Duration(milliseconds: 500 * (retryCount + 1));
-}
+/// 나의 직관에서 고른 날짜의 종료 경기 (`GET /game-results/recent?date=`).
+/// 서버는 정확히 그 날짜의 종료 경기만 주고, 없으면 빈 목록이다 (KAN-28).
+final gameResultsOnDateProvider = FutureProvider.autoDispose
+    .family<List<GameResult>, String>((ref, date) async {
+      final result = await ref
+          .read(getRecentGameResultsProvider)
+          .call(GetRecentGameResultsParams(date: date));
+      return switch (result) {
+        Ok(:final value) => value,
+        Err(:final failure) => throw failure,
+      };
+    }, retry: retryServerErrorsOnly);
+
+/// 요약 없음(404)과 오프라인은 재시도 없이 바로 보인다 (KAN-5 사용자 선택).
+Duration? gameSummaryRetry(int retryCount, Object error) =>
+    retryServerErrorsOnly(retryCount, error);
 
 enum GameSummaryTab { runs, pitching, pinchHitters }
 

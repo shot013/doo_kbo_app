@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/widgets/bottom_nav_spacer.dart';
 import '../../../game/presentation/providers/game_providers.dart';
+import '../widgets/my_attendance_section.dart';
 import '../widgets/recent_game_section.dart';
 import '../widgets/today_game_section.dart';
 
@@ -27,6 +28,8 @@ class HomeBody extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       TodayGameSection(),
+                      SizedBox(height: 24),
+                      MyAttendanceSection(),
                       SizedBox(height: 24),
                       RecentGameSection(),
                       BottomNavSpacer(),
