@@ -15,6 +15,7 @@ import '../../data/datasources/attendance_analytics.dart';
 import '../../data/repositories/attendance_repository_impl.dart';
 import '../../domain/entities/attendance_list.dart';
 import '../../domain/entities/attendance_record.dart';
+import '../../domain/entities/attendance_source.dart';
 import '../../domain/repositories/attendance_repository.dart';
 import '../../domain/usecases/attendance_usecases.dart';
 
@@ -71,9 +72,7 @@ class AttendanceRecordsNotifier extends Notifier<AttendanceList> {
     if (state.contains(game.gameId)) return;
     state = state.check(
       game,
-      source: source == AttendanceSource.addScreen
-          ? AttendanceRecordSource.addScreen
-          : AttendanceRecordSource.summary,
+      source: source.recordSource,
       now: _now(),
       newId: ref.read(attendanceIdGeneratorProvider),
     );

@@ -190,6 +190,52 @@ void main() {
     });
   });
 
+  group('AttendanceGame', () {
+    test('shows the place and status line of the add screen', () {
+      expect(attendanceGame('g1').placeAndStatusText, '잠실 · 경기 종료');
+      expect(
+        attendanceGame(
+          'g1',
+          stadium: null,
+          status: GameStatus.inProgress,
+        ).placeAndStatusText,
+        '경기 중',
+      );
+      expect(
+        attendanceGame('g1', status: GameStatus.postponed).placeAndStatusText,
+        '잠실 · 경기 연기',
+      );
+    });
+
+    test('shares the matchup text with the stored record', () {
+      final game = attendanceGame(
+        'g1',
+        homeScore: null,
+        awayScore: null,
+        status: GameStatus.cancelled,
+      );
+      expect(game.matchupText, 'LG vs 두산');
+      expect(
+        AttendanceRecord.create(
+          id: 'id',
+          game: game,
+          source: AttendanceRecordSource.summary,
+          now: t1,
+        ).matchupText,
+        game.matchupText,
+      );
+    });
+
+    test('reads the season year from the result date', () {
+      expect(
+        AttendanceGame.fromGameResult(
+          testResult('g1', date: '2025-09-01'),
+        ).seasonYear,
+        2025,
+      );
+    });
+  });
+
   group('canAttend', () {
     const today = '2026-11-28';
 

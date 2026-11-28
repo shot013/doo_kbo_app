@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../game/domain/entities/game_result.dart';
-import '../../data/datasources/attendance_analytics.dart';
 import '../../domain/entities/attendance_record.dart';
+import '../../domain/entities/attendance_source.dart';
 import '../providers/attendance_providers.dart';
 import '../screens/my_attendance_screen.dart';
 import 'attendance_snack_bar.dart';

@@ -7,6 +7,7 @@ import 'package:jikgwan/core/network/network_info.dart';
 import 'package:jikgwan/core/storage/shared_preferences_provider.dart';
 import 'package:jikgwan/features/attendance/data/datasources/attendance_analytics.dart';
 import 'package:jikgwan/features/attendance/domain/entities/attendance_record.dart';
+import 'package:jikgwan/features/attendance/domain/entities/attendance_source.dart';
 import 'package:jikgwan/features/attendance/presentation/providers/attendance_providers.dart';
 import 'package:jikgwan/features/game/data/datasources/game_remote_data_source.dart';
 import 'package:jikgwan/features/game/data/models/game_model.dart';

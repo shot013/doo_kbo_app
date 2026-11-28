@@ -5,10 +5,9 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/date_label.dart';
 import '../../../game/domain/entities/game.dart';
-import '../../../game/domain/entities/game_status.dart';
 import '../../../game/presentation/providers/game_providers.dart';
-import '../../data/datasources/attendance_analytics.dart';
 import '../../domain/entities/attendance_record.dart';
+import '../../domain/entities/attendance_source.dart';
 import '../providers/attendance_providers.dart';
 import '../widgets/attendance_calendar_dialog.dart';
 import '../widgets/attendance_widgets.dart';
@@ -176,14 +175,6 @@ class _GameTile extends ConsumerWidget {
   final Game game;
   final String today;
 
-  static String _statusText(GameStatus status) => switch (status) {
-    GameStatus.scheduled => '경기 예정',
-    GameStatus.inProgress => '경기 중',
-    GameStatus.finished => '경기 종료',
-    GameStatus.cancelled => '경기 취소',
-    GameStatus.postponed => '경기 연기',
-  };
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final attended = ref.watch(
@@ -195,12 +186,7 @@ class _GameTile extends ConsumerWidget {
       today: today,
     );
     final notifier = ref.read(attendanceRecordsProvider.notifier);
-    final hasScore =
-        game.status == GameStatus.finished &&
-        game.homeScore != null &&
-        game.awayScore != null;
-    final score = hasScore ? '${game.homeScore}:${game.awayScore}' : 'vs';
-    final place = game.stadium == null ? '' : '${game.stadium} · ';
+    final attendanceGame = AttendanceGame.fromGame(game);
 
     final Widget trailing;
     if (attended) {
@@ -230,10 +216,7 @@ class _GameTile extends ConsumerWidget {
       onTap: attended
           ? () => notifier.uncheck(game.id, AttendanceSource.addScreen)
           : allowed
-          ? () => notifier.check(
-              AttendanceGame.fromGame(game),
-              AttendanceSource.addScreen,
-            )
+          ? () => notifier.check(attendanceGame, AttendanceSource.addScreen)
           : null,
       child: AttendanceCard(
         borderColor: attended ? AppColors.accent : null,
@@ -244,7 +227,7 @@ class _GameTile extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '$place${_statusText(game.status)}',
+                    attendanceGame.placeAndStatusText,
                     style: const TextStyle(
                       color: AppColors.textMuted,
                       fontSize: 12,
@@ -254,9 +237,7 @@ class _GameTile extends ConsumerWidget {
                   AttendanceMatchup(
                     homeTeamCode: game.homeTeamCode,
                     awayTeamCode: game.awayTeamCode,
-                    text:
-                        '${game.homeTeamVisibleName} $score '
-                        '${game.awayTeamVisibleName}',
+                    text: attendanceGame.matchupText,
                   ),
                 ],
               ),

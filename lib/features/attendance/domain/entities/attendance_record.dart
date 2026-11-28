@@ -64,8 +64,8 @@ class AttendanceGame extends Equatable {
 
   factory AttendanceGame.fromGameResult(GameResult result) => AttendanceGame(
     gameId: result.gameId,
-    seasonYear:
-        int.tryParse(result.gameDate.split('-').first) ?? DateTime.now().year,
+    // 서버 경기일은 YYYY-MM-DD. 형식이 깨졌으면 0으로 두어 시즌에서 빠지게 한다.
+    seasonYear: int.tryParse(result.gameDate.split('-').first) ?? 0,
     gameDate: result.gameDate,
     stadium: result.stadium,
     homeTeamCode: result.homeTeamCode,
@@ -86,6 +86,37 @@ class AttendanceGame extends Equatable {
   final int? homeScore;
   final int? awayScore;
   final GameStatus status;
+
+  String get homeTeamVisibleName => _visibleName(homeTeamCode);
+  String get awayTeamVisibleName => _visibleName(awayTeamCode);
+
+  static String _visibleName(String code) {
+    for (final team in kKboTeams) {
+      if (team.code == code) return shortTeamName(team.name);
+    }
+    return code;
+  }
+
+  bool get _hasScore =>
+      status == GameStatus.finished && homeScore != null && awayScore != null;
+
+  /// 예: `LG 5:3 두산`. 끝나지 않았거나 취소된 경기는 `LG vs 두산`.
+  String get matchupText {
+    final score = _hasScore ? '$homeScore:$awayScore' : 'vs';
+    return '$homeTeamVisibleName $score $awayTeamVisibleName';
+  }
+
+  /// 경기 추가 카드 윗줄. 예: `잠실 · 경기 종료`
+  String get placeAndStatusText {
+    final label = switch (status) {
+      GameStatus.scheduled => '경기 예정',
+      GameStatus.inProgress => '경기 중',
+      GameStatus.finished => '경기 종료',
+      GameStatus.cancelled => '경기 취소',
+      GameStatus.postponed => '경기 연기',
+    };
+    return stadium == null ? label : '$stadium · $label';
+  }
 
   @override
   List<Object?> get props => [
@@ -185,15 +216,8 @@ class AttendanceRecord extends Equatable {
     status: gameStatus,
   );
 
-  String get homeTeamVisibleName => _visibleName(homeTeamCode);
-  String get awayTeamVisibleName => _visibleName(awayTeamCode);
-
-  static String _visibleName(String code) {
-    for (final team in kKboTeams) {
-      if (team.code == code) return shortTeamName(team.name);
-    }
-    return code;
-  }
+  String get homeTeamVisibleName => game.homeTeamVisibleName;
+  String get awayTeamVisibleName => game.awayTeamVisibleName;
 
   bool get _hasScore =>
       gameStatus == GameStatus.finished &&
@@ -207,10 +231,7 @@ class AttendanceRecord extends Equatable {
           gameStatus == GameStatus.inProgress);
 
   /// 예: `LG 5:3 두산`. 끝나지 않았거나 취소된 경기는 `LG vs 두산`.
-  String get matchupText {
-    final score = _hasScore ? '$homeScore:$awayScore' : 'vs';
-    return '$homeTeamVisibleName $score $awayTeamVisibleName';
-  }
+  String get matchupText => game.matchupText;
 
   /// 예: `11.26`
   String get monthDayText => monthDayLabel(gameDate);

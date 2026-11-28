@@ -1,16 +1,7 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-/// 직관 체크·해제를 어느 화면에서 했는지.
-enum AttendanceSource {
-  gameSummary('summary'),
-  addScreen('add_screen'),
-  list('list');
-
-  const AttendanceSource(this.value);
-
-  final String value;
-}
+import '../../domain/entities/attendance_source.dart';
 
 /// 직관 체크·해제 이벤트 (정책서 5.9, 6.3). 사용 규모를 보고 서버 이전 시점을 정한다.
 abstract interface class AttendanceAnalytics {
